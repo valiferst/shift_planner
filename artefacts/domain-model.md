@@ -30,7 +30,11 @@ _Citations:_
 1. _Eine Dienststelle beschäftigt Mitarbeiter:innen_ 
 2. _... und hat vorgegebene Dienstzeiten_
 3. _... und hat vorgegebene Dienstzeiten_
-4. _Manager:innen Dienststellen zuweisen..._
+4. _Manager:innen Dienststellen zuweisen..._ 
+
+### Takeaways
+1. Mitarbeiter:innen können mehreren Dienststellen zugeordnet sein
+2. Manager:innen können mehrere Dienststellen managen &rarr; Auswahlfeld für Dienststelle bei Schichtplan erstellung hinzufügen
 
 ## ShiftPlan and Status-Enum
 
