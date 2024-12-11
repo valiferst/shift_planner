@@ -70,50 +70,8 @@ _Citations:_
 1. _Größere Organisationen können zum Beispiel aus mehreren Dienststellen bestehen,
 um die Übersichtlichkeit zu gewährleisten._
 
-# plantUML code snippet
+# plantUML
 
-```
-@startuml
-' Define classes
-class User {}
+![plantUML domain model image](domain-model.png)
 
-class Department {
-  - startTime : TBD
-  - endTime : TBD
-}
-
-class ShiftPlan {
-  - date : TBD
-}
-
-class Shift {
-  - startTime : TBD
-  - endTime : TBD
-}
-
-enum Role {
-  ADMIN
-  MANAGER
-  EMPLOYEE
-}
-
-enum Status {
-  DRAFT
-  PUBLISHED
-  CANCELLED
-}
-
-' Define relationships
-User "0..*" -- "0..1" Department : assigned
-User "1" -- "1" Role : has
-Department "1" -- "1" User : manager
-Department "0..*" -- "0..*" User : employees
-ShiftPlan "1" -- "1" Department : assigned to
-ShiftPlan "0..*" -- "1" Shift : contains
-ShiftPlan "1" -- "1" Status : status
-Shift "0..*" -- "1" User : assigned to
-
-@enduml
-
-```
-
+[plantUML code](domain-model.puml)
