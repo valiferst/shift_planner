@@ -1,41 +1,57 @@
 @startuml
 ' Define classes
-class User {}
+class User {
+    - username : String
+    - password : String
+    - email : String
+    - name : String
+    - surname : String
+    - roles : List<Userrole>
+}
 
 class Department {
-  - startTime : TBD
-  - endTime : TBD
+  - name : String
+  - startTime : DateTime
+  - endTime : DateTime
+}
+
+class Absence {
+    - start: DateTime
+    - end: DateTime
+    - recurrenceDaily : boolean
+    - recurrenceWeekly: boolean
+    - recurrenceMonthly: boolean
 }
 
 class ShiftPlan {
-  - date : TBD
+  - date : DateTime
+  - state : State
 }
 
 class Shift {
-  - startTime : TBD
-  - endTime : TBD
+  - startTime : DateTime
+  - endTime : DateTime
 }
 
-enum Role {
+enum Userrole {
   ADMIN
   MANAGER
   EMPLOYEE
 }
 
-enum Status {
+enum State {
   DRAFT
   PUBLISHED
   CANCELLED
 }
 
 ' Define relationships
-User "0..*" -- "0..1" Department : assigned
-User "1" -- "1" Role : has
-Department "1" -- "1" User : manager
+Department "1..*" -- "1" User : manager
 Department "0..*" -- "0..*" User : employees
-ShiftPlan "1" -- "1" Department : assigned to
-ShiftPlan "0..*" -- "1" Shift : contains
-ShiftPlan "1" -- "1" Status : status
-Shift "0..*" -- "1" User : assigned to
+Department "1" -- "0..*" ShiftPlan
+ShiftPlan "1" -- "0..*" Shift
+Shift "0..*" -- "0..*" User
+Absence "0..*" -- "1" User
+
 
 @enduml
