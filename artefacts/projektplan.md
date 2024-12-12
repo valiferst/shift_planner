@@ -17,4 +17,8 @@
 - Über die verschiedene Ansichten nachdenken
 - Für jede Rolle eine Ansicht erstellen (Funktionaliät der Projektbeschreibung entnehmen)
 
-## USE-Cases benutzen um die GUI durchzutesten
+## USE-Cases
+- Erstellung eines Schichtplans
+- Abwesenheiten eintragen
+- Veröffentlichung eines Schichtplans
+- Wiederverwendung eines Schichtplans
