@@ -65,3 +65,6 @@ Branches have the following structure:
 - MR can be merged after 
     - pipeline ran without errors
     - Approval by 1 team member is given
+        - for merges into main this must be someone else
+        - for merges into `develop` this can be yourself
+            - please only use this option for time-sensitive fixes
