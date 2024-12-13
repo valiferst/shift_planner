@@ -27,7 +27,8 @@ backend-unit-tests:
       - target
   rules:
     - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" 
-    
+      changes: src/*
+
 # SonarQube Analysis for Frontend and Backend
 sonarqube-analysis:
   stage: analyze
@@ -42,3 +43,8 @@ sonarqube-analysis:
     - backend-unit-tests
   rules:
     - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" 
+      changes src/*
+
+dummy_job:
+  script:
+    - echo "Dummy job running because there were no changes in src/ folder"
