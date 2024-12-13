@@ -43,7 +43,7 @@ sonarqube-analysis:
     - backend-unit-tests
   rules:
     - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" 
-      changes src/*
+      changes: src/*
 
 dummy_job:
   script:
