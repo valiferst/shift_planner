@@ -25,10 +25,11 @@ backend-unit-tests:
     paths:
       # for sonar-scanner in next stage
       - target
-  only:
-      - main
-      - develop
-    
+  rules:
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" 
+      changes:
+        - src/**/*
+
 # SonarQube Analysis for Frontend and Backend
 sonarqube-analysis:
   stage: analyze
@@ -41,6 +42,11 @@ sonarqube-analysis:
     - sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} ${GITLAB_USER_NAME}"
   dependencies:
     - backend-unit-tests
-  only:
-    - main
-    - develop
+  rules:
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" 
+      changes: 
+        - src/**/*
+
+dummy_job:
+  script:
+    - echo "Dummy job running because there were no changes in src/ folder"
