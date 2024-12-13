@@ -27,6 +27,7 @@ backend-unit-tests:
       - target
   only:
       - main
+      - develop
     
 # SonarQube Analysis for Frontend and Backend
 sonarqube-analysis:
@@ -42,3 +43,4 @@ sonarqube-analysis:
     - backend-unit-tests
   only:
     - main
+    - develop
