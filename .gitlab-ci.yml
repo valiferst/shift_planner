@@ -1,0 +1,52 @@
+stages:
+  - test
+  - analyze
+
+.before_script_template:
+  before_script:
+    - apk add --update maven
+    - apk add --update git
+    - mkdir -p ~/.m2
+    # necessary for proxy settings
+    - cp settings.xml ~/.m2/settings.xml
+
+# Spring Boot Backend Unit Tests
+backend-unit-tests:
+  stage: test
+  image: alpine:3.21
+  extends: .before_script_template
+  script:
+    - echo "Running unit tests ..."
+    # to also generate Jacoco report (see pom.xml)
+    - mvn clean verify -Dskip.frontend=true
+    # for sonar-scanner in next stage
+    - mvn dependency:copy-dependencies
+  artifacts:
+    paths:
+      # for sonar-scanner in next stage
+      - target
+  rules:
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" 
+      changes:
+        - src/**/*
+
+# SonarQube Analysis for Frontend and Backend
+sonarqube-analysis:
+  stage: analyze
+  image: sonarsource/sonar-scanner-cli:latest
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/code/.sonar"
+    GIT_DEPTH: "0"
+  script:
+    # configuration in sonar-project.properties file
+    - sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} ${GITLAB_USER_NAME}"
+  dependencies:
+    - backend-unit-tests
+  rules:
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" 
+      changes: 
+        - src/**/*
+
+dummy_job:
+  script:
+    - echo "Dummy job running because there were no changes in src/ folder"
