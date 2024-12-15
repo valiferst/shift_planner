@@ -36,23 +36,23 @@ _Citations:_
 1. Mitarbeiter:innen können mehreren Dienststellen zugeordnet sein
 2. Manager:innen können mehrere Dienststellen managen &rarr; Auswahlfeld für Dienststelle bei Schichtplan erstellung hinzufügen
 
-## ShiftPlan and Status-Enum
+## ShiftPlan and ShiftPlanState-Enum
 
 ### ShiftPlan
 
 1. has one `Department`
 2. has zero to many `Shift`
-3. has one `Status`
+3. has one `ShiftPlanState`
 4. has a date (**type of date yet to be determined; weeknumber, date of startday (mon/sun)**)
 
 _Citations:_
 
 1. _Ein Schichtplan ist einer Dienststelle zugeordnet ..._
 2. _Ein Schichtplan kann beliebig viele Schichten beinhalten._
-3. _Ein Schichtplan kann im Status „in Entwurf“, „veröffentlicht“ oder „deaktiviert“ sein._
+3. _Ein Schichtplan kann im ShiftPlanState „in Entwurf“, „veröffentlicht“ oder „deaktiviert“ sein._
 4. _für jede Woche wird ein eigener Schichtplan erstellt_
 
-### Status
+### ShiftPlanState
 
 1. `DRAFT`
 2. `PUBLISHED`
