@@ -1,0 +1,77 @@
+@startuml
+' Define classes
+class User {
+    - userID: Long
+    - username: String
+    - password: String
+    - email: String
+    - name: String
+    - surname: String
+    - roles: List<UserRole>
+    - absences: List
+}
+
+class Department {
+    - departmentID: Long
+    - name: String
+    - city: String
+    - postCode: Int
+    - street: String
+    - houseNumber: Int
+}
+
+class OpeningHours {
+    - from: DateTime
+    - until: Datetime
+    - day: DayOfWeek
+}
+
+class Absence {
+    - start: DateTime
+    - end: DateTime
+    - nextRecurrentAbsence: Absence
+}
+
+class ShiftPlan {
+    - date: DateTime
+    - state: ShiftPlanState
+}
+
+class Shift {
+    - startTime: DateTime
+    - endTime: DateTime
+}
+
+enum UserRole {
+    ADMIN
+    MANAGER
+    EMPLOYEE
+}
+
+enum ShiftPlanState {
+    DRAFT
+    PUBLISHED
+    CANCELLED
+}
+
+enum DayOfWeek {
+    MONDAY
+    TUESDAY
+    WEDNESDAY
+    THURSDAY
+    FRIDAY
+    SATURDAY
+    SUNDAY
+}
+
+' Define relationships
+Department "1..*" -- "1" User: manager
+Department "0..*" -- "0..*" User: employees
+Department "1" -- "0..*" ShiftPlan
+Department "1" -- "0..*" OpeningHours: openingHours
+ShiftPlan "1" -- "0..*" Shift
+Shift "0..*" -- "0..*" User
+User "1" -- "0..*" Absence: absences
+
+
+@enduml
