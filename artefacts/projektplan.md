@@ -17,6 +17,12 @@
 - Über die verschiedene Ansichten nachdenken
 - Für jede Rolle eine Ansicht erstellen (Funktionaliät der Projektbeschreibung entnehmen)
 
+### Entwicklungsschritte (Programmieren) anhand der REACT.js Baumstruktur (top-down, von Wurzel zu Blättern)
+1. `App.tsx` und `routes.js` modifizieren
+2. Im Ordner `./views` neue views erstellen
+3. Im Ordner `./components` falls nötig neue components erstellen
+4. Im Order `./factories` und `./utilities` falls nötig neue crud und factory erstellen
+
 ## USE-Cases
 - Erstellung eines Schichtplans
 - Abwesenheiten eintragen
