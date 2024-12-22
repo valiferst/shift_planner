@@ -7,11 +7,13 @@ class Shift {
 	
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
+	private ShiftPlan shiftPlan;
 	private List<Userx> shiftWorkers;
-	
-	public Shift(LocalDateTime startTime, LocalDateTime endTime, Userx worker) {
+		
+	public Shift(LocalDateTime startTime, LocalDateTime endTime, ShiftPlan shiftPlan, Userx worker) {
 		this.setStartTime(startTime);
 		this.setEndTime(endTime);
+		this.setShiftPlan(shiftPlan);
 		this.shiftWorkers.add(worker);
 	}
 	
@@ -24,7 +26,7 @@ class Shift {
 		this.shiftWorkers.remove(worker);
 	}
 	
-	// Getter/Setter Times
+	// Getter and Setter
 	public LocalDateTime getStartTime() {
 		return startTime;
 	}
@@ -39,6 +41,14 @@ class Shift {
 
 	public void setEndTime(LocalDateTime endTime) {
 		this.endTime = endTime;
+	}
+
+	public ShiftPlan getShiftPlan() {
+		return shiftPlan;
+	}
+
+	public void setShiftPlan(ShiftPlan shiftPlan) {
+		this.shiftPlan = shiftPlan;
 	}
 
 }
