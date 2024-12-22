@@ -1,28 +1,42 @@
 package at.qe.skeleton.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import org.springframework.data.domain.Persistable;
 
-class Shift {
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+
+@Entity
+public class Shift implements Persistable<Long>, Serializable, Comparable<Shift> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 	
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
+	@ManyToOne
 	private ShiftPlan shiftPlan;
-	private List<Userx> shiftWorkers;
-		
-	public Shift(LocalDateTime startTime, LocalDateTime endTime, ShiftPlan shiftPlan, Userx worker) {
-		this.setStartTime(startTime);
-		this.setEndTime(endTime);
-		this.setShiftPlan(shiftPlan);
-		this.shiftWorkers.add(worker);
-	}
+	@ManyToMany
+	private Set<Userx> shiftWorkers;
+	
 	
 	public void addWorker(Userx worker) {
 		this.shiftWorkers.add(worker);
 	}
 	
 	public void removeWorker(Userx worker) {
-		//assuming smart manager: worker has just one list entry
 		this.shiftWorkers.remove(worker);
 	}
 	
@@ -50,5 +64,47 @@ class Shift {
 	public void setShiftPlan(ShiftPlan shiftPlan) {
 		this.shiftPlan = shiftPlan;
 	}
+	
+	public void setId(Long id) {
+	    this.id = id;
+	}
+	
+	@Override
+	  public int hashCode() {
+	    int hash = 7;
+	    hash = 59 * hash + Objects.hashCode(this.getStartTime());
+	    return hash;
+	  }
 
+	  @Override
+	  public boolean equals(Object obj) {
+	    if (obj == null) {
+	      return false;
+	    }
+	    if (!(obj instanceof Shift)) {
+	      return false;
+	    }
+	    final Shift other = (Shift) obj;
+	    return Objects.equals(this.getId(), other.getId());
+	  }
+
+	  @Override
+	  public String toString() {
+	    return "at.qe.skeleton.model.Shift[ start=" + startTime + ", end = " + endTime + " ]";
+	  }
+	  
+	  @Override
+	  public int compareTo(Shift o) {
+	    return this.id.compareTo(o.getId());
+	  }
+	  
+	  @Override
+	  public boolean isNew() {
+		  return (null == id);
+	  }
+	  
+	  @Override
+	  public Long getId() {
+		  return id;
+	  }
 }
