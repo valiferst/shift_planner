@@ -4,13 +4,15 @@
 
 ### Sinnvolle Reihenfolge für den "Kern" und damit Grundgerüst der App
 1. **Entitätsklassen erstellen** (Template von Userx und AuditLog Musterlösung)
-2. **Unit-Tests für Entitätsklassen erstellen** (können später noch ausgebaut werden)
-3. **Repositories für Entitätsklassen erstellen** (können erstmal leer sein und nur von AbstractRepo erben)
-4. **Services für Entitätsklassen erstellen** (können erstmal erstellt werden und evtl. wenn nicht gebraucht wieder entfert)
+2. **Repositories für Entitätsklassen erstellen** (können erstmal leer sein und nur von AbstractRepo erben)
+3. **Services für Entitätsklassen erstellen** (können erstmal erstellt werden und evtl. wenn nicht gebraucht wieder entfert)
+4. **Unit-Tests für Services erstellen** (können später noch ausgebaut werden)
 5. **DTOs erstellen** (möglicherweise werden nicht alle attribute im Front-End benötigt)
 6. **DTO-Mapper erstellen** (über die Richtung des Mappings nachdenken, was muss vom Frontend zum Backend und andersherum)
 
 ### Validierungslogik der Schichtpläne
+
+- Sequenzdiagramm als Startpunkt
 
 
 ## Frontend
@@ -23,8 +25,14 @@
 3. Im Ordner `./components` falls nötig neue components erstellen
 4. Im Order `./factories` und `./utilities` falls nötig neue crud und factory erstellen
 
-## USE-Cases
-- Erstellung eines Schichtplans
-- Abwesenheiten eintragen
-- Veröffentlichung eines Schichtplans
-- Wiederverwendung eines Schichtplans
+## USE-Cases (`swa_projekt_aufgabe.pdf` nochmal scannen um alle zu finden)
+- Erstellung eines Schichtplans (Manager:in)
+- Abwesenheiten eintragen (Mitarbeiter:in)
+- Veröffentlichung eines Schichtplans (Manager:in)
+- Wiederverwendung eines Schichtplans (Manager:in)
+- Erstellen eines Departments (Admin)
+- Ändern eines Departments (Admin)
+- Löschen eines Departments (Admin)
+- Erstellen eines Users (Admin, **bereits im skeleton vorhanden**)
+- Ändern eines Users (Admin, **bereits im skeleton vorhanden**)
+- Löschen eines Users (Admin, **bereits im skeleton vorhanden**)
