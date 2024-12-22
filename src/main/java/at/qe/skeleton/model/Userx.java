@@ -48,6 +48,9 @@ public class Userx implements Persistable<Long>, Serializable, Comparable<Userx>
   @Enumerated(EnumType.STRING)
   private Set<UserxRole> roles;
 
+  @ManyToMany
+  private Set<Shift> shifts;
+
   @OneToMany(mappedBy = "user")
   private Set<Absence> absences;
   boolean enabled;
@@ -153,6 +156,14 @@ public class Userx implements Persistable<Long>, Serializable, Comparable<Userx>
 
   public void setAbsences(Set<Absence> absences) {
     this.absences = absences;
+  }
+
+  public Set<Shift> getShifts() {
+    return shifts;
+  }
+
+  public void setShifts(Set<Shift> shifts) {
+    this.shifts = shifts;
   }
 
   @Override

@@ -1,6 +1,7 @@
 package at.qe.skeleton.dtos;
 
 import at.qe.skeleton.model.Absence;
+import at.qe.skeleton.model.Shift;
 import at.qe.skeleton.model.UserxRole;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -24,5 +25,6 @@ public record UserxDTO (
     String phone,
     boolean enabled,
     Set<UserxRole> roles,
-    Set<Absence> absences
+    Set<Absence> absences,
+    Set<Shift> shifts
 ) {}
