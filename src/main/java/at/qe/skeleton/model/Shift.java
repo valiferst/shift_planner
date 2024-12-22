@@ -15,6 +15,15 @@ class Shift {
 		this.shiftWorkers.add(worker);
 	}
 	
+	public void addWorker(Userx worker) {
+		this.shiftWorkers.add(worker);
+	}
+	
+	public void removeWorker(Userx worker) {
+		//assuming smart manager: worker has just one list entry
+		this.shiftWorkers.remove(worker);
+	}
+	
 	// Getter/Setter Times
 	public LocalDateTime getStartTime() {
 		return startTime;
