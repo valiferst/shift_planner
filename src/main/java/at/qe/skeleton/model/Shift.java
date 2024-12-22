@@ -2,7 +2,6 @@ package at.qe.skeleton.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import org.springframework.data.domain.Persistable;
@@ -72,7 +71,7 @@ public class Shift implements Persistable<Long>, Serializable, Comparable<Shift>
 	@Override
 	  public int hashCode() {
 	    int hash = 7;
-	    hash = 59 * hash + Objects.hashCode(this.getStartTime());
+	    hash = 59 * hash + Objects.hashCode(this.getId());
 	    return hash;
 	  }
 
@@ -90,7 +89,7 @@ public class Shift implements Persistable<Long>, Serializable, Comparable<Shift>
 
 	  @Override
 	  public String toString() {
-	    return "at.qe.skeleton.model.Shift[ start=" + startTime + ", end = " + endTime + " ]";
+	    return "at.qe.skeleton.model.Shift[ id=" + id + " ]";
 	  }
 	  
 	  @Override
