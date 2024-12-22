@@ -5,21 +5,10 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
 
+import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.domain.Persistable;
-
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 
 /**
  * Entity representing users.
@@ -59,6 +48,8 @@ public class Userx implements Persistable<Long>, Serializable, Comparable<Userx>
   @Enumerated(EnumType.STRING)
   private Set<UserxRole> roles;
 
+  @OneToMany(mappedBy = "user")
+  private Set<Absence> absences;
   boolean enabled;
   
   public String getUsername() {
@@ -144,7 +135,6 @@ public class Userx implements Persistable<Long>, Serializable, Comparable<Userx>
   public Userx getUpdateUser() {
     return updateUser;
   }
-
   public void setUpdateUser(Userx updateUser) {
     this.updateUser = updateUser;
   }
@@ -155,6 +145,14 @@ public class Userx implements Persistable<Long>, Serializable, Comparable<Userx>
 
   public void setUpdateDate(LocalDateTime updateDate) {
     this.updateDate = updateDate;
+  }
+
+  public Set<Absence> getAbsences() {
+    return absences;
+  }
+
+  public void setAbsences(Set<Absence> absences) {
+    this.absences = absences;
   }
 
   @Override

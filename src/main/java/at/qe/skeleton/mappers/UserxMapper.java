@@ -39,7 +39,8 @@ public class UserxMapper implements DTOMapper<Userx, UserxDTO>{
                 user.getEmail(), 
                 user.getPhone(), 
                 user.isEnabled(), 
-                user.getRoles()
+                user.getRoles(),
+                user.getAbsences()
         );
         
         return dto;
@@ -60,8 +61,8 @@ public class UserxMapper implements DTOMapper<Userx, UserxDTO>{
         user.setLastName(userxDto.lastName());
         user.setEmail(userxDto.email());
         user.setPhone(userxDto.phone());
-        user.setEnabled(userxDto.enabled());
         user.setRoles(userxDto.roles());
+        user.setAbsences(userxDto.absences());
 
         return user;
     }
