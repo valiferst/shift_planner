@@ -21,8 +21,8 @@ public class Department implements Persistable<Long>, Serializable, Comparable<D
     @OneToMany(mappedBy = "department")
     private List<ShiftPlan> shiftPlans;
 
-    @OneToOne
-    @JoinColumn(name = "manager_id")
+    @ManyToOne
+    @JoinColumn(name = "manager_id", nullable = false)
     private Userx manager;
 
     @OneToMany(mappedBy = "department")
