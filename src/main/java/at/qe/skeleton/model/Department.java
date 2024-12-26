@@ -29,14 +29,11 @@ public class Department implements Persistable<Long>, Serializable, Comparable<D
     private List<Userx> employees;
 
     // Constructors
-    // Constructor with basic attributes
     public Department(String name, LocalDateTime openingTime, LocalDateTime closingTime) {
         this.name = name;
         this.openingTime = openingTime;
         this.closingTime = closingTime;
     }
-
-    // Extended constructor with all attributes
 
     public Department() {}
 
