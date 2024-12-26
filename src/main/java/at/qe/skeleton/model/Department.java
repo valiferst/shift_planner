@@ -118,7 +118,7 @@ public class Department implements Persistable<Long>, Serializable, Comparable<D
 
     @Override
     public int compareTo(Department other) {
-        return this.name.compareTo(other.name);
+        return this.id.compareTo(other.getId());
     }
 
     @Override
