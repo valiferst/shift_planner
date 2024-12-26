@@ -15,8 +15,8 @@ public class Department implements Persistable<Long>, Serializable, Comparable<D
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long departmentID;
     private String name;
-    private LocalDateTime openingTime;  // Öffnungszeit als LocalDateTime
-    private LocalDateTime closingTime;  // Schließzeit als LocalDateTime
+    private LocalDateTime openingTime;  
+    private LocalDateTime closingTime;  
 
     @OneToMany(mappedBy = "department")
     private List<ShiftPlan> shiftPlans;
