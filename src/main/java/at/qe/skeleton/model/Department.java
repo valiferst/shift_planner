@@ -13,10 +13,11 @@ public class Department implements Persistable<Long>, Serializable, Comparable<D
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long departmentID;
+    private Long id;
     private String name;
     private LocalDateTime openingTime;  
     private LocalDateTime closingTime;  
+
 
     @OneToMany(mappedBy = "department")
     private List<ShiftPlan> shiftPlans;
@@ -24,9 +25,6 @@ public class Department implements Persistable<Long>, Serializable, Comparable<D
     @ManyToOne
     @JoinColumn(name = "manager_id", nullable = false)
     private Userx manager;
-
-    @OneToMany(mappedBy = "department")
-    private List<Userx> employees;
 
     // Constructors
     public Department(String name, LocalDateTime openingTime, LocalDateTime closingTime) {
@@ -38,14 +36,6 @@ public class Department implements Persistable<Long>, Serializable, Comparable<D
     public Department() {}
 
     // Getters and Setter
-    public Long getDepartmentID() {
-        return departmentID;
-    }
-
-    public void setDepartmentID(Long departmentID) {
-        this.departmentID = departmentID;
-    }
-
     public String getName() {
         return name;
     }
@@ -86,22 +76,14 @@ public class Department implements Persistable<Long>, Serializable, Comparable<D
         this.manager = manager;
     }
 
-    public List<Userx> getEmployees() {
-        return employees;
-    }
-
-    public void setEmployees(List<Userx> employees) {
-        this.employees = employees;
-    }
-
     @Override
     public Long getId() {
-        return this.departmentID;
+        return this.id;
     }
 
     @Override
     public boolean isNew() {
-        return this.departmentID == null;
+        return this.id == null;
     }
 
     @Override
@@ -121,15 +103,14 @@ public class Department implements Persistable<Long>, Serializable, Comparable<D
         if (obj == null) {
             return false;
         }
-        if (!(obj instanceof Department)) {
+        if (!(obj instanceof Department other)) {
             return false;
         }
-        final Department other = (Department) obj;
         return Objects.equals(this.getId(), other.getId());
     }
 
     @Override
     public String toString() {
-        return "at.qe.skeleton.model.Department[ id=" + departmentID + " ]";
+        return "at.qe.skeleton.model.Department[ id=" + id + " ]";
     }
 }
