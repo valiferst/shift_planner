@@ -1,5 +1,6 @@
 package at.qe.skeleton.tests;
 
+import at.qe.skeleton.model.ShiftPlan;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.UserxRole;
 import nl.jqno.equalsverifier.EqualsVerifier;
@@ -23,7 +24,15 @@ public class EqualsImplementationTest {
         user1.setId(1L);
         Userx user2 = new Userx();
         user2.setId(2L);
-        EqualsVerifier.forClass(Userx.class).withPrefabValues(Userx.class, user1, user2).suppress(Warning.STRICT_INHERITANCE, Warning.ALL_FIELDS_SHOULD_BE_USED).verify();
+        ShiftPlan shiftPlan1 = new ShiftPlan();
+        shiftPlan1.setId(1L);
+        ShiftPlan shiftPlan2 = new ShiftPlan();
+        shiftPlan2.setId(2L);
+        EqualsVerifier.forClass(Userx.class)
+                .withPrefabValues(Userx.class, user1, user2)
+                .withPrefabValues(ShiftPlan.class, shiftPlan1, shiftPlan2)
+                .suppress(Warning.STRICT_INHERITANCE, Warning.ALL_FIELDS_SHOULD_BE_USED)
+                .verify();
     }
 
     @Test
