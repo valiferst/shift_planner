@@ -15,13 +15,15 @@ public class ShiftPlan implements Persistable<Long>, Serializable, Comparable<Sh
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // Unique identifier for the ShiftPlan
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Department department; // Associated department
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "shiftPlan", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Shift> shifts; // List of shifts in the plan
 
+    @Enumerated(EnumType.STRING)
     private ShiftPlanState state; // Current state of the ShiftPlan
+
     private LocalDateTime date; // Date associated with the start or week of the ShiftPlan
 
     // Constructor
