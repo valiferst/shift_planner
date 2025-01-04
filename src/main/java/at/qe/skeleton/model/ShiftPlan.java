@@ -8,11 +8,19 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
 public class ShiftPlan implements Persistable<Long>, Serializable, Comparable<ShiftPlan> {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // Unique identifier for the ShiftPlan
+
+    @ManyToOne
     private Department department; // Associated department
+
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Shift> shifts; // List of shifts in the plan
+
     private ShiftPlanState state; // Current state of the ShiftPlan
     private LocalDateTime date; // Date associated with the start or week of the ShiftPlan
 
