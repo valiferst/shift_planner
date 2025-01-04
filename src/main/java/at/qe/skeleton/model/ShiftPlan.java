@@ -26,13 +26,14 @@ public class ShiftPlan implements Persistable<Long>, Serializable, Comparable<Sh
 
     private LocalDateTime date; // Date associated with the start or week of the ShiftPlan
 
-    // Constructor
-    public ShiftPlan(Long id, Department department, List<Shift> shifts, ShiftPlanState state, LocalDateTime date) {
-        this.id = id;
+    // No-args constructor (required by JPA)
+    public ShiftPlan() {}
+
+    // Flexible constructor for easier instantiation
+    public ShiftPlan(Department department, LocalDateTime date) {
         this.department = department;
-        this.shifts = shifts;
-        this.state = state;
         this.date = date;
+        this.state = ShiftPlanState.DRAFT;
     }
 
     // Getters and Setters
@@ -79,10 +80,21 @@ public class ShiftPlan implements Persistable<Long>, Serializable, Comparable<Sh
     // Utility methods
     public void addShift(Shift shift) {
         this.shifts.add(shift);
+        // shift.setShiftPlan(this); // Ensure bidirectional sync
+
     }
 
     public void removeShift(Shift shift) {
         this.shifts.remove(shift);
+        // shift.setShiftPlan(null); // Ensure bidirectional sync
+    }
+
+    public void publish() { // Publish the ShiftPlan
+        if (this.state == ShiftPlanState.DRAFT) {
+            this.state = ShiftPlanState.PUBLISHED;
+        } else {
+            throw new IllegalStateException("Only draft plans can be published.");
+        }
     }
 
     // standard methods
