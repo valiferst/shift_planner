@@ -1,18 +1,23 @@
 package at.qe.skeleton.model;
 
-import java.util.Date;
-import java.util.List;
+import jakarta.persistence.*;
+import org.springframework.data.domain.Persistable;
 
-public class ShiftPlan {
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
+
+public class ShiftPlan implements Persistable<Long>, Serializable, Comparable<ShiftPlan> {
 
     private Long id; // Unique identifier for the ShiftPlan
     private Department department; // Associated department
     private List<Shift> shifts; // List of shifts in the plan
     private ShiftPlanState state; // Current state of the ShiftPlan
-    private Date date; // Date associated with the start or week of the ShiftPlan
+    private LocalDateTime date; // Date associated with the start or week of the ShiftPlan
 
     // Constructor
-    public ShiftPlan(Long id, Department department, List<Shift> shifts, ShiftPlanState state, Date date) {
+    public ShiftPlan(Long id, Department department, List<Shift> shifts, ShiftPlanState state, LocalDateTime date) {
         this.id = id;
         this.department = department;
         this.shifts = shifts;
@@ -53,11 +58,11 @@ public class ShiftPlan {
         this.state = state;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
@@ -69,4 +74,43 @@ public class ShiftPlan {
     public void removeShift(Shift shift) {
         this.shifts.remove(shift);
     }
+
+    // standard methods
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 59 * hash + Objects.hashCode(this.getId());
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof ShiftPlan)) {
+            return false;
+        }
+        final ShiftPlan other = (ShiftPlan) obj;
+        return Objects.equals(this.getId(), other.getId());
+    }
+    
+    @Override
+    public String toString() {
+        return "at.qe.skeleton.model.ShiftPlan[ id=" + id + " ]";
+    }
+    @Override
+    public Long getId() {
+        return id;
+    }
+    @Override
+    public boolean isNew() {
+        return (null == id);
+    }
+    @Override
+    public int compareTo(ShiftPlan o) {
+        return this.id.compareTo(o.getId());
+    }
+
 }
