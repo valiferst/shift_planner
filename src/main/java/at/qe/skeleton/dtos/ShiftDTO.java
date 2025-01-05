@@ -1,6 +1,5 @@
 package at.qe.skeleton.dtos;
 
-import at.qe.skeleton.model.ShiftPlan;
 import at.qe.skeleton.model.Userx;
 
 import java.time.LocalDateTime;
@@ -11,6 +10,6 @@ public record ShiftDTO(
         LocalDateTime startTime,
         LocalDateTime endTime,
         Long toShiftPlan,
-        Set<Long> shiftWorkers
+        Set<Userx> shiftWorkers
 ) {
 }
