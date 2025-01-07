@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -98,8 +100,17 @@ public class DepartmentService {
         return department.getShiftPlans();
     }
 
-
-
-
-
+    /**
+     * Validates the opening and closing times for a department.
+     * @param openingTime The opening time.
+     * @param closingTime The closing time.
+     */
+    public void validateOpeningHours(LocalDateTime openingTime, LocalDateTime closingTime) {
+        if (openingTime == null || closingTime == null) {
+            throw new IllegalArgumentException("Opening and closing times must not be null.");
+        }
+        if (openingTime.isAfter(closingTime)) {
+            throw new IllegalArgumentException("Opening time cannot be after closing time.");
+        }
+    }
 }
