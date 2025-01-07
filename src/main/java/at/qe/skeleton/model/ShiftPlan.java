@@ -123,10 +123,7 @@ public class ShiftPlan implements Persistable<Long>, Serializable, Comparable<Sh
     public String toString() {
         return "at.qe.skeleton.model.ShiftPlan[ id=" + id + " ]";
     }
-    @Override
-    public Long getId() {
-        return id;
-    }
+
     @Override
     public boolean isNew() {
         return (null == id);
