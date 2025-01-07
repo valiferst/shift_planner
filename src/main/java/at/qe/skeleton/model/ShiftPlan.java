@@ -37,6 +37,7 @@ public class ShiftPlan implements Persistable<Long>, Serializable, Comparable<Sh
     }
 
     // Getters and Setters
+    @Override
     public Long getId() {
         return id;
     }
