@@ -1,0 +1,74 @@
+package at.qe.skeleton.services;
+
+import at.qe.skeleton.model.Department;
+import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.repositories.DepartmentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Service class for managing Departments.
+ */
+@Service
+@Scope("application")
+public class DepartmentService {
+
+    private final DepartmentRepository departmentRepository;
+
+    @Autowired
+    public DepartmentService(DepartmentRepository departmentRepository) {
+        this.departmentRepository = departmentRepository;
+    }
+
+    /**
+     * Saves a new or existing department.
+     *
+     * @param department The department to save.
+     * @return The saved department.
+     */
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Department saveDepartment(Department department) {
+        if (department.isNew() && departmentRepository.existsByName(department.getName())) {
+            throw new IllegalArgumentException("Department with the name " + department.getName() + " already exists.");
+        }
+        return departmentRepository.save(department);
+    }
+
+    /**
+     * Retrieves all departments.
+     *
+     * @return A list of all departments.
+     */
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public List<Department> getAllDepartments() {
+        return departmentRepository.findAll();
+    }
+
+    /**
+     * Loads a single department by its ID.
+     *
+     * @param id The ID of the department.
+     * @return The department, if found.
+     */
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Optional<Department> loadDepartment(Long id) {
+        return departmentRepository.findById(id);
+    }
+
+    /**
+     * Deletes a department.
+     *
+     * @param department The department to delete.
+     */
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public void deleteDepartment(Department department) {
+        if (department.getShiftPlans() != null && !department.getShiftPlans().isEmpty()) {
+            throw new IllegalStateException("Can not delete an department with associated shift plans.");
+        }
+        departmentRepository.delete(department);
+    }
+}
