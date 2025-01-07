@@ -1,6 +1,7 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.Department;
+import at.qe.skeleton.model.ShiftPlan;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.repositories.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,4 +72,34 @@ public class DepartmentService {
         }
         departmentRepository.delete(department);
     }
+
+    /**
+     * Assigns a manager to a department.
+     * @param departmentId The ID of the department.
+     * @param manager The manager to assign.
+     */
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public void assignManager(Long departmentId, Userx manager) {
+        Department department = departmentRepository.findById(departmentId)
+                .orElseThrow(() -> new IllegalArgumentException("Department not found with ID: " + departmentId));
+        department.setManager(manager);
+        departmentRepository.save(department);
+    }
+
+    /**
+     * Gets all shift plans for a department.
+     * @param departmentId The ID of the department.
+     * @return A list of shift plans for the department.
+     */
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public List<ShiftPlan> getShiftPlansByDepartment(Long departmentId) {
+        Department department = departmentRepository.findById(departmentId)
+                .orElseThrow(() -> new IllegalArgumentException("Department not found with ID: " + departmentId));
+        return department.getShiftPlans();
+    }
+
+
+
+
+
 }
