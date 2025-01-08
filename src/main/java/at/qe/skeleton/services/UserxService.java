@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import at.qe.skeleton.repositories.UserxRepository;
 import java.util.Optional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * Service for accessing and manipulating user data.
@@ -21,12 +22,16 @@ import java.util.Optional;
 @Component
 @Scope("application")
 public class UserxService {
- 
+
+    private final PasswordEncoder passwordEncoder;
     private final UserxRepository userRepository;
 
     @Autowired
-    public UserxService(UserxRepository userRepository) {
+    public UserxService(UserxRepository userRepository,
+                        PasswordEncoder passwordEncoder
+                        ) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
     
     /**
@@ -66,6 +71,8 @@ public class UserxService {
                 throw new UsernameDuplicateException("Username " + user.getUsername() + " not available");
             }
             user.setCreateUser(getAuthenticatedUser());
+            //1. encrypt password for newly created user
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
         } else {
             user.setUpdateUser(getAuthenticatedUser());
         }

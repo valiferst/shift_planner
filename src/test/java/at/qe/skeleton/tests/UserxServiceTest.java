@@ -13,6 +13,7 @@ import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.UserxRole;
 import at.qe.skeleton.services.UserxService;
 import java.util.Optional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * Some very basic tests for {@link UserxService}.
@@ -27,6 +28,8 @@ public class UserxServiceTest {
 
     @Autowired
     UserxService userService;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
@@ -143,7 +146,9 @@ public class UserxServiceTest {
         Userx freshlyCreatedUser = freshlyCreatedUserOpt.get();
         
         Assertions.assertEquals(username, freshlyCreatedUser.getUsername(), "New user could not be loaded from test data source after being saved");
-        Assertions.assertEquals(password, freshlyCreatedUser.getPassword(), "User \"" + username + "\" does not have a the correct password attribute stored being saved");
+        // 2. adapt to encoded password
+        Assertions.assertNotEquals(password, freshlyCreatedUser.getPassword(), "User \"" + username + "\" does not have a the correct password attribute stored being saved");
+        Assertions.assertTrue(passwordEncoder.matches(password, freshlyCreatedUser.getPassword()), "User \"" + username + "\" does not have a the correct password attribute stored being saved");
         Assertions.assertEquals(fName, freshlyCreatedUser.getFirstName(), "User \"" + username + "\" does not have a the correct firstName attribute stored being saved");
         Assertions.assertEquals(lName, freshlyCreatedUser.getLastName(), "User \"" + username + "\" does not have a the correct lastName attribute stored being saved");
         Assertions.assertEquals(email, freshlyCreatedUser.getEmail(), "User \"" + username + "\" does not have a the correct email attribute stored being saved");
@@ -163,6 +168,8 @@ public class UserxServiceTest {
             Assertions.assertFalse(adminUser.isEmpty(), "Admin user could not be loaded from test data source");
 
             Userx toBeCreatedUser = new Userx();
+            // 2. since we now access password in the UserxService saveUser method, we have to set it to trigger the DataIntegrityViolationException
+            toBeCreatedUser.setPassword("passwd");
             userService.saveUser(toBeCreatedUser);
         });
     }
