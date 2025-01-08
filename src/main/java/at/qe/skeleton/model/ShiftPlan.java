@@ -27,4 +27,14 @@ public class ShiftPlan {
     public void setDepartment(Department department) {
         this.department = department;
     }
+
+    public boolean isNew() {
+        return (null == id);
+    }
+
+    public void setCreateUser(Userx authenticatedUser) {
+    }
+
+    public void setUpdateUser(Userx authenticatedUser) {
+    }
 }
