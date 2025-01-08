@@ -78,26 +78,6 @@ public class ShiftPlan implements Persistable<Long>, Serializable, Comparable<Sh
         this.date = date;
     }
 
-    // Utility methods
-    public void addShift(Shift shift) {
-        this.shifts.add(shift);
-        // shift.setShiftPlan(this); // Ensure bidirectional sync
-
-    }
-
-    public void removeShift(Shift shift) {
-        this.shifts.remove(shift);
-        // shift.setShiftPlan(null); // Ensure bidirectional sync
-    }
-
-    public void publish() { // Publish the ShiftPlan
-        if (this.state == ShiftPlanState.DRAFT) {
-            this.state = ShiftPlanState.PUBLISHED;
-        } else {
-            throw new IllegalStateException("Only draft plans can be published.");
-        }
-    }
-
     // standard methods
 
     @Override
