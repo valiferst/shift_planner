@@ -3,7 +3,6 @@ package at.qe.skeleton.repositories;
 import at.qe.skeleton.model.Shift;
 import at.qe.skeleton.model.ShiftPlan;
 import at.qe.skeleton.model.Userx;
-import jdk.incubator.vector.LongVector;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
