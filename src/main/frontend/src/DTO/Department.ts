@@ -53,8 +53,8 @@ export class Department implements DepartmentDTO {
 
     // TODO implement Department creation via frontend with the manager as a manager name or user object and not just the id of the user object of the manager
     /**
-     * Serialize the User instance to JSON for creating a new user
-     * @returns JSON object with the fields required for creating a new user
+     * Serialize the Department instance to JSON for creating a new Department
+     * @returns JSON object with the fields required for creating a new Department
      */
     toCreateJSON(): Pick<DepartmentDTO, 'name' | 'openingTime' | 'closingTime' | 'managerId' > {
         return {
@@ -67,7 +67,7 @@ export class Department implements DepartmentDTO {
 
     // TODO, again, how do we translate an actual manager (user object with name e.g. John Doe) to a managerId?
     /**
-     * Serialize the User instance to JSON for updating an existing department
+     * Serialize the Department instance to JSON for updating an existing department
      * @returns JSON object with the fields required for updating a department
      */
     toUpdateJSON(): Pick<DepartmentDTO, 'id'| 'name' | 'openingTime' | 'closingTime' | 'managerId'  > {
