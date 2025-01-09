@@ -1,6 +1,6 @@
 package at.qe.skeleton.services;
 
-import at.qe.skeleton.exceptions.UsernameDuplicateException;
+import at.qe.skeleton.exceptions.ShiftDuplicateException;
 import at.qe.skeleton.model.Shift;
 import at.qe.skeleton.model.ShiftPlan;
 import at.qe.skeleton.model.Userx;
@@ -24,15 +24,33 @@ public class ShiftService {
         this.shiftRepository = shiftRepository;
     }
 
+    /**
+     * Returns a collection of all shifts of one user.
+     *
+     * @param user the user whose shifts we want
+     * @return the shift collection
+     */
     @PreAuthorize("hasAuthority('MANAGER')")
     public Collection<Shift> getAllUserShifts(Userx user) {
         return shiftRepository.findByShiftWorker(user);
     }
 
+    /**
+     * Returns a collection of all shifts of one shiftPlan.
+     *
+     * @param shiftPlan the shiftPlan of which we want the shifts
+     * @return the shift collection
+     */
     @PreAuthorize("hasAuthority('MANAGER')")
     public Collection<Shift> getAllShiftPlanShifts(ShiftPlan shiftPlan) {
         return shiftRepository.findByShiftPlan(shiftPlan); }
 
+    /**
+     * Loads a single shift identified by its id.
+     *
+     * @param id the id to search for
+     * @return the shift with the id
+     */
     @PreAuthorize("hasAuthority('MANAGER')")
     public Optional<Shift> loadShift(Long id) {
         return shiftRepository.findById(id);
@@ -48,4 +66,15 @@ public class ShiftService {
         return shiftRepository.save(shift);
     }
 
+    /**
+     * Deletes the shift.
+     *
+     * @param shift the shift to delete
+     */
+    @PreAuthorize("hasAuthority('MANAGER')")
+    public void deleteShift(Shift shift) {
+        // :TODO: write some audit log stating who and when this user was permanently deleted.
+        Optional<Shift> shiftOpt = shiftRepository.findById(shift.getId());
+        shiftOpt.ifPresent(shiftx -> shiftRepository.delete(shiftx));
+    }
 }
