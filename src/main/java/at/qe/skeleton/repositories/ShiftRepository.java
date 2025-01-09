@@ -3,6 +3,7 @@ package at.qe.skeleton.repositories;
 import at.qe.skeleton.model.Shift;
 import at.qe.skeleton.model.ShiftPlan;
 import at.qe.skeleton.model.Userx;
+import jdk.incubator.vector.LongVector;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -18,8 +19,12 @@ public interface ShiftRepository extends AbstractRepository<Shift, Long>{
 
     Shift findFirstByStartTime(LocalDateTime startTime);
 
+    @Query("SELECT u FROM Shift u WHERE :time BETWEEN u.startTime AND u.endTime")
+    //@Query("SELECT u FROM Shift u WHERE :time > u.startTime AND :time < u.endTime")
+    Shift findByStartTimeContaining(@Param("time") LocalDateTime startTime);
+
     @Query("SELECT u FROM Shift u WHERE :worker MEMBER OF u.shiftWorkers")
-    List<Shift> findByShiftWorker(@Param("worker")Userx shiftWorker);
+    List<Shift> findByShiftWorker(@Param("worker") Userx shiftWorker);
 
     List<Shift> findByShiftPlan(ShiftPlan shiftPlan);
 
