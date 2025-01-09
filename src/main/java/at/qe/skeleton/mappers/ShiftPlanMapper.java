@@ -2,6 +2,7 @@ package at.qe.skeleton.mappers;
 
 import at.qe.skeleton.dtos.ShiftPlanDTO;
 import at.qe.skeleton.model.ShiftPlan;
+import at.qe.skeleton.model.Userx;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
@@ -26,7 +27,9 @@ public class ShiftPlanMapper implements DTOMapper<ShiftPlan, ShiftPlanDTO> {
                 shiftPlan.getName(),
                 shiftPlan.getStartDate(),
                 shiftPlan.getEndDate(),
-                shiftPlan.getAssignedUsers().stream().map(Userx::getId).collect(Collectors.toSet())
+                shiftPlan.getAssignedUsers().stream()
+                        .map(Userx::getId)  // Map Userx to Long (ID)
+                        .collect(Collectors.toSet())
         );
     }
 

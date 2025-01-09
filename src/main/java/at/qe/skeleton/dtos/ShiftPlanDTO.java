@@ -1,6 +1,5 @@
 package at.qe.skeleton.dtos;
 
-import at.qe.skeleton.model.Userx;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -16,5 +15,5 @@ public record ShiftPlanDTO (
         String name,
         LocalDateTime startDate,
         LocalDateTime endDate,
-        Set<Userx> assignedUsers
+        Set<Long> assignedUserIds // Changed from Set<Userx> to Set<Long>
 ) {}
