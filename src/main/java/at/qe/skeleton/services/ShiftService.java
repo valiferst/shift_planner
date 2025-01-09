@@ -1,6 +1,7 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.ShiftDuplicateException;
+import at.qe.skeleton.exceptions.ShiftOverlapException;
 import at.qe.skeleton.model.Shift;
 import at.qe.skeleton.model.ShiftPlan;
 import at.qe.skeleton.model.Userx;
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -76,5 +78,38 @@ public class ShiftService {
         // :TODO: write some audit log stating who and when this user was permanently deleted.
         Optional<Shift> shiftOpt = shiftRepository.findById(shift.getId());
         shiftOpt.ifPresent(shiftx -> shiftRepository.delete(shiftx));
+    }
+
+    /**
+     *
+     * @param shift the shift to duplicate
+     * @param newTime updated time for new usage
+     * @return new shift at newTime
+     */
+    @PreAuthorize("hasAuthority('MANAGER')")
+    public Shift copyShift(Shift shift, LocalDateTime newTime){
+        if(shift.isNew()){
+            throw new IllegalArgumentException("Shift " + shift.getId() + " does not exist");
+        } else if (newTime.isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("Time " + newTime + "is in the past");
+        }
+        // :TODO: create new shift with new startTime, what about endTime?
+        return shift;
+    }
+
+    /**
+     * For a given shift, has the user already another shift at that time
+     *
+     * @param shift the shift to check if it overlaps with others
+     * @param user whose shift we check if it overlapps
+     */
+    @PreAuthorize("hasAuthority('MANAGER')")
+    public void overlapUserShift(Shift shift, Userx user){
+        Collection<Shift> shifts = getAllUserShifts(user);
+        for (Shift otherShift : shifts){
+            if(otherShift.getStartTime().isAfter(shift.getStartTime()) && otherShift.getStartTime().isBefore(shift.getEndTime())){
+                throw new ShiftOverlapException("The shift " + shift.getId() + " for user " + user.getUsername() + "is overlapping with another shift");
+            }
+        }
     }
 }
