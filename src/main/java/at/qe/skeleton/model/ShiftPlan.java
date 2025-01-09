@@ -5,8 +5,10 @@ import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+import java.util.List;
 
 @Entity
 public class ShiftPlan implements Persistable<Long>, Serializable, Comparable<ShiftPlan> {
@@ -25,6 +27,30 @@ public class ShiftPlan implements Persistable<Long>, Serializable, Comparable<Sh
     private ShiftPlanState state; // Current state of the ShiftPlan
 
     private LocalDateTime date; // Date associated with the start or week of the ShiftPlan
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Userx createUser; // User who created the plan
+
+    private LocalDateTime createDate; // Date when the plan was created
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Userx updateUser; // User who last updated the plan
+
+    private LocalDateTime updateDate; // Date when the plan was last updated
+
+    private String name; // Name of the ShiftPlan
+
+    private LocalDateTime startDate; // Start date of the ShiftPlan
+
+    private LocalDateTime endDate; // End date of the ShiftPlan
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "shiftplan_assigned_users",
+            joinColumns = @JoinColumn(name = "shiftplan_id"),
+            inverseJoinColumns = @JoinColumn(name = "userx_id")
+    )
+    private Set<Userx> assignedUsers = new HashSet<>(); // Users assigned to this ShiftPlan (null-safe initialization)
 
     // No-args constructor (required by JPA)
     public ShiftPlan() {}
@@ -78,8 +104,71 @@ public class ShiftPlan implements Persistable<Long>, Serializable, Comparable<Sh
         this.date = date;
     }
 
-    // standard methods
+    public Userx getCreateUser() {
+        return createUser;
+    }
 
+    public void setCreateUser(Userx createUser) {
+        this.createUser = createUser;
+    }
+
+    public LocalDateTime getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(LocalDateTime createDate) {
+        this.createDate = createDate;
+    }
+
+    public Userx getUpdateUser() {
+        return updateUser;
+    }
+
+    public void setUpdateUser(Userx updateUser) {
+        this.updateUser = updateUser;
+    }
+
+    public LocalDateTime getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(LocalDateTime updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public LocalDateTime getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDateTime getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDateTime endDate) {
+        this.endDate = endDate;
+    }
+
+    public Set<Userx> getAssignedUsers() {
+        return assignedUsers;
+    }
+
+    public void setAssignedUsers(Set<Userx> assignedUsers) {
+        this.assignedUsers = assignedUsers;
+    }
+
+    // Standard methods
     @Override
     public int hashCode() {
         int hash = 7;
@@ -98,7 +187,7 @@ public class ShiftPlan implements Persistable<Long>, Serializable, Comparable<Sh
         final ShiftPlan other = (ShiftPlan) obj;
         return Objects.equals(this.getId(), other.getId());
     }
-    
+
     @Override
     public String toString() {
         return "at.qe.skeleton.model.ShiftPlan[ id=" + id + " ]";
@@ -108,9 +197,9 @@ public class ShiftPlan implements Persistable<Long>, Serializable, Comparable<Sh
     public boolean isNew() {
         return (null == id);
     }
+
     @Override
     public int compareTo(ShiftPlan o) {
         return this.id.compareTo(o.getId());
     }
-
 }
