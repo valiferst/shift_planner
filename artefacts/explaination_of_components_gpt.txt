@@ -1,0 +1,80 @@
+1. ShiftPlanDTO (Data Transfer Object for ShiftPlan)
+Purpose:
+This class serves as a Data Transfer Object (DTO) to represent a ShiftPlan in a simplified form.
+It is used for transferring data between different layers of the application (such as between the service layer and the web layer) without exposing internal details of the ShiftPlan entity.
+Key Fields:
+id: The unique identifier of the ShiftPlan.
+createdBy, updatedBy: User IDs of the users who created or updated the ShiftPlan.
+createDate, updateDate: Timestamps representing when the ShiftPlan was created or last updated.
+name, startDate, endDate: Basic details of the shift plan (name, start date, and end date).
+assignedUsers: A set of Userx objects (or user IDs, in some cases) that are assigned to the ShiftPlan.
+2. ShiftPlanCreateDTO (Reduced DTO for ShiftPlan in the Create Endpoint)
+Purpose:
+This DTO is specifically used when creating a new ShiftPlan. It is a simplified version of the ShiftPlanDTO with only essential information needed to create a new ShiftPlan, i.e., without including internal data like createDate or updateDate.
+It is used in the request payload for the create operation (typically in the API layer).
+Key Fields:
+name, startDate, endDate: Essential properties for creating a ShiftPlan.
+assignedUserIds: A set of user IDs that will be assigned to the ShiftPlan when it is created.
+3. ShiftPlanMapper (Mapper between ShiftPlan and ShiftPlanDTO)
+Purpose:
+This class is responsible for converting a ShiftPlan entity to a ShiftPlanDTO and vice versa (though the reverse mapping is not supported in your current implementation).
+It ensures that data in the ShiftPlan entity is properly transformed and represented in the ShiftPlanDTO format before sending it to other layers (such as the API layer).
+Key Fields:
+Maps the assignedUsers collection from Set<Userx> to Set<Long> (the IDs of users) to simplify the DTO.
+Also handles mapping of other fields like name, startDate, and endDate.
+4. ShiftPlanCreateMapper (Mapper between ShiftPlanCreateDTO and ShiftPlan)
+Purpose:
+This mapper handles converting a ShiftPlanCreateDTO (used for creating a new ShiftPlan) to a ShiftPlan entity.
+It is used to build a ShiftPlan object from the data provided in the create endpoint of the API (e.g., when a new shift plan is created).
+Key Fields:
+Maps the name, startDate, and endDate from the DTO to the ShiftPlan entity.
+Converts the assignedUserIds (a set of user IDs) to Set<Userx> by calling UserxService to fetch the Userx objects.
+Ensures the assignedUsers set is populated correctly before creating the ShiftPlan.
+5. ShiftPlan (Entity Class)
+Purpose:
+This is the main ShiftPlan entity class, representing a shift plan in the system. It is a JPA entity, meaning it is directly mapped to a database table.
+This class contains all the business logic and data required for a ShiftPlan, such as the department it belongs to, the list of shifts, and the users assigned to it.
+Key Fields:
+id: The unique identifier of the ShiftPlan entity.
+department: The department to which the shift plan belongs.
+shifts: The list of shifts included in the shift plan.
+state: The current state of the shift plan (DRAFT, PUBLISHED, CANCELLED).
+createUser, updateUser: The users who created and last updated the ShiftPlan.
+assignedUsers: A set of Userx entities representing the users assigned to the shift plan.
+startDate, endDate: The start and end dates for the shift plan.
+Methods:
+Includes typical JPA getter and setter methods, as well as hashCode, equals, toString, and compareTo for proper entity behavior and comparison.
+6. ShiftPlanState (Enum for Shift Plan States)
+Purpose:
+This enum defines the possible states a ShiftPlan can have. It is used to manage the lifecycle of the shift plan.
+Key States:
+DRAFT: The shift plan is in a draft state, not yet finalized.
+PUBLISHED: The shift plan has been finalized and published.
+CANCELLED: The shift plan has been canceled and is no longer valid.
+7. Userx (Entity Class for Users)
+Purpose:
+Represents a user in the system. This entity is associated with shift plans, where users are assigned to different plans.
+Key Fields:
+id: The unique identifier of the user.
+name: The name of the user.
+Additional properties like email, role, etc. can be included.
+8. UserxService (Service for Loading Users)
+Purpose:
+This service provides methods for loading user information, typically from a database.
+The ShiftPlanCreateMapper relies on this service to convert a list of user IDs (assignedUserIds) into actual Userx objects when creating a new ShiftPlan.
+Key Methods:
+loadUser(Long userId): Fetches a Userx entity by user ID, typically used when creating or assigning users to shift plans.
+Flow of Operations:
+Creating a ShiftPlan:
+A user sends a request to create a new shift plan, providing a ShiftPlanCreateDTO with the necessary details (name, startDate, endDate, and assignedUserIds).
+The ShiftPlanCreateMapper takes this DTO and converts it into a ShiftPlan entity, mapping the user IDs to actual Userx objects using the UserxService.
+The ShiftPlan is saved to the database.
+Fetching a ShiftPlan:
+The ShiftPlanMapper takes a ShiftPlan entity and converts it into a ShiftPlanDTO, which is then returned as the response to the client.
+The list of assigned users is represented as a set of user IDs in the ShiftPlanDTO (not full Userx objects), making the response simpler and more efficient.
+These classes work together to handle the creation, management, and retrieval of shift plans while providing an abstraction layer that decouples the internal representation from the data exchanged with the outside world (API).
+
+
+
+
+
