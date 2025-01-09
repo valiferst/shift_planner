@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @Component
 @Scope("application")
@@ -32,6 +33,19 @@ public class ShiftService {
     public Collection<Shift> getAllShiftPlanShifts(ShiftPlan shiftPlan) {
         return shiftRepository.findByShiftPlan(shiftPlan); }
 
+    @PreAuthorize("hasAuthority('MANAGER')")
+    public Optional<Shift> loadShift(Long id) {
+        return shiftRepository.findById(id);
+    }
 
+    @PreAuthorize("hasAuthority('MANAGER')")
+    public Shift saveShift(Shift shift) {
+        if (shift.isNew()) {
+            if (shiftRepository.existsByStartTime(shift.getStartTime())) {
+                throw new ShiftDuplicateException("Shift starting at " + shift.getStartTime() + " not available");
+            }
+        }
+        return shiftRepository.save(shift);
+    }
 
 }
