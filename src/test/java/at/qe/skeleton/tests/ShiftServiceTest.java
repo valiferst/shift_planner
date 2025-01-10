@@ -2,7 +2,6 @@ package at.qe.skeleton.tests;
 
 import at.qe.skeleton.model.Shift;
 import at.qe.skeleton.model.Userx;
-import at.qe.skeleton.services.ShiftService;
 import at.qe.skeleton.services.UserxService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -46,6 +45,12 @@ public class ShiftServiceTest {
         for (Shift remainingShift : shiftService.getAllUserShifts(managerUser.get())) {
             Assertions.assertNotEquals(toBeDeletedShift.getId(), remainingShift.getId(), "Deleted Shift with id \"" + deleteShiftId + "\" could still be loaded from test data source via ShiftService.getAllUserShifts");
         }
+    }
+
+    @Test
+    @WithMockUser(username = "user1", authorities = {"MANAGER"})
+    public void testCopyShift(){
+        //TODO
     }
 
 
