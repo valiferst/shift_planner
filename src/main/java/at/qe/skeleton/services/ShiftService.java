@@ -59,11 +59,20 @@ public class ShiftService {
         return shiftRepository.findById(id);
     }
 
+    /**
+     * To save the shift, except it already exists in this shiftPlan.
+     *
+     * @param shift the shift to save
+     * @return the new saved shift
+     */
     @PreAuthorize("hasAuthority('MANAGER')")
     public Shift saveShift(Shift shift) {
         if (shift.isNew()) {
-            if (shiftRepository.existsByStartTime(shift.getStartTime())) {
-                throw new ShiftDuplicateException("Shift starting at " + shift.getStartTime() + " not available");
+            List<Shift> shifts = shiftRepository.findByShiftPlan(shift.getShiftPlan());
+            for (Shift compShift : shifts){
+                if(compShift.getStartTime() == shift.getStartTime() && compShift.getEndTime() == shift.getEndTime()){
+                    throw new ShiftDuplicateException("Shift starting at " + shift.getStartTime() + " already exists");
+                }
             }
         }
         return shiftRepository.save(shift);
