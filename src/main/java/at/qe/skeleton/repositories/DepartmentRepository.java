@@ -7,5 +7,5 @@ import at.qe.skeleton.model.Department;
  */
 
 public interface DepartmentRepository extends AbstractRepository<Department, Long> {
-
+    public boolean existsByName(String name);
 }
