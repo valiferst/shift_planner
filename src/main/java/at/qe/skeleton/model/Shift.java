@@ -1,6 +1,7 @@
 package at.qe.skeleton.model;
 
 import java.io.Serializable;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
@@ -74,6 +75,10 @@ public class Shift implements Persistable<Long>, Serializable, Comparable<Shift>
 
 	public void setShiftWorkers(Set<Userx> shiftWorkers){
 		this.shiftWorkers = shiftWorkers;
+	}
+
+	public Duration getShiftDuration(){
+		return Duration.between(this.startTime, this.endTime);
 	}
 	
 	@Override
