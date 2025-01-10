@@ -30,15 +30,18 @@ public class AbsenceService {
     }
 
     /**
-     * Saves the user. This method will also set {@link Userx#createDate} for new
-     * entities or {@link Userx#updateDate} for updated entities. The user
-     * requesting this operation will also be stored as {@link Userx#createDate}
-     * or {@link Userx#updateUser} respectively.
+     * Saves the absence
      *
-     * @param user the user to save
-     * @return the updated user
+     * @param absence the absence to save
+     * @return the updated absence
      */
-    public Userx saveAbsence(Absence absence) {
+    public Absence saveAbsence(Absence absence) {
+        if(absence.isNew()){
+            absence.setCreateUser(getAuthenticatedUser())
+        } else {
+            absence.setUpdateUser(getAuthenticatedUser())
+        }
+        return absenceRepository.save(absence)
 
     }
 
@@ -51,6 +54,27 @@ public class AbsenceService {
         // :TODO: write some audit log stating who and when this user was permanently deleted.
         Optional<Absence> absenceOpt = absenceRepository.findById(absence.getId());
         absenceOpt.ifPresent(absencex -> absenceRepository.delete(absencex));
+    }
+
+    /**
+     * Returns a collection of all absences.
+     *
+     * @return the absence collection
+     */
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Collection<Absence> getAllAbsences() {
+        return absenceRepository.findAll();
+    }
+
+
+    /**
+     * Loads a single absence identified by its id.
+     *
+     * @param id the id to search for
+     * @return the absence with the id
+     */
+    public Optional<Absence> loadAbsence(Long id) {
+        return absenceRepository.findById(id);
     }
 
 }
