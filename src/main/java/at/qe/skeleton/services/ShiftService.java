@@ -98,8 +98,8 @@ public class ShiftService {
         Shift newShift = new Shift();
         newShift.setStartTime(newTime);
         newShift.setShiftPlan(shift.getShiftPlan());
-        // TODO: shiftworker and calculate endTime
-
+        newShift.setShiftWorkers(shift.getShiftWorkers());
+        newShift.setEndTime(newTime.plus(shift.getShiftDuration()));
         return newShift;
     }
 
