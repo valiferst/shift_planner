@@ -6,6 +6,10 @@ import at.qe.skeleton.services.ShiftService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Mapping between Shift and ShiftDTOs.
+ *
+ */
 @Service
 public class ShiftMapper implements DTOMapper<Shift, ShiftDTO>{
 
