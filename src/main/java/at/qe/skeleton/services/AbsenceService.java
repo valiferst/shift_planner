@@ -29,5 +29,28 @@ public class AbsenceService {
         this.absenceRepository = absenceRepository;
     }
 
+    /**
+     * Saves the user. This method will also set {@link Userx#createDate} for new
+     * entities or {@link Userx#updateDate} for updated entities. The user
+     * requesting this operation will also be stored as {@link Userx#createDate}
+     * or {@link Userx#updateUser} respectively.
+     *
+     * @param user the user to save
+     * @return the updated user
+     */
+    public Userx saveAbsence(Absence absence) {
+
+    }
+
+    /**
+     * Deletes the user.
+     *
+     * @param user the user to delete
+     */
+    public void deleteAbsence(Absence absence) {
+        // :TODO: write some audit log stating who and when this user was permanently deleted.
+        Optional<Absence> absenceOpt = absenceRepository.findById(absence.getId());
+        absenceOpt.ifPresent(absencex -> absenceRepository.delete(absencex));
+    }
 
 }
