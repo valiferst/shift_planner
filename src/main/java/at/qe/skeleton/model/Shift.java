@@ -67,6 +67,14 @@ public class Shift implements Persistable<Long>, Serializable, Comparable<Shift>
 	public void setId(Long id) {
 	    this.id = id;
 	}
+
+	public Set<Userx> getShiftWorkers(){
+		return shiftWorkers;
+	}
+
+	public void setShiftWorkers(Set<Userx> shiftWorkers){
+		this.shiftWorkers = shiftWorkers;
+	}
 	
 	@Override
 	  public int hashCode() {
