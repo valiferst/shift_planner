@@ -2,6 +2,7 @@ package at.qe.skeleton.tests;
 
 import at.qe.skeleton.model.Shift;
 import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.services.ShiftService;
 import at.qe.skeleton.services.UserxService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
@@ -50,8 +53,21 @@ public class ShiftServiceTest {
     @Test
     @WithMockUser(username = "user1", authorities = {"MANAGER"})
     public void testCopyShift(){
-        //TODO
+        LocalDateTime newTime = LocalDateTime.of(2024, 01, 02, 10, 00, 00);
+        Optional<Shift> copyShift = shiftService.loadShift(2001L);
+        Assertions.assertFalse(copyShift.isEmpty(), "Shift to copy could not be loaded from test data source");
+
+        Shift newShift = shiftService.copyShift(copyShift.get(), newTime);
+
+        Duration duration = copyShift.get().getShiftDuration();
+        Assertions.assertEquals(newTime, newShift.getStartTime(), "Copied shift does not have the new startTime");
+        Assertions.assertEquals(newTime.plus(duration), newShift.getEndTime(), "Copied shift does not have the correct endTime");
+        Assertions.assertEquals(copyShift.get().getShiftPlan(), newShift.getShiftPlan(), "Copied shift does not have the same shiftPlan");
+        Assertions.assertEquals(copyShift.get().getShiftWorkers(), newShift.getShiftWorkers(), "Copied shift does not have the same shiftWorkers");
+
     }
+
+    
 
 
 }
