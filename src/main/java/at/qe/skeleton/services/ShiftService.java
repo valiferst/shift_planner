@@ -140,11 +140,11 @@ public class ShiftService {
     public void overlapUserAbsences(Shift shift, Userx user){
         Set<Absence> absences =  user.getAbsences();
         for (Absence absence : absences){
-            if(shift.getStartTime().isAfter(absence.getValidFrom()) && shift.getStartTime().isBefore(absence.getValidUntil())){
-                if(shift.getStartTime().getDayOfWeek() == absence.getAbsentDay() && shift.getStartTime().toLocalTime().isBefore(absence.getAbsentFrom())
+            if(shift.getStartTime().isAfter(absence.getValidFrom()) && shift.getStartTime().isBefore(absence.getValidUntil())
+                    && shift.getStartTime().getDayOfWeek() == absence.getAbsentDay()
+                    && shift.getStartTime().toLocalTime().isBefore(absence.getAbsentFrom())
                     && shift.getEndTime().toLocalTime().isAfter(absence.getAbsentFrom())){
-                    throw new ShiftOverlapException("The shift "+ shift.getId() + "overlaps with absence of user " + user.getUsername());
-                }
+                throw new ShiftOverlapException("The shift "+ shift.getId() + "overlaps with absence of user " + user.getUsername());
             }
         }
     }
