@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -81,10 +82,11 @@ public class ShiftService {
     }
 
     /**
+     *To get the copy of given shift at newTime
      *
      * @param shift the shift to duplicate
      * @param newTime updated time for new usage
-     * @return new shift at newTime
+     * @return newShift at newTime
      */
     @PreAuthorize("hasAuthority('MANAGER')")
     public Shift copyShift(Shift shift, LocalDateTime newTime){
@@ -93,19 +95,23 @@ public class ShiftService {
         } else if (newTime.isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("Time " + newTime + "is in the past");
         }
-        // :TODO: create new shift with new startTime, what about endTime?
-        return shift;
+        Shift newShift = new Shift();
+        newShift.setStartTime(newTime);
+        newShift.setShiftPlan(shift.getShiftPlan());
+        // TODO: shiftworker and calculate endTime
+
+        return newShift;
     }
 
     /**
-     * For a given shift, has the user already another shift at that time
+     * For a given shift, throw exception if the user already has another shift at that time
      *
      * @param shift the shift to check if it overlaps with others
-     * @param user whose shift we check if it overlapps
+     * @param user whose shift we check if it overlaps
      */
     @PreAuthorize("hasAuthority('MANAGER')")
     public void overlapUserShift(Shift shift, Userx user){
-        Collection<Shift> shifts = getAllUserShifts(user);
+        List<Shift> shifts = shiftRepository.findByShiftWorker(user);
         for (Shift otherShift : shifts){
             if(otherShift.getStartTime().isAfter(shift.getStartTime()) && otherShift.getStartTime().isBefore(shift.getEndTime())){
                 throw new ShiftOverlapException("The shift " + shift.getId() + " for user " + user.getUsername() + "is overlapping with another shift");
