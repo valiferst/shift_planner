@@ -24,8 +24,6 @@ public interface ShiftRepository extends AbstractRepository<Shift, Long>{
     //@Query("SELECT u FROM Shift u WHERE :time > u.startTime AND :time < u.endTime")
     Optional<Shift> findByStartTimeContaining(@Param("time") LocalDateTime startTime);
 
-    List<Shift> findByDuration(Duration duration);
-
     @Query("SELECT u FROM Shift u WHERE :worker MEMBER OF u.shiftWorkers")
     List<Shift> findByShiftWorker(@Param("worker") Userx shiftWorker);
 
