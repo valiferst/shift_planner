@@ -2,6 +2,7 @@ package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.ShiftDuplicateException;
 import at.qe.skeleton.exceptions.ShiftOverlapException;
+import at.qe.skeleton.model.Absence;
 import at.qe.skeleton.model.Shift;
 import at.qe.skeleton.model.ShiftPlan;
 import at.qe.skeleton.model.Userx;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Component
 @Scope("application")
@@ -115,7 +117,7 @@ public class ShiftService {
     /**
      * For a given shift, throw exception if the user already has another shift at that time
      *
-     * @param shift the shift to check if it overlaps with others
+     * @param shift the shift to check if it overlaps with other shift
      * @param user whose shift we check if it overlaps
      */
     @PreAuthorize("hasAuthority('MANAGER')")
@@ -124,6 +126,25 @@ public class ShiftService {
         for (Shift otherShift : shifts){
             if(otherShift.getStartTime().isAfter(shift.getStartTime()) && otherShift.getStartTime().isBefore(shift.getEndTime())){
                 throw new ShiftOverlapException("The shift " + shift.getId() + " for user " + user.getUsername() + "is overlapping with another shift");
+            }
+        }
+    }
+
+    /**
+     * For a given shift, throw exception if user has absence at the same time
+     *
+     * @param shift the shift to check if overlaps with user absence
+     * @param user whose shift we check if it overlaps 
+     */
+    @PreAuthorize("hasAuthority('MANAGER')")
+    public void overlapUserAbsences(Shift shift, Userx user){
+        Set<Absence> absences =  user.getAbsences();
+        for (Absence absence : absences){
+            if(shift.getStartTime().isAfter(absence.getValidFrom()) && shift.getStartTime().isBefore(absence.getValidUntil())){
+                if(shift.getStartTime().getDayOfWeek() == absence.getAbsentDay() && shift.getStartTime().toLocalTime().isBefore(absence.getAbsentFrom())
+                    && shift.getEndTime().toLocalTime().isAfter(absence.getAbsentFrom())){
+                    throw new ShiftOverlapException("The shift "+ shift.getId() + "overlaps with absence of user " + user.getUsername());
+                }
             }
         }
     }
