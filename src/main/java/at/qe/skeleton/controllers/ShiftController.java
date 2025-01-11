@@ -1,15 +1,16 @@
 package at.qe.skeleton.controllers;
 
 import at.qe.skeleton.dtos.ShiftDTO;
+import at.qe.skeleton.dtos.UserxDTO;
 import at.qe.skeleton.mappers.ShiftMapper;
 import at.qe.skeleton.model.Shift;
+import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.services.ShiftService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -41,5 +42,20 @@ public class ShiftController {
         }
     }
 
-
+    /**
+     * Deletes shift of given id.
+     *
+     * @param id the id of the shift to delete
+     * @return {@link ResponseEntity} with status {@code 204 (No Content)} on successful delete, or with status {@code 404 (Not Found)} if no user with this id exists
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteShift(@PathVariable Long id) {
+        Optional<Shift> existingShift = shiftService.loadShift(id);
+        if (existingShift.isPresent()) {
+            shiftService.deleteShift(existingShift.get());
+            return ResponseEntity.noContent().build();
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Shift not found");
+        }
+    }
 }
