@@ -1,10 +1,8 @@
 package at.qe.skeleton.controllers;
 
 import at.qe.skeleton.dtos.ShiftDTO;
-import at.qe.skeleton.dtos.UserxDTO;
 import at.qe.skeleton.mappers.ShiftMapper;
 import at.qe.skeleton.model.Shift;
-import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.services.ShiftService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collection;
 import java.util.Optional;
 
 /**
