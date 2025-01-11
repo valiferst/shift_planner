@@ -25,15 +25,13 @@ public class ShiftMapper implements DTOMapper<Shift, ShiftDTO>{
         if (shift == null) {
             return null;
         }
-        ShiftDTO dto = new ShiftDTO(
+        return new ShiftDTO(
                 shift.getId(),
                 shift.getStartTime(),
                 shift.getEndTime(),
                 shift.getShiftPlan(),
                 shift.getShiftWorkers()
         );
-
-        return dto;
     }
 
     @Override
