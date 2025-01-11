@@ -1,3 +1,4 @@
+// Dummy class for Department
 package at.qe.skeleton.model;
 
 import jakarta.persistence.*;
@@ -15,8 +16,8 @@ public class Department implements Persistable<Long>, Serializable, Comparable<D
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private LocalDateTime openingTime;  
-    private LocalDateTime closingTime;  
+    private LocalDateTime openingTime;
+    private LocalDateTime closingTime;
 
 
     @OneToMany(mappedBy = "department")
