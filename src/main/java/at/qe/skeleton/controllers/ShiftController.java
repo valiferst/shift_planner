@@ -1,11 +1,8 @@
 package at.qe.skeleton.controllers;
 
 import at.qe.skeleton.dtos.ShiftDTO;
-import at.qe.skeleton.dtos.UserxCreateDTO;
-import at.qe.skeleton.dtos.UserxDTO;
 import at.qe.skeleton.mappers.ShiftMapper;
 import at.qe.skeleton.model.Shift;
-import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.services.ShiftService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +41,20 @@ public class ShiftController {
             return ResponseEntity.notFound().build();
         }
     }
+
+//    /**
+//     * Copies a shift with new starting time
+//     *
+//     * @param shiftDTO the shift to copy
+//     * @param newTime the new time the shift starts
+//     * @return {@link ResponseEntity} with status {@code 201 (Created)} with the copy of the shift in the body,
+//     *          or with status {@code 409 (Conflict)} if the original shift doesn't exist of time is in the past
+//     */
+//    @PostMapping("")
+//    public ResponseEntity<ShiftDTO> copyShift(@Valid @RequestBody ShiftDTO shiftDTO, LocalDateTime newTime){
+//        Shift shift = shiftService.copyShift(shiftMapper.mapFrom(shiftDTO), newTime);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(shiftMapper.mapTo(shift));
+//    }
 
     /**
      * Creates a shift if the shift is not yet there.
