@@ -14,5 +14,6 @@ public record DepartmentDTO (
         LocalDateTime openingTime,
         LocalDateTime closingTime,
         Long managerId,
+        String fullManagerName, // firstName lastName (username)
         List<ShiftPlan> shiftPlans
 ) {}
