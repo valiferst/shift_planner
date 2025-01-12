@@ -14,7 +14,7 @@
         "Software Architecture" offered by the University of Innsbruck.
 
         Uses Spring framework (http://spring.io) for the backend and
-        React (https://react.dev/) for the web frontend. PrimeReact (https://primereact.org/) 
+        React (https://react.dev/) for the web frontend. PrimeReact (https://primereact.org/)
         is used as component library to prettify the frontend.
         Feel free to use this skeleton project as you see fit - but keep in
         mind that this project is primarily provided to be used for educational
@@ -76,6 +76,37 @@
             <version>3.17.1</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- JUnit 5 Abhängigkeit (JUnit Jupiter) -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.7.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.7.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Mockito für Mocking von Abhängigkeiten in den Tests -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>4.0.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Optional: Weitere Test-Hilfsbibliotheken wie AssertJ -->
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.21.0</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -136,7 +167,7 @@
                     </execution>
                 </executions>
             </plugin>
-            
+
             <!-- Install Node and NPM -->
             <plugin>
                 <groupId>com.github.eirslett</groupId>
