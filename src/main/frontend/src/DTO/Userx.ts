@@ -79,6 +79,15 @@ export class Userx implements UserDTO {
     }
 
     /**
+     * Getter method for the full name of the user with the username
+     * Get the full name of the user and add the username
+     * @returns Full name of the user with the username
+     */
+    get fullNameWithUsername(): string {
+        return `${this.firstName} ${this.lastName} (${this.username})`;
+    }
+
+    /**
      * Serialize the User instance to JSON
      * @returns JSON object with the password field omitted
      */
