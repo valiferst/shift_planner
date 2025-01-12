@@ -37,7 +37,7 @@ public class AbsenceService {
     }
 
     /**
-     * Deletes the user.
+     * Deletes the absence.
      *
      * @param absence the absence to delete
      */
