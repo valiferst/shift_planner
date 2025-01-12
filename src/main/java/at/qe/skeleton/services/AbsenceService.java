@@ -37,18 +37,14 @@ public class AbsenceService {
      */
     public Absence saveAbsence(Absence absence) {
         if(absence.isNew()){
-            absence.setCreateUser(getAuthenticatedUser())
-        } else {
-            absence.setUpdateUser(getAuthenticatedUser())
-        }
-        return absenceRepository.save(absence)
-
+            throw new IllegalArgumentException("Absence already exists");}
+        return absenceRepository.save(absence);
     }
 
     /**
      * Deletes the user.
      *
-     * @param user the user to delete
+     * @param absence the absence to delete
      */
     public void deleteAbsence(Absence absence) {
         // :TODO: write some audit log stating who and when this user was permanently deleted.
@@ -76,5 +72,4 @@ public class AbsenceService {
     public Optional<Absence> loadAbsence(Long id) {
         return absenceRepository.findById(id);
     }
-
 }
