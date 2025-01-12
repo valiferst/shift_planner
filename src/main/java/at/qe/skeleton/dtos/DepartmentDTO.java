@@ -2,6 +2,7 @@ package at.qe.skeleton.dtos;
 
 import at.qe.skeleton.model.ShiftPlan;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -13,5 +14,5 @@ public record DepartmentDTO (
         LocalDateTime openingTime,
         LocalDateTime closingTime,
         Long managerId,
-        Set<ShiftPlan> shiftPlans
+        List<ShiftPlan> shiftPlans
 ) {}
