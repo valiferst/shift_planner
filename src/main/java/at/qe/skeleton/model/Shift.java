@@ -1,6 +1,7 @@
 package at.qe.skeleton.model;
 
 import java.io.Serializable;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
@@ -16,29 +17,29 @@ import jakarta.persistence.ManyToOne;
 @Entity
 public class Shift implements Persistable<Long>, Serializable, Comparable<Shift> {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
 	@ManyToOne
 	private ShiftPlan shiftPlan;
 	@ManyToMany
 	private Set<Userx> shiftWorkers;
-	
-	
+
+
 	public void addWorker(Userx worker) {
 		this.shiftWorkers.add(worker);
 	}
-	
+
 	public void removeWorker(Userx worker) {
 		this.shiftWorkers.remove(worker);
 	}
-	
+
 	// Getter and Setter
 	public LocalDateTime getStartTime() {
 		return startTime;
@@ -67,6 +68,18 @@ public class Shift implements Persistable<Long>, Serializable, Comparable<Shift>
 	public void setId(Long id) {
 	    this.id = id;
 	}
+
+	public Set<Userx> getShiftWorkers(){
+		return shiftWorkers;
+	}
+
+	public void setShiftWorkers(Set<Userx> shiftWorkers){
+		this.shiftWorkers = shiftWorkers;
+	}
+
+	public Duration getShiftDuration(){
+		return Duration.between(this.startTime, this.endTime);
+	}
 	
 	@Override
 	  public int hashCode() {
@@ -91,17 +104,17 @@ public class Shift implements Persistable<Long>, Serializable, Comparable<Shift>
 	  public String toString() {
 	    return "at.qe.skeleton.model.Shift[ id=" + id + " ]";
 	  }
-	  
+
 	  @Override
 	  public int compareTo(Shift o) {
 	    return this.id.compareTo(o.getId());
 	  }
-	  
+
 	  @Override
 	  public boolean isNew() {
 		  return (null == id);
 	  }
-	  
+
 	  @Override
 	  public Long getId() {
 		  return id;

@@ -4,7 +4,7 @@
  */
 import React from 'react';
 import {Menubar} from "primereact/menubar";
-import {HomePageRoute, ManageUsersRoute} from "../routes";
+import {HomePageRoute, ManageDepartmentsRoute, ManageUsersRoute} from "../routes";
 import {useUser} from "../Contexts/AuthenticatedUserContext";
 import {UserxRole} from "../DTO/Userx";
 
@@ -21,7 +21,8 @@ const NavbarComponent: React.FC = () => {
         label: 'Admin Submenu', icon: 'pi pi-star',
         items: [{
             label: 'Manage Users', icon: 'pi pi-star', url: ManageUsersRoute.url
-        }]
+        },
+            {label: 'Manage Departments', icon: 'pi pi-star', url: ManageDepartmentsRoute.url}]
     }, {
         label: "Logout", icon: "pi pi-sign-out", url: "/logout"
     }];
