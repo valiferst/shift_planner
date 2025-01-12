@@ -46,17 +46,16 @@ public class AbsenceMapper implements DTOMapper<Absence, AbsenceDTO>{
         }
         Absence absence;
         if (null != absenceDto.id()) {
-            absence = AbsenceService.loadAbsence(absenceDto.id()).orElse(new Absence());
+            absence = absenceService.loadAbsence(absenceDto.id()).orElse(new Absence());
         } else {
             absence = new Absence();
         }
-        absence.setFirstName(absenceDto.firstName());
-        user.setUser(absenceDto.user());
-        user.setValidFrom(absenceDto.validFrom());
-        user.setValidUntil(absenceDto.validUntil());
-        user.setAbsentFrom(absenceDto.absentFrom());
-        user.setAbsentUntil(absenceDto.absentUntil());
-        user.setAbsentDay(absenceDto.absentDay());
+        absence.setUser(absenceDto.user());
+        absence.setValidFrom(absenceDto.validFrom());
+        absence.setValidUntil(absenceDto.validUntil());
+        absence.setAbsentFrom(absenceDto.absentFrom());
+        absence.setAbsentUntil(absenceDto.absentUntil());
+        absence.setAbsentDay(absenceDto.absentDay());
 
         return absence;
     }
