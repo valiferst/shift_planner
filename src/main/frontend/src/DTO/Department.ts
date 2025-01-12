@@ -13,6 +13,7 @@ export interface DepartmentDTO {
     openingTime: Date | null;
     closingTime: Date | null;
     managerId?: number| null; // TODO research optional values in ts
+    fullManagerName: string
 }
 
 /**
@@ -25,6 +26,7 @@ export class Department implements DepartmentDTO {
     openingTime: Date | null;
     closingTime: Date | null;
     managerId?: number| null;
+    fullManagerName: string
 
     /**
      * Constructor for the Department class
@@ -36,6 +38,7 @@ export class Department implements DepartmentDTO {
         this.openingTime = data.openingTime;
         this.closingTime = data.closingTime;
         this.managerId = data.managerId;
+        this.fullManagerName = data.fullManagerName;
     }
 
     /**
@@ -47,7 +50,8 @@ export class Department implements DepartmentDTO {
             id: this.id,
             name: this.name,
             openingTime: this.openingTime,
-            closingTime: this.closingTime
+            closingTime: this.closingTime,
+            fullManagerName: this.fullManagerName
         };
     }
 
@@ -70,13 +74,14 @@ export class Department implements DepartmentDTO {
      * Serialize the Department instance to JSON for updating an existing department
      * @returns JSON object with the fields required for updating a department
      */
-    toUpdateJSON(): Pick<DepartmentDTO, 'id'| 'name' | 'openingTime' | 'closingTime' | 'managerId'  > {
+    toUpdateJSON(): Pick<DepartmentDTO, 'id'| 'name' | 'openingTime' | 'closingTime' | 'managerId' | 'fullManagerName' > {
         return {
             id: this.id,
             name: this.name,
             openingTime: this.openingTime,
             closingTime: this.closingTime,
             managerId: this.managerId,
+            fullManagerName: this.fullManagerName
         };
     }
 
@@ -90,7 +95,8 @@ export class Department implements DepartmentDTO {
             name: '',
             openingTime: null,
             closingTime: null,
-            managerId: null
+            managerId: null,
+            fullManagerName: ''
         });
     }
 
