@@ -9,147 +9,151 @@ import {Card} from 'primereact/card';
 import {InputMaskChangeEvent} from "primereact/inputmask";
 import 'primeicons/primeicons.css';
 
-import UserListComponent from "./UserListComponent";
-import UserDialog from "./UserDialog";
-import DeleteDialog from "./DeleteDialog";
+import AbsenceListComponent from "./AbsenceListComponent";
+import AbsenceDialog from "./AbsenceDialog";
+import AbsenceDeleteDialog from "./AbsenceDeleteDialog";
 
-import {UserDTO, Userx} from "../DTO/Userx";
-import {UserCrud} from "../utilities/UserCrud";
+import {AbsenceDTO, Absence} from "../DTO/Absence";
+import {AbsenceCrud} from "../utilities/AbsenceCrud";
 import {
-    createUserxFromInterfaces,
-    createUserxRoleArrayFromStrings
-} from '../factories/userxFactory';
-import {CheckboxChangeEvent} from "primereact/checkbox";
+    createAbsenceFromInterfaces
+} from '../factories/absenceFactory';
 
 /**
- * Component for managing users.
+ * Component for managing absences.
  */
-const UserTable = () => {
-    const [users, setUsers] = useState<Userx[]>([]);
+const AbsenceTable = () => {
+    const [absences, setAbsences] = useState<Absence[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const [selectedUser, setSelectedUser] = useState<UserDTO | null>(null);
-    const [isNewUser, setIsNewUser] = useState<boolean>(false);
+    const [selectedAbsence, setSelectedAbsence] = useState<AbsenceDTO | null>(null);
+    const [isNewAbsence, setIsNewAbsence] = useState<boolean>(false);
     const [dialogVisible, setDialogVisible] = useState<boolean>(false);
     const [deleteDialogVisible, setDeleteDialogVisible] = useState<boolean>(false);
 
     /**
-     * Fetch all users from the backend on mount once.
+     * Fetch all absences from the backend on mount once.
      */
     useEffect(() => {
-        const fetchUsers = async () => {
+        const fetchAbsences = async () => {
             try {
-                const userxData = await UserCrud.fetchAllUsers();
-                const userxInstances = userxData.map((user: UserDTO) => createUserxFromInterfaces(user));
-                setUsers(userxInstances);
+                const absenceData = await AbsenceCrud.fetchAllAbsences();
+                const absenceInstances = absenceData.map((absence: AbsenceDTO) => createAbsenceFromInterfaces(absence));
+                setAbsences(absenceInstances);
             } catch (error: any) {
-                console.error('Error fetching users:', error);
+                console.error('Error fetching absences:', error);
             } finally {
                 setLoading(false); // Set loading to false regardless of success or failure
             }
         };
-        fetchUsers();
+        fetchAbsences();
     }, []); // empty dependency array means this effect will only run once on mount
 
     /**
-     * Validate the user object.
-     * @param user
+     * Validate the absence object.
+     * @param absence
      */
-    const validateUser = (user: UserDTO | null): boolean => {
-        if (!user) return false;
-        return user.firstName !== '' && user.lastName !== '' && user.username !== '' && user.password !== '';
+    const validateAbsence = (absence: AbsenceDTO | null): boolean => {
+        if (!absence) return false;
+        return absence.validFrom !== null &&
+            absence.validUntil !== null &&
+            absence.absentFrom !== null &&
+            absence.absentUntil !== null &&
+            absence.absentDay !== null &&
+            absence.validFrom <= absence.validUntil;
     }
 
     /**
-     * Handle the submit event for the user dialog.
+     * Handle the submit event for the absence dialog.
      */
     const handleSubmit = async () => {
-        if (!validateUser(selectedUser)) {
+        if (!validateAbsence(selectedAbsence)) {
             // Display an error message or handle the validation error
             console.error('Please fill out all required fields.');
             return;
         }
 
-        if (isNewUser) {
-            await createUser();
+        if (isNewAbsence) {
+            await createAbsence();
         } else {
-            await updateUser();
+            await updateAbsence();
         }
         hideDialog();
     };
 
     /**
-     * Create a new user and update the state.
+     * Create a new absence and update the state.
      */
-    const createUser = async () => {
-        if (!selectedUser) return;
+    const createAbsence = async () => {
+        if (!selectedAbsence) return;
 
         try {
-            const newUser: Userx = await UserCrud.createUser(selectedUser);
-            setUsers([...users, newUser]);
+            const newAbsence: Absence = await AbsenceCrud.createAbsence(selectedAbsence);
+            setAbsences([...absences, newAbsence]);
         } catch (error: any) {
-            console.error('Error saving user:', error);
+            console.error('Error saving absence:', error);
             // Add toast message for error
         }
     }
 
     /**
-     * Update an existing user and update the state.
+     * Update an existing absence and update the state.
      */
-    const updateUser = async () => {
-        if (!selectedUser) return;
+    const updateAbsence = async () => {
+        if (!selectedAbsence) return;
 
         try {
-            const updatedUser: Userx = await UserCrud.updateUser(selectedUser);
-            setUsers(users.map((user: Userx) => user.id === updatedUser.id ? updatedUser : user));
+            const updatedAbsence: Absence = await AbsenceCrud.updateAbsence(selectedAbsence);
+            setAbsences(absences.map((absence: Absence) => absence.id === updatedAbsence.id ? updatedAbsence : absence));
             hideDialog();
         } catch (error: any) {
-            console.error('Error updating user:', error);
+            console.error('Error updating absence:', error);
         }
     }
 
 
     /**
-     * Delete a user and update the state.
+     * Delete an absence and update the state.
      */
-    const deleteUser = async () => {
-        if (!selectedUser) return;
+    const deleteAbsence = async () => {
+        if (!selectedAbsence) return;
 
         try {
-            await UserCrud.deleteUser(selectedUser);
-            setUsers(users.filter((user: Userx) => user.id !== selectedUser.id));
+            await AbsenceCrud.deleteAbsence(selectedAbsence);
+            setAbsences(absences.filter((absence: Absence) => absence.id !== selectedAbsence.id));
             hideDialog();
         } catch (error) {
-            console.error('Error deleting user:', error);
+            console.error('Error deleting absence:', error);
+            // TODO: Add toast message for error
         }
         setDeleteDialogVisible(false);
     }
 
     /**
-     * Open the delete dialog for a user.
-     * @param user
+     * Open the delete dialog for an absence.
+     * @param absence
      */
-    const openDeleteDialog = (user: Userx) => {
-        setSelectedUser(user);
+    const openDeleteDialog = (absence: Absence) => {
+        setSelectedAbsence(absence);
         setDeleteDialogVisible(true);
     }
 
     /**
-     * Open the edit dialog for a user.
-     * @param user
+     * Open the edit dialog for an absence.
+     * @param absence
      */
-    const openEditDialog = (user: Userx) => {
-        setSelectedUser(user);
-        setIsNewUser(false);
+    const openEditDialog = (absence: Absence) => {
+        setSelectedAbsence(absence);
+        setIsNewAbsence(false);
         showDialog()
     };
 
     /**
-     * Open the dialog for creating a new user.
+     * Open the dialog for creating a new absence.
      */
-    const openNewUserDialog = () => {
-        setSelectedUser(Userx.empty());
+    const openNewAbsenceDialog = () => {
+        setSelectedAbsence(Absence.empty());
         showDialog()
-        setIsNewUser(true);
+        setIsNewAbsence(true);
     }
 
     /**
@@ -167,63 +171,38 @@ const UserTable = () => {
     };
 
     /**
-     * Handle input changes for the user dialog.
+     * Handle input changes for the absence dialog.
      * @param event
      */
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement> | InputMaskChangeEvent) => {
-        if (!selectedUser) return;
+        if (!selectedAbsence) return;
 
         const {name, value} = event.target;
 
-        setSelectedUser({...selectedUser, [name]: value});
-    }
-
-    /**
-     * Handle user enabled change for the user dialog.
-     * @param event
-     */
-    const handleUserEnabledChange = (event: CheckboxChangeEvent) => {
-        if (!selectedUser) return;
-
-        const {name, checked} = event.target;
-
-        setSelectedUser({...selectedUser, [name]: checked});
-    }
-
-    /**
-     * Handle roles change for the user dialog.
-     * @param event
-     */
-    const handleRolesChange = (event: { value: string[] }) => {
-        if (!selectedUser) return;
-
-        const roles = createUserxRoleArrayFromStrings(event.value);
-
-        setSelectedUser({...selectedUser, roles: roles});
+        setSelectedAbsence({...selectedAbsence, [name]: value});
     }
 
 
-    return (<Card title="User List" className="m-4">
-            {/* Button that opens a new user dialog on click */}
-            <Button label="Add User" icon="pi pi-plus" className="p-button-raised p-button-rounded"
-                    style={{marginBottom: "10px"}} onClick={openNewUserDialog}/>
-            <UserListComponent users={users} loading={loading} onEditUser={openEditDialog}
-                               onDeleteUser={openDeleteDialog}/>
+    return (<Card title="Absence List" className="m-4">
+            {/* Button that opens a new absence dialog on click */}
+            <Button label="Add Absence" icon="pi pi-plus" className="p-button-raised p-button-rounded"
+                    style={{marginBottom: "10px"}} onClick={openNewAbsenceDialog}/>
+            <AbsenceListComponent absences={absences} loading={loading} onEditAbsence={openEditDialog}
+                                  onDeleteAbsence={openDeleteDialog}/>
 
-            {/* Dialog for creating or editing a user */}
-            <UserDialog visible={dialogVisible} user={selectedUser} isNewUser={isNewUser}
-                        onHide={hideDialog} onSubmit={handleSubmit}
-                        onInputChange={handleInputChange} onRolesChange={handleRolesChange}
-                        onUserEnabledChange={handleUserEnabledChange}/>
-            {/* Dialog for deleting a user */}
-            <DeleteDialog
+            {/* Dialog for creating or editing an absence */}
+            <AbsenceDialog visible={dialogVisible} absence={selectedAbsence} isNewAbsence={isNewAbsence}
+                           onHide={hideDialog} onSubmit={handleSubmit}
+                           onInputChange={handleInputChange}/>
+            {/* Dialog for deleting an absence */}
+            <AbsenceDeleteDialog
                 visible={deleteDialogVisible}
                 onHide={() => setDeleteDialogVisible(false)}
-                onDelete={deleteUser}
-                user={selectedUser}/>
+                onDelete={deleteAbsence}
+                absence={selectedAbsence}/>
         </Card>
     );
 };
 
-export default UserTable;
+export default AbsenceTable;
 
