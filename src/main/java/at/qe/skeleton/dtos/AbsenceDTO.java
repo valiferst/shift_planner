@@ -12,5 +12,5 @@ public record AbsenceDTO(
         LocalDateTime validUntil,
         LocalTime absentFrom,
         LocalTime absentUntil,
-        DayOfWeek absentDay,
+        DayOfWeek absentDay
 ) {}
