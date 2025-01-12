@@ -34,6 +34,7 @@ public class DepartmentMapper implements DTOMapper<Department, DepartmentDTO> {
                 department.getOpeningTime(),
                 department.getClosingTime(),
                 department.getManager() != null ? department.getManager().getId() : null,
+                departmentService.getFullManagerName(department),
                 department.getShiftPlans()
         );
     }
