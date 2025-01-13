@@ -5,14 +5,9 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
-import org.springframework.data.domain.Persistable;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+import org.springframework.data.domain.Persistable;
 
 @Entity
 public class Shift implements Persistable<Long>, Serializable, Comparable<Shift> {
@@ -28,6 +23,7 @@ public class Shift implements Persistable<Long>, Serializable, Comparable<Shift>
 	private LocalDateTime endTime;
 	@ManyToOne
 	private ShiftPlan shiftPlan;
+	@JoinTable(name = "Shift_Workers")
 	@ManyToMany
 	private Set<Userx> shiftWorkers;
 
