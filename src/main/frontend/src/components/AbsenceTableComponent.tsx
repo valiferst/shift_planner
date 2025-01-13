@@ -187,12 +187,8 @@ const AbsenceTable = () => {
      * Handle input changes for the absence dialog: times.
      * @param event
      */
-    //const handleTimeChange = (name: 'absentFrom' | 'absentUntil', event: FormEvent<(Date | null)[], SyntheticEvent<Element, Event>>) => {
     const handleTimeChange = (name: 'absentFrom' | 'absentUntil' | 'validFrom' | 'validUntil', event: Nullable<Date>) => {
         if (!selectedAbsence) return;
-        //const value = event?.value?.[0] || null;
-        //const { name, value } = event.target;
-
         setSelectedAbsence({ ...selectedAbsence, [name]: event });
     }
 

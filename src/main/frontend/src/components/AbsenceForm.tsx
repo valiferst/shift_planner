@@ -33,14 +33,6 @@ const AbsenceForm: React.FC<AbsenceFormProps> =
         // TODO Implement validFrom and validTo as Datepicker: see https://refine.dev/blog/react-date-picker/#select-range-within-one-component
         // TODO Implement absentFrom and absentUntil as time
         // TODO Implement Weekday as Dropdown -> change weekday do set?
-        /*
-
-                        <InputText id="absentFrom" name="absentFrom" value={absence.absentFrom?.getTime().toString()}
-                            onChange={onInputChange}
-                            placeholder="00:00" />
-
-                            <Calendar value={absence.absentFrom} onChange={(e) => onInputChange('absentFrom', e.value)} timeOnly />
-                            */
         return (
             <div>
                 <h1>

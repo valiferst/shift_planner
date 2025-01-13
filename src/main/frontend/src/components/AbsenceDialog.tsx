@@ -17,7 +17,6 @@ interface AbsenceDialogProps {
     onHide: () => void,
     onSubmit: () => void,
     onInputChange: (event: React.ChangeEvent<HTMLInputElement> | InputMaskChangeEvent) => void,
-    //onTimeChange: (name: 'absentFrom' | 'absentUntil', event: FormEvent<(Date | null)[], SyntheticEvent<Element, Event>>) => void,
     onTimeChange: (name: 'absentFrom' | 'absentUntil' | 'validFrom' | 'validUntil', event: Nullable<Date>) => void,
 }
 
