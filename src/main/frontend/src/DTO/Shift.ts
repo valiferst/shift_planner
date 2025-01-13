@@ -3,8 +3,8 @@
  */
 export interface ShiftDTO {
     id?: number;
-    startTime: number;
-    endTime: number;
+    startTime: Date;
+    endTime: Date;
     toShiftPlan: number;
     shiftWorkers: string[];
 }
@@ -12,8 +12,8 @@ export interface ShiftDTO {
 
 export class Shift implements ShiftDTO{
     id?: number;
-    startTime: number;
-    endTime: number;
+    startTime: Date;
+    endTime: Date;
     toShiftPlan: number;
     shiftWorkers: string[];
 
@@ -55,5 +55,30 @@ export class Shift implements ShiftDTO{
             shiftWorkers: this.shiftWorkers
         };
     }
-    
+
+    /**
+     * Serialize the Shift instance to JSON for updating an existing shift
+     * @returns JSON object with the fields required for updating a shift
+     */
+    toUpdateJSON(): Pick<ShiftDTO, 'id' | 'startTime' | 'endTime' | 'toShiftPlan' | 'shiftWorkers'> {
+        return {
+            id: this.id,
+            startTime: this.startTime,
+            endTime: this.endTime,
+            toShiftPlan: this.toShiftPlan,
+            shiftWorkers: this.shiftWorkers
+        };
+    }
+
+    /**
+     * Create a Shift instance from a JSON object
+     * @param json
+     * @returns Shift instance
+     */
+    static fromJSON(json: any): Shift {
+        if (!json || typeof json !== 'object') {
+            throw new Error('Invalid JSON for Shift');
+        }
+        return new Shift(json);
+    }
 }
