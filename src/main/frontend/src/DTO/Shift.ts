@@ -10,7 +10,7 @@ export interface ShiftDTO {
 }
 
 
-export class ShiftDTO implements ShiftDTO{
+export class Shift implements ShiftDTO{
     id?: number;
     startTime: number;
     endTime: number;
@@ -28,4 +28,20 @@ export class ShiftDTO implements ShiftDTO{
         this.toShiftPlan = data.toShiftPlan;
         this.shiftWorkers = data.shiftWorkers;
     }
+
+    /**
+     * Serialize the Shift instance to JSON
+     * @returns JSON object
+     */
+    toJSON(): ShiftDTO {
+        return {
+            id: this.id,
+            startTime: this.startTime,
+            endTime: this.endTime,
+            toShiftPlan: this.toShiftPlan,
+            shiftWorkers: this.shiftWorkers
+        };
+    }
+
+    
 }
