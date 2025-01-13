@@ -77,35 +77,35 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- JUnit 5 Abhängigkeit (JUnit Jupiter) -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>5.7.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.7.1</version>
-            <scope>test</scope>
-        </dependency>
+<!--        &lt;!&ndash; JUnit 5 Abhängigkeit (JUnit Jupiter) &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.junit.jupiter</groupId>-->
+<!--            <artifactId>junit-jupiter-api</artifactId>-->
+<!--&lt;!&ndash;            <version>5.7.1</version>&ndash;&gt;-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.junit.jupiter</groupId>-->
+<!--            <artifactId>junit-jupiter-engine</artifactId>-->
+<!--&lt;!&ndash;            <version>5.7.1</version>&ndash;&gt;-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
 
-        <!-- Mockito für Mocking von Abhängigkeiten in den Tests -->
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>4.0.0</version>
-            <scope>test</scope>
-        </dependency>
+<!--        &lt;!&ndash; Mockito für Mocking von Abhängigkeiten in den Tests &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.mockito</groupId>-->
+<!--            <artifactId>mockito-core</artifactId>-->
+<!--            <version>4.0.0</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
 
-        <!-- Optional: Weitere Test-Hilfsbibliotheken wie AssertJ -->
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <version>3.21.0</version>
-            <scope>test</scope>
-        </dependency>
+<!--        &lt;!&ndash; Optional: Weitere Test-Hilfsbibliotheken wie AssertJ &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.assertj</groupId>-->
+<!--            <artifactId>assertj-core</artifactId>-->
+<!--            <version>3.21.0</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
 
     </dependencies>
 
