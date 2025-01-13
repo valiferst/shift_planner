@@ -43,5 +43,17 @@ export class Shift implements ShiftDTO{
         };
     }
 
+    /**
+     * Serialize the Shift instance to JSON for creating a new shift
+     * @returns JSON object with the fields required for creating a new shift
+     */
+    toCreateJSON(): Pick<ShiftDTO, 'startTime' | 'endTime' | 'toShiftPlan' | 'shiftWorkers' > {
+        return {
+            startTime: this.startTime,
+            endTime: this.endTime,
+            toShiftPlan: this.toShiftPlan,
+            shiftWorkers: this.shiftWorkers
+        };
+    }
     
 }
