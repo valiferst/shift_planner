@@ -1,16 +1,19 @@
-package at.qe.skeleton.services;
+package at.qe.skeleton.tests;
 
 import at.qe.skeleton.model.ShiftPlan;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.repositories.ShiftPlanRepository;
 import at.qe.skeleton.repositories.UserxRepository;
+import at.qe.skeleton.services.ShiftPlanService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -18,6 +21,8 @@ import java.util.Optional;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest()
+@WebAppConfiguration
 class ShiftPlanServiceTest {
 
     @Mock
