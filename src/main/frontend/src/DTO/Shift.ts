@@ -3,18 +3,18 @@
  */
 export interface ShiftDTO {
     id?: number;
-    startTime: Date;
-    endTime: Date;
-    toShiftPlan: number;
+    startTime: Date | null;
+    endTime: Date | null;
+    toShiftPlan: number | null;
     shiftWorkers: string[];
 }
 
 
 export class Shift implements ShiftDTO{
     id?: number;
-    startTime: Date;
-    endTime: Date;
-    toShiftPlan: number;
+    startTime: Date | null;
+    endTime: Date | null;
+    toShiftPlan: number| null;
     shiftWorkers: string[];
 
     /**
@@ -23,9 +23,9 @@ export class Shift implements ShiftDTO{
      */
     constructor(data: ShiftDTO) {
         this.id = data.id;
-        this.startTime = data.startTime;
-        this.endTime = data.endTime;
-        this.toShiftPlan = data.toShiftPlan;
+        this.startTime = data.startTime ? new Date(data.startTime) : null;
+        this.endTime = data.endTime ? new Date(data.endTime) : null;
+        this.toShiftPlan = data.toShiftPlan ?? null;
         this.shiftWorkers = data.shiftWorkers;
     }
 
@@ -68,6 +68,20 @@ export class Shift implements ShiftDTO{
             toShiftPlan: this.toShiftPlan,
             shiftWorkers: this.shiftWorkers
         };
+    }
+
+    /**
+     * Create an empty Shift instance
+     * @returns Shift instance with empty fields
+     */
+    static empty(): Shift {
+        return new Shift({
+            id: undefined,
+            startTime: null,
+            endTime: null,
+            toShiftPlan: null,
+            shiftWorkers: []
+        });
     }
 
     /**
