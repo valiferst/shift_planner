@@ -113,4 +113,14 @@ public class DepartmentService {
             throw new IllegalArgumentException("Opening time cannot be after closing time.");
         }
     }
+
+    /**
+     * Returns the full name of the manager of a department (First Name, Last Name, username),
+     * so it can be used in the frontend to set the manager of a department.
+     * @param department The opening time.
+     */
+    public String getFullManagerName(Department department) {
+        return department.getManager().getFirstName() + " " + department.getManager().getLastName() + " ("  +
+                department.getManager().getUsername() + ")";
+    }
 }
