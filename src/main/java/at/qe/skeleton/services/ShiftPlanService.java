@@ -64,6 +64,12 @@ public class ShiftPlanService {
 
     // TODO implement validate shiftplan (is this the right spot)?
 
+    //TODO create publish method
+    // State will be set to PUBLISHED, previously published plan will be set to CANCELLED (concerning only the department)
+    // method calls to department service
+
+    // TODO create methods that update individual parts of a shiftplan
+
     /**
      * Deletes the shift plan.
      *

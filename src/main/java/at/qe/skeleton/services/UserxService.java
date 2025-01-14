@@ -91,6 +91,8 @@ public class UserxService {
         userOpt.ifPresent(userx -> userRepository.delete(userx));
     }
 
+    // TODO get Departments from Manager
+
     /**
      * Returns the currently authenticated user.
      *
