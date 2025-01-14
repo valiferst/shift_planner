@@ -4,13 +4,12 @@
  */
 import React from 'react';
 import {Menubar} from "primereact/menubar";
-import {HomePageRoute, ManageDepartmentsRoute, ManageUsersRoute} from "../routes";
+import {HomePageRoute, ManageAbsencesRoute, ManageDepartmentsRoute, ManageUsersRoute} from "../routes";
 import {useUser} from "../Contexts/AuthenticatedUserContext";
 import {UserxRole} from "../DTO/Userx";
 
 /**
  * Navbar component.
- * TODO: Improve this component to make adding new menu items easier.
  */
 const NavbarComponent: React.FC = () => {
     const { currentUser } = useUser();
@@ -20,9 +19,14 @@ const NavbarComponent: React.FC = () => {
     }, {
         label: 'Admin Submenu', icon: 'pi pi-star',
         items: [{
-            label: 'Manage Users', icon: 'pi pi-star', url: ManageUsersRoute.url
+            label: 'Manage Users', icon: 'pi pi-user-edit', url: ManageUsersRoute.url
         },
-            {label: 'Manage Departments', icon: 'pi pi-star', url: ManageDepartmentsRoute.url}]
+            {label: 'Manage Departments', icon: 'pi pi-building', url: ManageDepartmentsRoute.url}]
+    }, {
+        label: 'User Submenu', icon: 'pi pi-user',
+        items: [{
+            label: 'Manage Absences', icon: 'pi pi-calendar-times', url: ManageAbsencesRoute.url
+        }]
     }, {
         label: "Logout", icon: "pi pi-sign-out", url: "/logout"
     }];
