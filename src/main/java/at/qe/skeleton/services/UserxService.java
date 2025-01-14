@@ -86,9 +86,9 @@ public class UserxService {
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteUser(Userx user) {
-        // :TODO: write some audit log stating who and when this user was permanently deleted.
         Optional<Userx> userOpt = userRepository.findById(user.getId());
         userOpt.ifPresent(userx -> userRepository.delete(userx));
+        // TODO set the manager id of a department to something else (dummy-manager, null), when a Manager is deleted
     }
 
     /**
