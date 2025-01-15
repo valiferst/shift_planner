@@ -2,6 +2,7 @@ package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.Department;
 import at.qe.skeleton.model.ShiftPlan;
+import at.qe.skeleton.model.ShiftPlanState;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.repositories.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,7 +115,30 @@ public class DepartmentService {
         }
     }
 
-    // TODO get the one PUBLISHED shiftplan from shiftplans list
+    /**
+     * Retrieves the single PUBLISHED shift plan for a department.
+     * If there is no PUBLISHED shift plan, returns null.
+     * If multiple PUBLISHED shift plans exist, an exception is thrown.
+     *
+     * @param departmentId The ID of the department.
+     * @return The PUBLISHED shift plan, or null if none exists.
+     */
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ShiftPlan getPublishedShiftPlan(Long departmentId) {
+        Department department = departmentRepository.findById(departmentId)
+                .orElseThrow(() -> new IllegalArgumentException("Department not found with ID: " + departmentId));
+
+        List<ShiftPlan> publishedShiftPlans = department.getShiftPlans().stream()
+                .filter(shiftPlan -> shiftPlan.getState() == ShiftPlanState.PUBLISHED)
+                .toList();
+
+        if (publishedShiftPlans.size() > 1) {
+            throw new IllegalStateException("Multiple PUBLISHED shift plans found for the department.");
+        }
+
+        return publishedShiftPlans.isEmpty() ? null : publishedShiftPlans.get(0);
+    }
+
 
     /**
      * Returns the full name of the manager of a department (First Name, Last Name, username),
