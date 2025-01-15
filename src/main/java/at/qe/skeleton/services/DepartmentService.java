@@ -150,7 +150,4 @@ public class DepartmentService {
                 department.getManager().getUsername() + ")";
     }
 
-    public ShiftPlan getPublishedPlan(Long departmentId) {
-        return null;
-    }
 }

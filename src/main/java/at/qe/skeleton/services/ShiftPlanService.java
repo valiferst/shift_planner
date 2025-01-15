@@ -77,7 +77,8 @@ public class ShiftPlanService {
 
     /**
      * Validates the shift plan
-     *
+     * change State of old PUBLISHED shift plan to CANCELLED
+     * changes state of shift plan to be published to PUBLISHED
      *
      * @param shiftPlan teh shift plan to be published
      */
@@ -87,7 +88,8 @@ public class ShiftPlanService {
         if (!validateShiftPlan(shiftPlan)){
             throw new IllegalArgumentException("Shift plan is not valid");
         }
-        ShiftPlan oldShiftPlan = DepartmentService.getPublishedPlan(shiftPlan.getDepartment().getId());
+
+        ShiftPlan oldShiftPlan = DepartmentService.getPublishedShiftPlan(shiftPlan.getDepartment().getId());
 
         if (oldShiftPlan != null) {
             oldShiftPlan.setState(CANCELLED);
