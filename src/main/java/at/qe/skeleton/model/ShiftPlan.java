@@ -28,13 +28,7 @@ public class ShiftPlan implements Persistable<Long>, Serializable, Comparable<Sh
 
     private LocalDateTime date; // Date associated with the start or week of the ShiftPlan
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Userx createUser; // User who created the plan
-
     private LocalDateTime createDate; // Date when the plan was created
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Userx updateUser; // User who last updated the plan
 
     private LocalDateTime updateDate; // Date when the plan was last updated
 
@@ -104,28 +98,12 @@ public class ShiftPlan implements Persistable<Long>, Serializable, Comparable<Sh
         this.date = date;
     }
 
-    public Userx getCreateUser() {
-        return createUser;
-    }
-
-    public void setCreateUser(Userx createUser) {
-        this.createUser = createUser;
-    }
-
     public LocalDateTime getCreateDate() {
         return createDate;
     }
 
     public void setCreateDate(LocalDateTime createDate) {
         this.createDate = createDate;
-    }
-
-    public Userx getUpdateUser() {
-        return updateUser;
-    }
-
-    public void setUpdateUser(Userx updateUser) {
-        this.updateUser = updateUser;
     }
 
     public LocalDateTime getUpdateDate() {
