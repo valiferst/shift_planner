@@ -11,6 +11,10 @@ VALUES (3000, TRUE, 'Max', 'Mustermann', 'passwd', 'user2', 1000, '2024-01-01 00
 INSERT INTO USERX (ID, ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, CREATE_USER_ID, CREATE_DATE)
 VALUES (4000, TRUE, 'Elvis', 'The King', 'passwd', 'elvis', 1000, '2024-01-01 00:00:00');
 
+-- DUMMY MANAGER
+INSERT INTO USERX (ID, ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, CREATE_USER_ID, CREATE_DATE)
+VALUES (9999, TRUE, 'Dummy', 'Manager', 'passwd', 'dummy_manager', 1000, '2024-01-01 00:00:00');
+
 -- Insert departments into DEPARTMENT table
 
 INSERT INTO DEPARTMENT (
@@ -30,25 +34,21 @@ INSERT INTO DEPARTMENT (
 -- Insert shiftplans into SHIFT_PLAN table
 
 INSERT INTO SHIFT_PLAN (CREATE_DATE,
-                             CREATE_USER_ID,
                              DATE,
                              DEPARTMENT_ID,
                              END_DATE,
                              ID,
                              START_DATE,
                              UPDATE_DATE,
-                             UPDATE_USER_ID,
                              NAME,
                              STATE)
 VALUES ('2025-01-14',
-        2000, -- user1, Susi Kaufgern
         '2025-01-14',
         2000,
         '2025-12-31',
         2000,
         '2025-01-01',
         '2025-01-15',
-        2000,
         'Test Shiftplan',
         'DRAFT');
 
@@ -74,3 +74,7 @@ VALUES ((SELECT ID FROM USERX WHERE USERNAME = 'elvis'), 'ADMIN');
 
 INSERT INTO USERX_USERX_ROLE (USERX_ID, ROLES)
 VALUES ((SELECT ID FROM USERX WHERE USERNAME = 'elvis'), 'EMPLOYEE');
+
+-- dummy manager
+INSERT INTO USERX_USERX_ROLE (USERX_ID, ROLES)
+VALUES ((SELECT ID FROM USERX WHERE USERNAME = 'dummy_manager'), 'MANAGER');
