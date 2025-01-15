@@ -3,6 +3,7 @@ package at.qe.skeleton.services;
 import at.qe.skeleton.model.Department;
 import at.qe.skeleton.model.ShiftPlan;
 import at.qe.skeleton.repositories.ShiftPlanRepository;
+import at.qe.skeleton.services.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -10,6 +11,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.Optional;
+
+import static at.qe.skeleton.model.ShiftPlanState.PUBLISHED;
+import static at.qe.skeleton.model.ShiftPlanState.CANCELLED;
 
 /**
  * Service for accessing and manipulating shift plans.
@@ -63,10 +67,38 @@ public class ShiftPlanService {
     }
 
     // TODO implement validate shiftplan (is this the right spot)?
+    public boolean validateShiftPlan(ShiftPlan shiftPlan) {
+        return true;
+    }
 
     //TODO create publish method
     // State will be set to PUBLISHED, previously published plan will be set to CANCELLED (concerning only the department)
     // method calls to department service
+
+    /**
+     * Validates the shift plan
+     *
+     *
+     * @param shiftPlan teh shift plan to be published
+     */
+
+    @PreAuthorize("hasAuthority ('MANAGER')")
+    public void publishShiftPlan(ShiftPlan shiftPlan) {
+        if (!validateShiftPlan(shiftPlan)){
+            throw new IllegalArgumentException("Shift plan is not valid");
+        }
+        ShiftPlan oldShiftPlan = DepartmentService.getPublishedPlan(shiftPlan.getDepartment().getId());
+
+        if (oldShiftPlan != null) {
+            oldShiftPlan.setState(CANCELLED);
+            shiftPlanRepository.save(oldShiftPlan);
+        } else {
+            throw new IllegalArgumentException("No published shift plan found for the department.");
+        }
+
+        shiftPlan.setState(PUBLISHED);
+        shiftPlanRepository.save(shiftPlan);
+    }
 
     // TODO create methods that update individual parts of a shiftplan
 
