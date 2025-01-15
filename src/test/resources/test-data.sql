@@ -17,31 +17,28 @@ VALUES (9999, TRUE, 'Dummy', 'Manager', 'passwd', 'dummy_manager', 1000, '2024-0
 
 -- Insert departments into DEPARTMENT table
 
-INSERT INTO DEPARTMENT (
-    CLOSING_TIME,
-    ID,
-    MANAGER_ID,
-    OPENING_TIME,
-    NAME
-) VALUES (
-             '2024-01-01 00:00:00',
-             2000,
-             2000,          -- user1, Susi Kaufgern is a manager
-             '2024-01-01 00:00:00',
-             'Test Department'
-         );
+INSERT INTO DEPARTMENT (CLOSING_TIME,
+                        ID,
+                        MANAGER_ID,
+                        OPENING_TIME,
+                        NAME)
+VALUES ('2024-01-01 00:00:00',
+        2000,
+        2000, -- user1, Susi Kaufgern is a manager
+        '2024-01-01 00:00:00',
+        'Test Department');
 
 -- Insert shiftplans into SHIFT_PLAN table
 
 INSERT INTO SHIFT_PLAN (CREATE_DATE,
-                             DATE,
-                             DEPARTMENT_ID,
-                             END_DATE,
-                             ID,
-                             START_DATE,
-                             UPDATE_DATE,
-                             NAME,
-                             STATE)
+                        DATE,
+                        DEPARTMENT_ID,
+                        END_DATE,
+                        ID,
+                        START_DATE,
+                        UPDATE_DATE,
+                        NAME,
+                        STATE)
 VALUES ('2025-01-14',
         '2025-01-14',
         2000,
@@ -56,6 +53,16 @@ VALUES ('2025-01-14',
 
 INSERT INTO SHIFT (END_TIME, ID, SHIFT_PLAN_ID, START_TIME)
 VALUES ('2024-01-01 00:00:00', 2000, 2000, '2024-01-01 00:00:00');
+
+-- Insert absences into
+INSERT INTO ABSENCE (ABSENT_DAY, ABSENT_FROM, ABSENT_UNTIL, ID, USER_ID, VALID_FROM, VALID_UNTIL)
+VALUES (1,
+        '00:00:00', -- only time without date!!!
+        '00:00:00',
+        2000,
+        2000,
+        '2024-01-01 00:00:00',
+        '2024-01-01 00:00:00');
 
 
 -- Insert roles into USERX_USERX_ROLE table by looking up the corresponding user ID
