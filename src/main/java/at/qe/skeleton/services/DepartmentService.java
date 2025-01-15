@@ -114,6 +114,8 @@ public class DepartmentService {
         }
     }
 
+    // TODO get the one PUBLISHED shiftplan from shiftplans list
+
     /**
      * Returns the full name of the manager of a department (First Name, Last Name, username),
      * so it can be used in the frontend to set the manager of a department.

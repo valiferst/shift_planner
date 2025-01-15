@@ -91,6 +91,8 @@ public class UserxService {
         // TODO set the manager id of a department to something else (dummy-manager, null), when a Manager is deleted
     }
 
+    // TODO get Departments from Manager
+
     /**
      * Returns the currently authenticated user.
      *
