@@ -52,6 +52,11 @@ VALUES ('2025-01-14',
         'Test Shiftplan',
         'DRAFT');
 
+-- Insert shifts into SHIFT table
+
+INSERT INTO SHIFT (END_TIME, ID, SHIFT_PLAN_ID, START_TIME)
+VALUES ('2024-01-01 00:00:00', 2000, 2000, '2024-01-01 00:00:00');
+
 
 -- Insert roles into USERX_USERX_ROLE table by looking up the corresponding user ID
 INSERT INTO USERX_USERX_ROLE (USERX_ID, ROLES)
