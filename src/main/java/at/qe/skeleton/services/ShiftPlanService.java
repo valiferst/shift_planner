@@ -67,6 +67,7 @@ public class ShiftPlanService {
     }
 
     // TODO implement validate shiftplan (is this the right spot)?
+
     public boolean validateShiftPlan(ShiftPlan shiftPlan) {
         return true;
     }
@@ -80,7 +81,7 @@ public class ShiftPlanService {
      * change State of old PUBLISHED shift plan to CANCELLED
      * changes state of shift plan to be published to PUBLISHED
      *
-     * @param shiftPlan teh shift plan to be published
+     * @param shiftPlan the shift plan to be published
      */
 
     @PreAuthorize("hasAuthority ('MANAGER')")
