@@ -23,10 +23,13 @@ import static at.qe.skeleton.model.ShiftPlanState.CANCELLED;
 public class ShiftPlanService {
 
     private final ShiftPlanRepository shiftPlanRepository;
+    private final DepartmentService departmentService;
 
     @Autowired
-    public ShiftPlanService(ShiftPlanRepository shiftPlanRepository) {
+    public ShiftPlanService(ShiftPlanRepository shiftPlanRepository, DepartmentService departmentService) {
+
         this.shiftPlanRepository = shiftPlanRepository;
+        this.departmentService = departmentService;
     }
 
     /**
@@ -90,7 +93,7 @@ public class ShiftPlanService {
             throw new IllegalArgumentException("Shift plan is not valid");
         }
 
-        ShiftPlan oldShiftPlan = DepartmentService.getPublishedShiftPlan(shiftPlan.getDepartment().getId());
+        ShiftPlan oldShiftPlan = departmentService.getPublishedShiftPlan(shiftPlan.getDepartment().getId());
 
         if (oldShiftPlan != null) {
             oldShiftPlan.setState(CANCELLED);
