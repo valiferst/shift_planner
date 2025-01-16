@@ -87,9 +87,7 @@ public class ShiftService {
      */
     @PreAuthorize("hasAuthority('MANAGER')")
     public void deleteShift(Shift shift) {
-        // :TODO: write some audit log stating who and when this user was permanently deleted.
-        Optional<Shift> shiftOpt = shiftRepository.findById(shift.getId());
-        shiftOpt.ifPresent(shiftx -> shiftRepository.delete(shiftx));
+        shiftRepository.findById(shift.getId()).ifPresent(shiftRepository::delete);
     }
 
     /**
