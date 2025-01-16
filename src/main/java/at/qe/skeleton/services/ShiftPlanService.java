@@ -1,9 +1,7 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.Department;
-import at.qe.skeleton.model.Shift;
 import at.qe.skeleton.model.ShiftPlan;
-import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.repositories.ShiftPlanRepository;
 import at.qe.skeleton.repositories.ShiftRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,7 +75,7 @@ public class ShiftPlanService {
     // TODO create methods that update individual parts of a shiftplan
 
     /**
-     * Deletes the shift plan and all shifts assigned to it.
+     * Deletes the shift plan.
      *
      * @param shiftPlan the shift plan to delete
      */
@@ -85,14 +83,7 @@ public class ShiftPlanService {
     @PreAuthorize("hasAuthority('MANAGER')")
     public void deleteShiftPlan(ShiftPlan shiftPlan) {
         Optional<ShiftPlan> shiftPlanOptional = shiftPlanRepository.findById(shiftPlan.getId());
-        if(shiftPlanOptional.isPresent()) {
-            Collection<Shift> allShifts = shiftRepository.findByShiftPlan(shiftPlan);
-            for(Shift shift : allShifts) {
-                shiftRepository.delete(shift);
-            }
-            // Delete the shiftPlan after all shifts in it are deleted
-            shiftPlanRepository.delete(shiftPlanOptional.get());
-        }
+        shiftPlanOptional.ifPresent(shiftPlanRepository::delete);
     }
 
 }
