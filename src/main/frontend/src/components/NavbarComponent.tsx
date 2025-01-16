@@ -29,9 +29,9 @@ const NavbarComponent: React.FC = () => {
         },
             {label: 'Manage Departments', icon: 'pi pi-building', url: ManageDepartmentsRoute.url}]
     }, {
-        label: 'Manager Submenu', icon: 'pi pi-user',
+        label: 'Manager Submenu', icon: 'pi pi-briefcase',
         items: [{
-            label: 'Manage Shiftplans', icon: 'pi pi-calendar-times', url: ManageShiftplansRoute.url
+            label: 'Manage Shiftplans', icon: 'pi pi-calendar-clock', url: ManageShiftplansRoute.url
         }]
     }, {
         label: 'Employee Submenu', icon: 'pi pi-user',
@@ -42,14 +42,17 @@ const NavbarComponent: React.FC = () => {
         label: "Logout", icon: "pi pi-sign-out", url: "/logout"
     }];
 
-    // TODO make menu visibility dependent on role
 
     const getItems = () => {
+        const filterLabels= ["Employee Submenu"]
         if (currentUser?.roles.includes(UserxRole.ADMIN)) {
-            return items;
-        } else {
-            return items.filter(item => item.label !== "Admin Submenu");
+            filterLabels.push("Admin Submenu")
         }
+        if (currentUser?.roles.includes(UserxRole.MANAGER)){
+            filterLabels.push("Manager Submenu")
+        }
+        return items.filter(item => filterLabels.includes(item.label));
+
     }
 
     return (
