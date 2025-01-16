@@ -24,13 +24,11 @@ public class ShiftPlanService {
 
     private final ShiftPlanRepository shiftPlanRepository;
     private final ShiftRepository shiftRepository;
-    private final ShiftService shiftService;
 
     @Autowired
     public ShiftPlanService(ShiftPlanRepository shiftPlanRepository, ShiftRepository shiftRepository, ShiftService shiftService) {
         this.shiftPlanRepository = shiftPlanRepository;
         this.shiftRepository = shiftRepository;
-        this.shiftService = shiftService;
     }
 
     /**
@@ -88,9 +86,9 @@ public class ShiftPlanService {
     public void deleteShiftPlan(ShiftPlan shiftPlan) {
         Optional<ShiftPlan> shiftPlanOptional = shiftPlanRepository.findById(shiftPlan.getId());
         if(shiftPlanOptional.isPresent()) {
-            Collection<Shift> allShifts = shiftService.getAllShiftPlanShifts(shiftPlan);
+            Collection<Shift> allShifts = shiftRepository.findByShiftPlan(shiftPlan);
             for(Shift shift : allShifts) {
-                shiftService.deleteShift(shift);
+                shiftRepository.delete(shift);
             }
             // Delete the shiftPlan after all shifts in it are deleted
             shiftPlanRepository.delete(shiftPlanOptional.get());
