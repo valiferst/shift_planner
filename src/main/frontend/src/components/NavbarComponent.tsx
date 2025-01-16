@@ -4,7 +4,13 @@
  */
 import React from 'react';
 import {Menubar} from "primereact/menubar";
-import {HomePageRoute, ManageAbsencesRoute, ManageDepartmentsRoute, ManageUsersRoute} from "../routes";
+import {
+    HomePageRoute,
+    ManageAbsencesRoute,
+    ManageDepartmentsRoute,
+    ManageShiftplansRoute,
+    ManageUsersRoute
+} from "../routes";
 import {useUser} from "../Contexts/AuthenticatedUserContext";
 import {UserxRole} from "../DTO/Userx";
 
@@ -12,7 +18,7 @@ import {UserxRole} from "../DTO/Userx";
  * Navbar component.
  */
 const NavbarComponent: React.FC = () => {
-    const { currentUser } = useUser();
+    const {currentUser} = useUser();
 
     const items = [{
         label: 'Home', icon: 'pi pi-home', url: HomePageRoute.url
@@ -23,13 +29,20 @@ const NavbarComponent: React.FC = () => {
         },
             {label: 'Manage Departments', icon: 'pi pi-building', url: ManageDepartmentsRoute.url}]
     }, {
-        label: 'User Submenu', icon: 'pi pi-user',
+        label: 'Manager Submenu', icon: 'pi pi-user',
+        items: [{
+            label: 'Manage Shiftplans', icon: 'pi pi-calendar-times', url: ManageShiftplansRoute.url
+        }]
+    }, {
+        label: 'Employee Submenu', icon: 'pi pi-user',
         items: [{
             label: 'Manage Absences', icon: 'pi pi-calendar-times', url: ManageAbsencesRoute.url
         }]
     }, {
         label: "Logout", icon: "pi pi-sign-out", url: "/logout"
     }];
+
+    // TODO make menu visibility dependent on role
 
     const getItems = () => {
         if (currentUser?.roles.includes(UserxRole.ADMIN)) {
@@ -41,7 +54,7 @@ const NavbarComponent: React.FC = () => {
 
     return (
         <div className="card">
-            <Menubar model={getItems()} />
+            <Menubar model={getItems()}/>
         </div>
     );
 }
