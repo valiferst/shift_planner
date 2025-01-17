@@ -3,13 +3,13 @@ package at.qe.skeleton.services;
 import at.qe.skeleton.model.Department;
 import at.qe.skeleton.model.ShiftPlan;
 import at.qe.skeleton.repositories.ShiftPlanRepository;
-import at.qe.skeleton.services.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import static at.qe.skeleton.model.ShiftPlanState.PUBLISHED;
@@ -44,7 +44,7 @@ public class ShiftPlanService {
 
     @PreAuthorize("hasAnyAuthority('MANAGER')")
     public Collection<ShiftPlan> getAllShiftPlansForDepartment(Department department) {
-        return null; // TODO implement getting list of shift plans per department
+        return List.of(); // TODO implement getting list of shift plans per department
     }
 
     /**
@@ -80,15 +80,18 @@ public class ShiftPlanService {
     // method calls to department service
 
     /**
+     * publishes the ShiftPlan
+     *
      * Validates the shift plan
      * change State of old PUBLISHED shift plan to CANCELLED
      * changes state of shift plan to be published to PUBLISHED
      *
      * @param shiftPlan the shift plan to be published
+     * @return the published ShiftPlan
      */
 
     @PreAuthorize("hasAuthority ('MANAGER')")
-    public void publishShiftPlan(ShiftPlan shiftPlan) {
+    public ShiftPlan publishShiftPlan(ShiftPlan shiftPlan) {
         if (!validateShiftPlan(shiftPlan)){
             throw new IllegalArgumentException("Shift plan is not valid");
         }
@@ -103,7 +106,7 @@ public class ShiftPlanService {
         }
 
         shiftPlan.setState(PUBLISHED);
-        shiftPlanRepository.save(shiftPlan);
+        return shiftPlanRepository.save(shiftPlan);
     }
 
     // TODO create methods that update individual parts of a shiftplan
@@ -116,7 +119,7 @@ public class ShiftPlanService {
     @PreAuthorize("hasAuthority('MANAGER')")
     public void deleteShiftPlan(ShiftPlan shiftPlan) {
         Optional<ShiftPlan> shiftPlanOpt = shiftPlanRepository.findById(shiftPlan.getId());
-        shiftPlanOpt.ifPresent(plan -> shiftPlanRepository.delete(plan));
+        shiftPlanOpt.ifPresent(shiftPlanRepository::delete);
     }
 
 }
