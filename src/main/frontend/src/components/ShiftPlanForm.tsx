@@ -16,6 +16,7 @@ interface AbsenceFormProps {
     onInputChange: (event: React.ChangeEvent<HTMLInputElement> | InputMaskChangeEvent) => void,
     onTimeChange: (name: 'absentFrom' | 'absentUntil' | 'validFrom' | 'validUntil', event: Nullable<Date>) => void,
 }
+// TODO: make ShiftPlan form essentially a shift table view? Then this form would be obsolete
 
 /**
  * Form for creating or editing an absence.
@@ -31,9 +32,6 @@ const AbsenceForm: React.FC<AbsenceFormProps> =
         onInputChange,
         onTimeChange,
     }) => {
-        // TODO Implement validFrom and validTo as Datepicker: see https://refine.dev/blog/react-date-picker/#select-range-within-one-component
-        // TODO Implement absentFrom and absentUntil as time
-        // TODO Implement Weekday as Dropdown -> change weekday do set?
         return (
             <div>
                 <h1>
