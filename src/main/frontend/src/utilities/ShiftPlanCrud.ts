@@ -3,89 +3,107 @@
  * Architecture" offered by Innsbruck University.
  */
 import axios from "axios";
-import {AbsenceDTO, Absence} from "../DTO/Absence";
-import {createAbsenceFromInterfaces} from "../factories/absenceFactory";
+import {ShiftPlanDTO, ShiftPlan} from "../DTO/ShiftPlan";
+import {createShiftPlanFromInterfaces} from "../factories/shiftPlanFactory";
 
 import {API_BASE_URL} from "../config/config";
 
 /**
- * This file provides utility functions for CRUD operations on absences.
+ * This file provides utility functions for CRUD operations on shiftPlans.
  */
 
 /**
- * Fetch all absences from the backend
- * @returns Promise<AbsenceDTO[]> a promise that resolves with an array of AbsenceDTO objects
+ * Fetch all shiftPlans from the backend
+ * @returns Promise<ShiftPlanDTO[]> a promise that resolves with an array of ShiftPlanDTO objects
  * @throws Error if the request fails
  */
-const fetchAllAbsences = async (): Promise<AbsenceDTO[]> => {
+const fetchAllShiftPlans = async (): Promise<ShiftPlanDTO[]> => {
     try {
-        const response = await axios.get(`${API_BASE_URL}/api/users/absences`, {
+        // TODO: check in backend/discuss if this is the right url
+        const response = await axios.get(`${API_BASE_URL}/api/shiftPlans`, {
             withCredentials: true
         });
         return response.data;
     } catch (error: any) {
-        throw new Error(`Error fetching absences: ${error.message}`);
+        throw new Error(`Error fetching shiftPlans: ${error.message}`);
     }
 }
 
 /**
- * Create a new absence
- * @param selectedAbsence the absence to create
- * @returns Promise<Absence> a promise that resolves with the created absence
+ * Create a new shiftPlan
+ * @param selectedShiftPlan the shiftPlan to create
+ * @returns Promise<ShiftPlan> a promise that resolves with the created shiftPlan
  * @throws Error if the request fails
  */
-const createAbsence = async (selectedAbsence: AbsenceDTO): Promise<Absence> => {
-    try {
-        const absenceInstance = createAbsenceFromInterfaces(selectedAbsence);
-        const response = await axios.post(`${API_BASE_URL}/api/users/absences`, absenceInstance.toCreateJSON(), {
+const createShiftPlan = async (selectedShiftPlan: ShiftPlanDTO): Promise<ShiftPlan> => { try { const shiftPlanInstance = createShiftPlanFromInterfaces(selectedShiftPlan);
+        const response = await axios.post(`${API_BASE_URL}/api/shiftPlans`, shiftPlanInstance.toCreateJSON(), {
             withCredentials: true
         });
-        return Absence.fromJSON(response.data);
+        return ShiftPlan.fromJSON(response.data);
     } catch (error: any) {
-        throw new Error(`Error saving absence: ${error.message}`);
+        throw new Error(`Error saving shiftPlan: ${error.message}`);
     }
 }
 
 /**
- * Update an existing absence
- * @param selectedAbsence the absence to update
- * @returns Promise<Absence> a promise that resolves with the updated absence
+ * Update an existing shiftPlan
+ * @param selectedShiftPlan the shiftPlan to update
+ * @returns Promise<ShiftPlan> a promise that resolves with the updated shiftPlan
  * @throws Error if the request fails
  */
-const updateAbsence = async (selectedAbsence: AbsenceDTO): Promise<Absence> => {
+const updateShiftPlan = async (selectedShiftPlan: ShiftPlanDTO): Promise<ShiftPlan> => {
     try {
-        const absenceInstance = createAbsenceFromInterfaces(selectedAbsence);
-        const response = await axios.patch(`${API_BASE_URL}/api/users/absences/${selectedAbsence.id}`, absenceInstance.toUpdateJSON(), {
+        const shiftPlanInstance = createShiftPlanFromInterfaces(selectedShiftPlan);
+        const response = await axios.patch(`${API_BASE_URL}/api/shiftPlans/${selectedShiftPlan.id}`, shiftPlanInstance.toUpdateJSON(), {
             headers: {
                 'Content-Type': 'application/json'
             },
             withCredentials: true
         });
-        return Absence.fromJSON(response.data);
+        return ShiftPlan.fromJSON(response.data);
     } catch (error: any) {
-        throw new Error(`Error updating absence: ${error.message}`);
+        throw new Error(`Error updating shiftPlan: ${error.message}`);
     }
 }
 
+const publishShiftPlan = async (selectedShiftPlan: ShiftPlanDTO): Promise<ShiftPlan> => {
+    try {
+        const shiftPlanInstance = createShiftPlanFromInterfaces(selectedShiftPlan);
+        // TODO: discuss if patch is the correct axios call
+        const response = await axios.patch(`${API_BASE_URL}/api/shiftPlans/${selectedShiftPlan.id}/publish`, shiftPlanInstance.toUpdateJSON(), {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true
+        });
+        return ShiftPlan.fromJSON(response.data);
+    } catch (error: any) {
+        throw new Error(`Error publishing shiftPlan: ${error.message}`);
+    }
+}
+
+
+
 /**
- * Delete an existing absence
- * @param selectedAbsence the absence to delete
+ * Delete an existing shiftPlan
+ * @param selectedShiftPlan the shiftPlan to delete
  * @returns Promise<any> a promise that resolves with the response data
  * @throws Error if the request fails
  */
-const deleteAbsence = async (selectedAbsence: AbsenceDTO) => {
+const deleteShiftPlan = async (selectedShiftPlan: ShiftPlanDTO) => {
     try {
-        return await axios.delete(`${API_BASE_URL}/api/users/absences/${selectedAbsence.id}`, {
+        return await axios.delete(`${API_BASE_URL}/api/shiftPlans/${selectedShiftPlan.id}`, {
             withCredentials: true
         });
     } catch (error: any) {
-        throw new Error(`Error deleting absence: ${error.message}`);
+        throw new Error(`Error deleting shiftPlan: ${error.message}`);
     }
 }
 
-export const AbsenceCrud = {
-    createAbsence,
-    updateAbsence,
-    deleteAbsence,
-    fetchAllAbsences
+export const ShiftPlanCrud = {
+    createShiftPlan,
+    updateShiftPlan,
+    publishShiftPlan,
+    deleteShiftPlan,
+    fetchAllShiftPlans
 }

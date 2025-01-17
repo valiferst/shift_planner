@@ -8,50 +8,65 @@ import {Button} from "primereact/button";
 import {Column} from "primereact/column";
 import {DataTable} from "primereact/datatable";
 
-import {Absence} from "../DTO/Absence";
+import {ShiftPlan} from "../DTO/ShiftPlan";
 
-interface AbsenceListProps {
-    absences: Absence[];
+interface ShiftPlanListProps {
+    shiftPlans: ShiftPlan[];
     loading: boolean;
-    onEditAbsence: (absence: Absence) => void;
-    onDeleteAbsence: (absence: Absence) => void;
+    onPublishShiftPlan: (shiftPlan: ShiftPlan) => void;
+    onEditShiftPlan: (shiftPlan: ShiftPlan) => void;
+    onDeleteShiftPlan: (shiftPlan: ShiftPlan) => void;
 }
 
 
 /**
- * Component for displaying a list of absences in a DataTable.
- * @param absences the absences to display
- * @param loading whether the absences are loading
- * @param onEditAbsence callback when an absence is edited
- * @param onDeleteAbsence callback when an absence is deleted
+ * Component for displaying a list of shiftPlans in a DataTable.
+ * @param shiftPlans the shiftPlans to display
+ * @param loading whether the shiftPlans are loading
+ * @param onEditShiftPlan callback when an shiftPlan is edited
+ * @param onPublishShiftPlan callback when an shiftPlan is published
+ * @param onDeleteShiftPlan callback when an shiftPlan is deleted
  */
-const AbsenceListComponent: React.FC<AbsenceListProps> = ({ absences, loading, onEditAbsence, onDeleteAbsence }) => {
+const ShiftPlanListComponent: React.FC<ShiftPlanListProps> = ({ shiftPlans, loading, onEditShiftPlan, onPublishShiftPlan, onDeleteShiftPlan }) => {
 
     /**
-     * Renders the edit button for an absence.
+     * Renders the edit button for an shiftPlan.
      * @param rowData
      */
-    const editButtonTemplate = (rowData: Absence) => {
+    const editButtonTemplate = (rowData: ShiftPlan) => {
         return (<Button
             label={"Details"}
             icon="pi pi-external-link"
-            onClick={() => onEditAbsence(rowData)}
-            aria-label={`Absence Details`}
+            onClick={() => onEditShiftPlan(rowData)}
+            aria-label={`ShiftPlan Details`}
         />);
     };
 
     /**
-     * Renders the delete button for an absence.
+     * Renders the publish button for an shiftPlan.
      * @param rowData
      */
-    const deleteButtonTemplate = (rowData: Absence) => {
+    const publishButtonTemplate = (rowData: ShiftPlan) => {
+        return (<Button
+            label={"Publish"}
+            icon="pi pi-check-circle"
+            onClick={() => onPublishShiftPlan(rowData)}
+            aria-label={`Publish ShiftPlan`}
+        />);
+    };
+
+    /**
+     * Renders the delete button for an shiftPlan.
+     * @param rowData
+     */
+    const deleteButtonTemplate = (rowData: ShiftPlan) => {
         return (
             <Button
                 label={"Delete"}
                 icon="pi pi-trash"
                 className="p-button-rounded p-button-danger"
-                onClick={() => onDeleteAbsence(rowData)}
-                aria-label={`Delete Absence`}
+                onClick={() => onDeleteShiftPlan(rowData)}
+                aria-label={`Delete ShiftPlan`}
             />
         );
     }
@@ -59,8 +74,8 @@ const AbsenceListComponent: React.FC<AbsenceListProps> = ({ absences, loading, o
 
 
     return (
-        // DataTable for displaying absences
-        <DataTable value={absences} loading={loading}>
+        // DataTable for displaying shiftPlans
+        <DataTable value={shiftPlans} loading={loading}>
             <Column field="absentFrom" header="Absent From" sortable></Column>
             <Column field="absentUntil" header="Absent Until" sortable></Column>
             <Column field="absentDay" header="Absent Weekday" sortable></Column>
@@ -68,10 +83,12 @@ const AbsenceListComponent: React.FC<AbsenceListProps> = ({ absences, loading, o
             <Column field="validUntil" header="Valid Until" sortable></Column>
             <Column body={editButtonTemplate} exportable={false}
                     style={{minWidth: '8rem'}}></Column>
+            <Column body={publishButtonTemplate} exportable={false}
+                    style={{minWidth: '8rem'}}></Column>
             <Column body={deleteButtonTemplate} exportable={false}
                     style={{minWidth: '8rem'}}></Column>
         </DataTable>
     )
 };
 
-export default AbsenceListComponent;
+export default ShiftPlanListComponent;

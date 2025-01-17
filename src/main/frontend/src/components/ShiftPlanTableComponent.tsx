@@ -2,159 +2,191 @@
  * This code is part of the skeleton project provided for students of the course "Software
  * Architecture" offered by Innsbruck University.
  */
-import React, { SyntheticEvent, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Button } from "primereact/button";
 import { Card } from 'primereact/card';
 import { InputMaskChangeEvent } from "primereact/inputmask";
 import 'primeicons/primeicons.css';
 
-import AbsenceListComponent from "./AbsenceListComponent";
-import AbsenceDialog from "./AbsenceDialog";
-import AbsenceDeleteDialog from "./AbsenceDeleteDialog";
+import ShiftPlanListComponent from "./ShiftPlanListComponent";
+import ShiftPlanDialog from "./ShiftPlanDialog";
+import ShiftPlanPublishDialog from "./ShiftPlanPublishDialog";
+import ShiftPlanDeleteDialog from "./ShiftPlanDeleteDialog";
 
-import { AbsenceDTO, Absence } from "../DTO/Absence";
-import { AbsenceCrud } from "../utilities/AbsenceCrud";
+import { ShiftPlanDTO, ShiftPlan } from "../DTO/ShiftPlan";
+import { ShiftPlanCrud } from "../utilities/ShiftPlanCrud";
 import {
-    createAbsenceFromInterfaces
-} from '../factories/absenceFactory';
-import { FormEvent, Nullable } from 'primereact/ts-helpers';
+    createShiftPlanFromInterfaces
+} from '../factories/shiftPlanFactory';
 
 /**
- * Component for managing absences.
+ * Component for managing shiftPlans.
  */
-const AbsenceTable = () => {
-    const [absences, setAbsences] = useState<Absence[]>([]);
+const ShiftPlanTable = () => {
+    const [shiftPlans, setShiftPlans] = useState<ShiftPlan[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const [selectedAbsence, setSelectedAbsence] = useState<AbsenceDTO | null>(null);
-    const [isNewAbsence, setIsNewAbsence] = useState<boolean>(false);
+    const [selectedShiftPlan, setSelectedShiftPlan] = useState<ShiftPlanDTO | null>(null);
+    const [isNewShiftPlan, setIsNewShiftPlan] = useState<boolean>(false);
     const [dialogVisible, setDialogVisible] = useState<boolean>(false);
+    const [publishDialogVisible, setPublishDialogVisible] = useState<boolean>(false);
     const [deleteDialogVisible, setDeleteDialogVisible] = useState<boolean>(false);
 
     /**
-     * Fetch all absences from the backend on mount once.
+     * Fetch all shiftPlans from the backend on mount once.
      */
     useEffect(() => {
-        const fetchAbsences = async () => {
+        const fetchShiftPlans = async () => {
             try {
-                const absenceData = await AbsenceCrud.fetchAllAbsences();
-                const absenceInstances = absenceData.map((absence: AbsenceDTO) => createAbsenceFromInterfaces(absence));
-                setAbsences(absenceInstances);
+                // TODO: implement using fetch shiftplans for manager
+                const shiftPlanData = await ShiftPlanCrud.fetchAllShiftPlans();
+                const shiftPlanInstances = shiftPlanData.map((shiftPlan: ShiftPlanDTO) => createShiftPlanFromInterfaces(shiftPlan));
+                setShiftPlans(shiftPlanInstances);
             } catch (error: any) {
-                console.error('Error fetching absences:', error);
+                console.error('Error fetching shiftPlans:', error);
             } finally {
                 setLoading(false); // Set loading to false regardless of success or failure
             }
         };
-        fetchAbsences();
+        fetchShiftPlans();
     }, []); // empty dependency array means this effect will only run once on mount
 
     /**
-     * Validate the absence object.
-     * @param absence
+     * Validate the shiftPlan object.
+     * @param shiftPlan
      */
-    const validateAbsence = (absence: AbsenceDTO | null): boolean => {
-        if (!absence) return false;
-        return absence.validFrom !== null &&
-            absence.validUntil !== null &&
-            absence.absentFrom !== null &&
-            absence.absentUntil !== null &&
-            absence.absentDay !== null &&
-            absence.validFrom <= absence.validUntil;
+    const validateShiftPlan = (shiftPlan: ShiftPlanDTO | null): boolean => {
+        if (!shiftPlan) return false;
+        return shiftPlan.validFrom !== null &&
+            shiftPlan.validUntil !== null &&
+            shiftPlan.absentFrom !== null &&
+            shiftPlan.absentUntil !== null &&
+            shiftPlan.absentDay !== null &&
+            shiftPlan.validFrom <= shiftPlan.validUntil;
     }
 
     /**
-     * Handle the submit event for the absence dialog.
+     * Handle the submit event for the shiftPlan dialog.
      */
     const handleSubmit = async () => {
-        if (!validateAbsence(selectedAbsence)) {
+        if (!validateShiftPlan(selectedShiftPlan)) {
             // Display an error message or handle the validation error
-            console.error('Please fill out all required fields.');
+            console.error('Error submitting ShiftPlan, please check for overlaps in Shifts.');
             return;
         }
-
-        if (isNewAbsence) {
-            await createAbsence();
+        if (isNewShiftPlan) {
+            await createShiftPlan();
         } else {
-            await updateAbsence();
+            await updateShiftPlan();
         }
         hideDialog();
     };
 
     /**
-     * Create a new absence and update the state.
+     * Create a new shiftPlan and update the state.
      */
-    const createAbsence = async () => {
-        if (!selectedAbsence) return;
+    const createShiftPlan = async () => {
+        if (!selectedShiftPlan) return;
 
         try {
-            const newAbsence: Absence = await AbsenceCrud.createAbsence(selectedAbsence);
-            setAbsences([...absences, newAbsence]);
+            const newShiftPlan: ShiftPlan = await ShiftPlanCrud.createShiftPlan(selectedShiftPlan);
+            setShiftPlans([...shiftPlans, newShiftPlan]);
         } catch (error: any) {
-            console.error('Error saving absence:', error);
+            console.error('Error saving shiftPlan:', error);
             // Add toast message for error
         }
     }
 
     /**
-     * Update an existing absence and update the state.
+     * Update an existing shiftPlan and update the state.
      */
-    const updateAbsence = async () => {
-        if (!selectedAbsence) return;
+    const updateShiftPlan = async () => {
+        if (!selectedShiftPlan) return;
 
         try {
-            const updatedAbsence: Absence = await AbsenceCrud.updateAbsence(selectedAbsence);
-            setAbsences(absences.map((absence: Absence) => absence.id === updatedAbsence.id ? updatedAbsence : absence));
+            const updatedShiftPlan: ShiftPlan = await ShiftPlanCrud.updateShiftPlan(selectedShiftPlan);
+            setShiftPlans(shiftPlans.map((shiftPlan: ShiftPlan) => shiftPlan.id === updatedShiftPlan.id ? updatedShiftPlan : shiftPlan));
             hideDialog();
         } catch (error: any) {
-            console.error('Error updating absence:', error);
+            console.error('Error updating shiftPlan:', error);
         }
     }
 
+        /**
+         * Publish an existing shiftPlan and update the state.
+         */
+        const publishShiftPlan = async () => {
+            if (!selectedShiftPlan) return;
+
+            try {
+                const publishedShiftPlan: ShiftPlan = await ShiftPlanCrud.publishShiftPlan(selectedShiftPlan);
+                setShiftPlans(shiftPlans.map((shiftPlan: ShiftPlan) => shiftPlan.id === publishedShiftPlan.id ? publishedShiftPlan : shiftPlan));
+                // TODO implement updating state of previously published ShiftPlan if there was one
+                setPublishDialogVisible(false)
+            } catch (error: any) {
+                console.error('Error publishing shiftPlan:', error);
+            }
+        }
 
     /**
-     * Delete an absence and update the state.
+     * Delete a shiftPlan and update the state.
      */
-    const deleteAbsence = async () => {
-        if (!selectedAbsence) return;
+    const deleteShiftPlan = async () => {
+        if (!selectedShiftPlan) return;
 
         try {
-            await AbsenceCrud.deleteAbsence(selectedAbsence);
-            setAbsences(absences.filter((absence: Absence) => absence.id !== selectedAbsence.id));
+            await ShiftPlanCrud.deleteShiftPlan(selectedShiftPlan);
+            setShiftPlans(shiftPlans.filter((shiftPlan: ShiftPlan) => shiftPlan.id !== selectedShiftPlan.id));
             hideDialog();
         } catch (error) {
-            console.error('Error deleting absence:', error);
+            console.error('Error deleting shiftPlan:', error);
             // TODO: Add toast message for error
         }
         setDeleteDialogVisible(false);
     }
 
     /**
-     * Open the delete dialog for an absence.
-     * @param absence
+     * Open the delete dialog for a shiftPlan.
+     * @param shiftPlan
      */
-    const openDeleteDialog = (absence: Absence) => {
-        setSelectedAbsence(absence);
+    const openDeleteDialog = (shiftPlan: ShiftPlan) => {
+        setSelectedShiftPlan(shiftPlan);
         setDeleteDialogVisible(true);
     }
 
     /**
-     * Open the edit dialog for an absence.
-     * @param absence
+     * Open the edit dialog for an shiftPlan.
+     * @param shiftPlan
      */
-    const openEditDialog = (absence: Absence) => {
-        setSelectedAbsence(absence);
-        setIsNewAbsence(false);
+    const openEditDialog = (shiftPlan: ShiftPlan) => {
+        setSelectedShiftPlan(shiftPlan);
+        setIsNewShiftPlan(false);
         showDialog()
     };
 
     /**
-     * Open the dialog for creating a new absence.
+     * Open the publish dialog for a shiftPlan.
+     * @param shiftPlan
      */
-    const openNewAbsenceDialog = () => {
-        setSelectedAbsence(Absence.empty());
+    const openPublishDialog = (shiftPlan: ShiftPlan) => {
+        setSelectedShiftPlan(shiftPlan);
+        setPublishDialogVisible(true);
+    };
+
+    /**
+     * Hide the publish dialog.
+     */
+    const hidePublishDialog = () => {
+        setPublishDialogVisible(false);
+    };
+
+    /**
+     * Open the dialog for creating a new shiftPlan.
+     */
+    const openNewShiftPlanDialog = () => {
+        setSelectedShiftPlan(ShiftPlan.empty());
         showDialog()
-        setIsNewAbsence(true);
+        setIsNewShiftPlan(true);
     }
 
     /**
@@ -172,47 +204,42 @@ const AbsenceTable = () => {
     };
 
     /**
-     * Handle input changes for the absence dialog.
+     * Handle input changes for the shiftPlan dialog.
      * @param event
      */
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement> | InputMaskChangeEvent) => {
-        if (!selectedAbsence) return;
+        if (!selectedShiftPlan) return;
 
         const { name, value } = event.target;
 
-        setSelectedAbsence({ ...selectedAbsence, [name]: value });
+        setSelectedShiftPlan({ ...selectedShiftPlan, [name]: value });
     }
 
-    /**
-     * Handle input changes for the absence dialog: times.
-     * @param event
-     */
-    const handleTimeChange = (name: 'absentFrom' | 'absentUntil' | 'validFrom' | 'validUntil', event: Nullable<Date>) => {
-        if (!selectedAbsence) return;
-        setSelectedAbsence({ ...selectedAbsence, [name]: event });
-    }
 
-    return (<Card title="Absence List" className="m-4">
-        {/* Button that opens a new absence dialog on click */}
-        <Button label="Add Absence" icon="pi pi-plus" className="p-button-raised p-button-rounded"
-            style={{ marginBottom: "10px" }} onClick={openNewAbsenceDialog} />
-        <AbsenceListComponent absences={absences} loading={loading} onEditAbsence={openEditDialog}
-            onDeleteAbsence={openDeleteDialog} />
+    return (<Card title="ShiftPlan List" className="m-4">
+        {/* Button that opens a new shiftPlan dialog on click */}
+        <Button label="Add ShiftPlan" icon="pi pi-plus" className="p-button-raised p-button-rounded"
+            style={{ marginBottom: "10px" }} onClick={openNewShiftPlanDialog} />
+        <ShiftPlanListComponent shiftPlans={shiftPlans} loading={loading} onEditShiftPlan={openEditDialog}
+            onPublishShiftPlan={openPublishDialog} onDeleteShiftPlan={openDeleteDialog} />
 
-        {/* Dialog for creating or editing an absence */}
-        <AbsenceDialog visible={dialogVisible} absence={selectedAbsence} isNewAbsence={isNewAbsence}
+        {/* Dialog for creating or editing an shiftPlan */}
+        <ShiftPlanDialog visible={dialogVisible} shiftPlan={selectedShiftPlan} isNewShiftPlan={isNewShiftPlan}
             onHide={hideDialog} onSubmit={handleSubmit}
-            onInputChange={handleInputChange}
-            onTimeChange={handleTimeChange} />
-        {/* Dialog for deleting an absence */}
-        <AbsenceDeleteDialog
+            onInputChange={handleInputChange} />
+        {/* Dialog for creating or publishing an shiftPlan */}
+        <ShiftPlanPublishDialog visible={publishDialogVisible} shiftPlan={selectedShiftPlan}
+                         onHide={hidePublishDialog} onPublish={publishShiftPlan}
+                         onInputChange={handleInputChange} />
+        {/* Dialog for deleting an shiftPlan */}
+        <ShiftPlanDeleteDialog
             visible={deleteDialogVisible}
             onHide={() => setDeleteDialogVisible(false)}
-            onDelete={deleteAbsence}
-            absence={selectedAbsence} />
+            onDelete={deleteShiftPlan}
+            shiftPlan={selectedShiftPlan} />
     </Card>
     );
 };
 
-export default AbsenceTable;
+export default ShiftPlanTable;
 

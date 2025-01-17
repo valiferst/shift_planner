@@ -6,33 +6,29 @@ import React from 'react';
 import { Dialog } from 'primereact/dialog';
 import { Button } from "primereact/button";
 import { ShiftPlanDTO } from "../DTO/ShiftPlan";
-import ShiftPlanForm from './ShiftPlanForm';
 import { InputMaskChangeEvent } from "primereact/inputmask";
 
-interface ShiftPlanDialogProps {
+interface ShiftPlanPublishDialogProps {
     visible: boolean,
     shiftPlan: ShiftPlanDTO | null,
-    isNewShiftPlan: boolean,
     onHide: () => void,
-    onSubmit: () => void,
+    onPublish: () => void,
     onInputChange: (event: React.ChangeEvent<HTMLInputElement> | InputMaskChangeEvent) => void,
 }
 
 /**
  * Dialog for creating or editing an shiftPlan.
  * @param visible whether the dialog is visible
- * @param shiftPlan the shiftPlan to be edited
- * @param isNewShiftPlan whether the shiftPlan is new
+ * @param shiftPlan the shiftPlan to be published
  * @param onHide callback when the dialog is hidden
- * @param onSubmit callback when the shiftPlan is submitted
+ * @param onPublish callback when the shiftPlan is published
  * @param onInputChange callback when the input changes
  */
-const ShiftPlanDialog: React.FC<ShiftPlanDialogProps> = ({
+const ShiftPlanDialog: React.FC<ShiftPlanPublishDialogProps> = ({
     visible,
     shiftPlan,
-    isNewShiftPlan,
     onHide,
-    onSubmit,
+    onPublish,
     onInputChange,
 }) => {
 
@@ -42,26 +38,26 @@ const ShiftPlanDialog: React.FC<ShiftPlanDialogProps> = ({
     const renderFooter = () => (
         <div>
             <Button label="Cancel" icon="pi pi-times" onClick={onHide} className="p-button-text" />
-            <Button label={isNewShiftPlan ? "Create" : "Save"} icon="pi pi-check" onClick={onSubmit}
+            <Button label="Publish" icon="pi pi-check" onClick={onPublish}
                 autoFocus />
         </div>
     );
 
     return (
         <Dialog
-            header={isNewShiftPlan ? "Create New ShiftPlan" : "Edit ShiftPlan"}
+            header="Publish ShiftPlan"
             visible={visible}
             style={{ width: '50vw' }}
             onHide={onHide}
             footer={renderFooter}
         >
-            {shiftPlan && (
-                <ShiftPlanForm
-                    shiftPlan={shiftPlan}
-                    isNewShiftPlan={isNewShiftPlan}
-                    onInputChange={onInputChange}
-                />
-            )}
+            {/*{shiftPlan && (*/}
+            {/*    <ShiftPlanForm*/}
+            {/*        shiftPlan={shiftPlan}*/}
+            {/*        isNewShiftPlan={isNewShiftPlan}*/}
+            {/*        onInputChange={onInputChange}*/}
+            {/*    />*/}
+            {/*)}*/}
         </Dialog>
     );
 };

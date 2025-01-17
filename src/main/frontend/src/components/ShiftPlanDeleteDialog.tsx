@@ -5,26 +5,26 @@
 import {Button} from "primereact/button";
 import React from "react";
 import {Dialog} from "primereact/dialog";
-import {AbsenceDTO} from "../DTO/Absence";
+import {ShiftPlanDTO} from "../DTO/ShiftPlan";
 
-interface AbsenceDeleteDialogProps {
+interface ShiftPlanDeleteDialogProps {
     visible: boolean;
     onHide: () => void;
     onDelete: () => void;
-    absence: AbsenceDTO | null;
+    shiftPlan: ShiftPlanDTO | null;
 }
 
 /**
- * Dialog for deleting an absence.
+ * Dialog for deleting an shiftPlan.
  *
  * @param visible whether the dialog is visible
  * @param onHide callback when the dialog is hidden
- * @param onDelete callback when the absence is deleted
- * @param absence the absence to be deleted
+ * @param onDelete callback when the shiftPlan is deleted
+ * @param shiftPlan the shiftPlan to be deleted
  *
  * @returns the delete dialog
  */
-const AbsenceDeleteDialog: React.FC<AbsenceDeleteDialogProps> = ({ visible, onHide, onDelete, absence }) => {
+const ShiftPlanDeleteDialog: React.FC<ShiftPlanDeleteDialogProps> = ({ visible, onHide, onDelete, shiftPlan }) => {
 
     /**
      * Renders the contents of the delete dialog.
@@ -32,8 +32,8 @@ const AbsenceDeleteDialog: React.FC<AbsenceDeleteDialogProps> = ({ visible, onHi
     const renderDeleteDialogContents = () => {
         return (
             <div>
-                <h2>Delete Absence</h2>
-                <p>Are you sure you want to delete this absence?</p>
+                <h2>Delete ShiftPlan</h2>
+                <p>Are you sure you want to delete this shiftPlan?</p>
             </div>
         );
     }
@@ -54,7 +54,7 @@ const AbsenceDeleteDialog: React.FC<AbsenceDeleteDialogProps> = ({ visible, onHi
 
     return (
         <Dialog
-            header="Delete Absence"
+            header="Delete ShiftPlan"
             visible={visible}
             style={{ width: '50vw' }}
             onHide={onHide}
@@ -65,4 +65,4 @@ const AbsenceDeleteDialog: React.FC<AbsenceDeleteDialogProps> = ({ visible, onHi
     );
 }
 
-export default AbsenceDeleteDialog;
+export default ShiftPlanDeleteDialog;
