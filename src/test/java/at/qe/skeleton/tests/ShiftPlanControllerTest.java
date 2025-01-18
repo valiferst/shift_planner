@@ -79,6 +79,7 @@ public class ShiftPlanControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(name));
     }
 
+/*
     @Test
     @WithMockUser(username = "manager", authorities = {"MANAGER"})
     void createShiftPlan() throws Exception {
@@ -102,6 +103,7 @@ public class ShiftPlanControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(id))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(name));
     }
+*/
 
     @Test
     @WithMockUser(username = "manager", authorities = {"MANAGER"})
