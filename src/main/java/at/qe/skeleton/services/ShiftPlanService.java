@@ -69,20 +69,12 @@ public class ShiftPlanService {
         return shiftPlanRepository.save(shiftPlan);
     }
 
-    // TODO implement validate shiftplan (is this the right spot)?
-
     public boolean validateShiftPlan(ShiftPlan shiftPlan) {
         return true;
     }
 
-    //TODO create publish method
-    // State will be set to PUBLISHED, previously published plan will be set to CANCELLED (concerning only the department)
-    // method calls to department service
-
     /**
      * publishes the ShiftPlan
-     *
-     * Validates the shift plan
      * change State of old PUBLISHED shift plan to CANCELLED
      * changes state of shift plan to be published to PUBLISHED
      *
@@ -101,8 +93,6 @@ public class ShiftPlanService {
         if (oldShiftPlan != null) {
             oldShiftPlan.setState(CANCELLED);
             shiftPlanRepository.save(oldShiftPlan);
-        } else {
-            throw new IllegalArgumentException("No published shift plan found for the department.");
         }
 
         shiftPlan.setState(PUBLISHED);
