@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * REST controller for managing Shift Plans.
@@ -40,9 +39,10 @@ public class ShiftPlanController {
     public ResponseEntity<List<ShiftPlanDTO>> getAllShiftPlans() {
         List<ShiftPlanDTO> shiftPlans = shiftPlanService.getAllShiftPlans().stream()
                 .map(shiftPlanMapper::mapTo)
-                .collect(Collectors.toList());
+                .toList();
         return ResponseEntity.ok(shiftPlans);
     }
+    // TODO: Implement publish shiftplan
 
     /**
      * Retrieves a single shift plan by ID.
