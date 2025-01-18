@@ -8,6 +8,7 @@ import { Button } from "primereact/button";
 import { ShiftPlanDTO } from "../DTO/ShiftPlan";
 import ShiftPlanForm from './ShiftPlanForm';
 import { InputMaskChangeEvent } from "primereact/inputmask";
+import {Nullable} from "primereact/ts-helpers";
 
 interface ShiftPlanDialogProps {
     visible: boolean,
@@ -16,6 +17,7 @@ interface ShiftPlanDialogProps {
     onHide: () => void,
     onSubmit: () => void,
     onInputChange: (event: React.ChangeEvent<HTMLInputElement> | InputMaskChangeEvent) => void,
+    onTimeChange: (name: 'startDate' | 'endDate', event: Nullable<Date>) => void,
 }
 
 /**
@@ -26,6 +28,7 @@ interface ShiftPlanDialogProps {
  * @param onHide callback when the dialog is hidden
  * @param onSubmit callback when the shiftPlan is submitted
  * @param onInputChange callback when the input changes
+ * @param onTimeChange callback when the date in datepicker field changes
  */
 const ShiftPlanDialog: React.FC<ShiftPlanDialogProps> = ({
     visible,
@@ -34,6 +37,7 @@ const ShiftPlanDialog: React.FC<ShiftPlanDialogProps> = ({
     onHide,
     onSubmit,
     onInputChange,
+    onTimeChange,
 }) => {
 
     /**
@@ -60,6 +64,7 @@ const ShiftPlanDialog: React.FC<ShiftPlanDialogProps> = ({
                     shiftPlan={shiftPlan}
                     isNewShiftPlan={isNewShiftPlan}
                     onInputChange={onInputChange}
+                    onTimeChange={onTimeChange}
                 />
             )}
         </Dialog>
