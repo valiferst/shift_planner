@@ -149,4 +149,5 @@ public class DepartmentService {
         return department.getManager().getFirstName() + " " + department.getManager().getLastName() + " ("  +
                 department.getManager().getUsername() + ")";
     }
+
 }
