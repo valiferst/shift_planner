@@ -3,8 +3,12 @@ package at.qe.skeleton.mappers;
 import at.qe.skeleton.dtos.ShiftPlanDTO;
 import at.qe.skeleton.model.ShiftPlan;
 import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.services.ShiftPlanService;
+import at.qe.skeleton.services.UserxService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -13,6 +17,15 @@ import java.util.stream.Collectors;
 @Service
 public class ShiftPlanMapper implements DTOMapper<ShiftPlan, ShiftPlanDTO> {
 
+    private final ShiftPlanService shiftPlanService;
+    private final UserxService userxService;
+
+    @Autowired
+    public ShiftPlanMapper(ShiftPlanService shiftPlanService, UserxService userxService) {
+        this.shiftPlanService = shiftPlanService;
+        this.userxService = userxService;
+    }
+
     @Override
     public ShiftPlanDTO mapTo(ShiftPlan shiftPlan) {
         if (shiftPlan == null) {
@@ -20,9 +33,7 @@ public class ShiftPlanMapper implements DTOMapper<ShiftPlan, ShiftPlanDTO> {
         }
         return new ShiftPlanDTO(
                 shiftPlan.getId(),
-                shiftPlan.getCreateUser() != null ? shiftPlan.getCreateUser().getId() : null,
                 shiftPlan.getCreateDate(),
-                shiftPlan.getUpdateUser() != null ? shiftPlan.getUpdateUser().getId() : null,
                 shiftPlan.getUpdateDate(),
                 shiftPlan.getName(),
                 shiftPlan.getStartDate(),
@@ -34,7 +45,30 @@ public class ShiftPlanMapper implements DTOMapper<ShiftPlan, ShiftPlanDTO> {
     }
 
     @Override
-    public ShiftPlan mapFrom(ShiftPlanDTO dto) {
-        throw new UnsupportedOperationException("Mapping from ShiftPlanDTO to ShiftPlan is not supported.");
+    public ShiftPlan mapFrom(ShiftPlanDTO shiftPlanDto) {
+        if (null == shiftPlanDto) {
+            return null;
+        }
+        ShiftPlan shiftPlan;
+        if (null != shiftPlanDto.id()) {
+            shiftPlan = shiftPlanService.loadShiftPlan(shiftPlanDto.id()).orElse(new ShiftPlan());
+        } else {
+            shiftPlan = new ShiftPlan();
+        }
+        shiftPlan.setCreateDate(shiftPlanDto.createDate());
+        shiftPlan.setUpdateDate(shiftPlanDto.updateDate());
+        shiftPlan.setName(shiftPlanDto.name());
+        shiftPlan.setStartDate(shiftPlanDto.startDate());
+        shiftPlan.setEndDate(shiftPlanDto.endDate());
+        shiftPlan.setAssignedUsers(
+                shiftPlanDto.assignedUserIds().stream()
+                        .map(userxService::loadUser)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .collect(Collectors.toSet())
+        );
+
+
+        return shiftPlan;
     }
 }
