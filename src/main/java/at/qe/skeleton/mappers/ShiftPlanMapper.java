@@ -38,6 +38,7 @@ public class ShiftPlanMapper implements DTOMapper<ShiftPlan, ShiftPlanDTO> {
                 shiftPlan.getName(),
                 shiftPlan.getStartDate(),
                 shiftPlan.getEndDate(),
+                shiftPlan.getState(),
                 shiftPlan.getAssignedUsers().stream()
                         .map(Userx::getId)  // Map Userx to Long (ID)
                         .collect(Collectors.toSet())
@@ -60,6 +61,7 @@ public class ShiftPlanMapper implements DTOMapper<ShiftPlan, ShiftPlanDTO> {
         shiftPlan.setName(shiftPlanDto.name());
         shiftPlan.setStartDate(shiftPlanDto.startDate());
         shiftPlan.setEndDate(shiftPlanDto.endDate());
+        shiftPlan.setState(shiftPlanDto.state());
         shiftPlan.setAssignedUsers(
                 shiftPlanDto.assignedUserIds().stream()
                         .map(userxService::loadUser)

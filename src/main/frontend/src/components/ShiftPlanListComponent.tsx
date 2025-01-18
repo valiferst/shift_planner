@@ -82,6 +82,7 @@ const ShiftPlanListComponent: React.FC<ShiftPlanListProps> = ({ shiftPlans, load
             <Column field="endDate" header="End Date" sortable></Column>
             <Column field="createDate" header="Created Date" sortable></Column>
             <Column field="updateDate" header="Updated Date" sortable></Column>
+            <Column field="state" header="Status" sortable></Column>
             <Column body={(rowData) => rowData.assignedUserIds?.join(', ')} header="Assigned Users" exportable={false}></Column>
             <Column body={editButtonTemplate} exportable={false} style={{ minWidth: '8rem' }}></Column>
             <Column body={publishButtonTemplate} exportable={false} style={{ minWidth: '8rem' }}></Column>

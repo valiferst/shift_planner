@@ -4,6 +4,7 @@ import at.qe.skeleton.controllers.ShiftPlanController;
 import at.qe.skeleton.dtos.ShiftPlanDTO;
 import at.qe.skeleton.mappers.ShiftPlanMapper;
 import at.qe.skeleton.model.ShiftPlan;
+import at.qe.skeleton.model.ShiftPlanState;
 import at.qe.skeleton.services.ShiftPlanService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -48,7 +49,7 @@ public class ShiftPlanControllerTest {
         shiftPlan.setId(id);
         shiftPlan.setName(name);
 
-        ShiftPlanDTO shiftPlanDTO = new ShiftPlanDTO(id, LocalDateTime.now(), LocalDateTime.now(), name, LocalDateTime.now(), LocalDateTime.now(), null);
+        ShiftPlanDTO shiftPlanDTO = new ShiftPlanDTO(id, LocalDateTime.now(), LocalDateTime.now(), name, LocalDateTime.now(), LocalDateTime.now(), ShiftPlanState.DRAFT, null);
 
         Mockito.when(shiftPlanService.getAllShiftPlans()).thenReturn(List.of(shiftPlan));
         Mockito.when(shiftPlanMapper.mapTo(Mockito.any(ShiftPlan.class))).thenReturn(shiftPlanDTO);
@@ -68,7 +69,7 @@ public class ShiftPlanControllerTest {
         shiftPlan.setId(id);
         shiftPlan.setName(name);
 
-        ShiftPlanDTO shiftPlanDTO = new ShiftPlanDTO(id, LocalDateTime.now(), LocalDateTime.now(), name, LocalDateTime.now(), LocalDateTime.now(), null);
+        ShiftPlanDTO shiftPlanDTO = new ShiftPlanDTO(id, LocalDateTime.now(), LocalDateTime.now(), name, LocalDateTime.now(), LocalDateTime.now(), ShiftPlanState.DRAFT, null);
 
         Mockito.when(shiftPlanService.loadShiftPlan(id)).thenReturn(Optional.of(shiftPlan));
         Mockito.when(shiftPlanMapper.mapTo(shiftPlan)).thenReturn(shiftPlanDTO);
