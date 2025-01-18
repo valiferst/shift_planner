@@ -6,14 +6,12 @@ import at.qe.skeleton.mappers.ShiftPlanMapper;
 import at.qe.skeleton.model.ShiftPlan;
 import at.qe.skeleton.model.ShiftPlanState;
 import at.qe.skeleton.services.ShiftPlanService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
@@ -29,7 +27,7 @@ import java.util.Optional;
  */
 @WebMvcTest(ShiftPlanController.class)
 @AutoConfigureMockMvc
-public class ShiftPlanControllerTest {
+class ShiftPlanControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -49,7 +47,7 @@ public class ShiftPlanControllerTest {
         shiftPlan.setId(id);
         shiftPlan.setName(name);
 
-        ShiftPlanDTO shiftPlanDTO = new ShiftPlanDTO(id, LocalDateTime.now(), LocalDateTime.now(), name, LocalDateTime.now(), LocalDateTime.now(), ShiftPlanState.DRAFT, null);
+        ShiftPlanDTO shiftPlanDTO = new ShiftPlanDTO(id, LocalDateTime.now(), LocalDateTime.now(), name, LocalDateTime.now(), LocalDateTime.now(), ShiftPlanState.DRAFT);
 
         Mockito.when(shiftPlanService.getAllShiftPlans()).thenReturn(List.of(shiftPlan));
         Mockito.when(shiftPlanMapper.mapTo(Mockito.any(ShiftPlan.class))).thenReturn(shiftPlanDTO);
@@ -69,7 +67,7 @@ public class ShiftPlanControllerTest {
         shiftPlan.setId(id);
         shiftPlan.setName(name);
 
-        ShiftPlanDTO shiftPlanDTO = new ShiftPlanDTO(id, LocalDateTime.now(), LocalDateTime.now(), name, LocalDateTime.now(), LocalDateTime.now(), ShiftPlanState.DRAFT, null);
+        ShiftPlanDTO shiftPlanDTO = new ShiftPlanDTO(id, LocalDateTime.now(), LocalDateTime.now(), name, LocalDateTime.now(), LocalDateTime.now(), ShiftPlanState.DRAFT);
 
         Mockito.when(shiftPlanService.loadShiftPlan(id)).thenReturn(Optional.of(shiftPlan));
         Mockito.when(shiftPlanMapper.mapTo(shiftPlan)).thenReturn(shiftPlanDTO);
@@ -80,31 +78,6 @@ public class ShiftPlanControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(name));
     }
 
-/*
-    @Test
-    @WithMockUser(username = "manager", authorities = {"MANAGER"})
-    void createShiftPlan() throws Exception {
-        Long id = 1L;
-        String name = "Test Plan";
-
-        ShiftPlanDTO shiftPlanDTO = new ShiftPlanDTO(id, LocalDateTime.now(), LocalDateTime.now(), name, LocalDateTime.now(), LocalDateTime.now(), null);
-        ShiftPlan shiftPlan = new ShiftPlan();
-        shiftPlan.setId(id);
-        shiftPlan.setName(name);
-
-        Mockito.when(shiftPlanMapper.mapFrom(shiftPlanDTO)).thenReturn(shiftPlan);
-        Mockito.when(shiftPlanService.saveShiftPlan(shiftPlan)).thenReturn(shiftPlan);
-        Mockito.when(shiftPlanMapper.mapTo(shiftPlan)).thenReturn(shiftPlanDTO);
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/shiftplans")
-                        .with(SecurityMockMvcRequestPostProcessors.csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(shiftPlanDTO)))
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(id))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(name));
-    }
-*/
 
     @Test
     @WithMockUser(username = "manager", authorities = {"MANAGER"})
