@@ -19,10 +19,12 @@ import java.util.Optional;
 public class ShiftPlanService {
 
     private final ShiftPlanRepository shiftPlanRepository;
+    private ShiftPlanUpdateManager updateManager;
 
     @Autowired
     public ShiftPlanService(ShiftPlanRepository shiftPlanRepository) {
         this.shiftPlanRepository = shiftPlanRepository;
+        this.updateManager = new ShiftPlanUpdateManager();
     }
 
     /**
@@ -62,13 +64,15 @@ public class ShiftPlanService {
         return shiftPlanRepository.save(shiftPlan);
     }
 
+    @PreAuthorize("hasAuthority('MANAGER')")
+    public void updateShiftPlan(ShiftPlan shiftPlan, String attributeName, Object value) {
+        updateManager.updateAttribute(shiftPlan, attributeName, value);
+    }
     // TODO implement validate shiftplan (is this the right spot)?
 
     //TODO create publish method
     // State will be set to PUBLISHED, previously published plan will be set to CANCELLED (concerning only the department)
     // method calls to department service
-
-    // TODO create methods that update individual parts of a shiftplan
 
     /**
      * Deletes the shift plan.
@@ -80,5 +84,5 @@ public class ShiftPlanService {
         Optional<ShiftPlan> shiftPlanOpt = shiftPlanRepository.findById(shiftPlan.getId());
         shiftPlanOpt.ifPresent(plan -> shiftPlanRepository.delete(plan));
     }
-
 }
+
