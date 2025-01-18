@@ -34,7 +34,7 @@ public class UserxServiceTest {
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void testDatainitialization() {
-        Assertions.assertEquals(4, userService.getAllUsers().size(), "Insufficient amount of users initialized for test data source");
+        Assertions.assertEquals(5, userService.getAllUsers().size(), "Insufficient amount of users initialized for test data source");
         for (Userx user : userService.getAllUsers()) {
             if ("admin".equals(user.getUsername())) {
                 Assertions.assertTrue(user.getRoles().contains(UserxRole.ADMIN), "User \"" + user + "\" does not have role ADMIN");
@@ -60,7 +60,13 @@ public class UserxServiceTest {
                 Assertions.assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
                 Assertions.assertNull(user.getUpdateUser(), "User \"" + user + "\" has a updateUser defined");
                 Assertions.assertNull(user.getUpdateDate(), "User \"" + user + "\" has a updateDate defined");
-            } else {
+            } else if ("dummy_manager".equals(user.getUsername())) {
+                Assertions.assertTrue(user.getRoles().contains(UserxRole.MANAGER), "User \"" + user + "\" does not have role MANAGER");
+                Assertions.assertNotNull(user.getCreateUser(), "User \"" + user + "\" does not have a createUser defined");
+                Assertions.assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
+                Assertions.assertNull(user.getUpdateUser(), "User \"" + user + "\" has a updateUser defined");
+                Assertions.assertNull(user.getUpdateDate(), "User \"" + user +"\" has a updateDate defined");}
+            else {
                 Assertions.fail("Unknown user \"" + user.getUsername() + "\" loaded from test data source via UserService.getAllUsers");
             }
         }
@@ -77,9 +83,12 @@ public class UserxServiceTest {
         Assertions.assertFalse(toBeDeletedUserOpt.isEmpty(), "User with id \"" + deleteUserId + "\" could not be loaded from test data source");
         Userx toBeDeletedUser = toBeDeletedUserOpt.get();
 
+        // test if user is referrenced as a manager
+
+
         userService.deleteUser(toBeDeletedUser);
 
-        Assertions.assertEquals(3, userService.getAllUsers().size(), "No user has been deleted after calling UserService.deleteUser");
+        Assertions.assertEquals(4, userService.getAllUsers().size(), "No user has been deleted after calling UserService.deleteUser");
         Optional<Userx> deletedUserOpt = userService.loadUser(deleteUserId);
         Assertions.assertTrue(deletedUserOpt.isEmpty(), "Deleted User with id \"" + deleteUserId + "\" could still be loaded from test data source via UserService.loadUser");
 

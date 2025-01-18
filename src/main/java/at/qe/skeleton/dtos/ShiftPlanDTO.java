@@ -8,9 +8,7 @@ import java.util.Set;
  */
 public record ShiftPlanDTO (
         Long id,
-        Long createdBy,
         LocalDateTime createDate,
-        Long updatedBy,
         LocalDateTime updateDate,
         String name,
         LocalDateTime startDate,
