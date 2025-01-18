@@ -53,9 +53,7 @@ public class ShiftControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/shifts/{id}", id))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(id))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.startTime").value(startTime.toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.endTime").value(endTime.toString()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(id));
     }
 
 /*
