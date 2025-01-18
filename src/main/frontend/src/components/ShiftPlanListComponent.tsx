@@ -76,17 +76,16 @@ const ShiftPlanListComponent: React.FC<ShiftPlanListProps> = ({ shiftPlans, load
     return (
         // DataTable for displaying shiftPlans
         <DataTable value={shiftPlans} loading={loading}>
-            <Column field="absentFrom" header="Absent From" sortable></Column>
-            <Column field="absentUntil" header="Absent Until" sortable></Column>
-            <Column field="absentDay" header="Absent Weekday" sortable></Column>
-            <Column field="validFrom" header="Valid from" sortable></Column>
-            <Column field="validUntil" header="Valid Until" sortable></Column>
-            <Column body={editButtonTemplate} exportable={false}
-                    style={{minWidth: '8rem'}}></Column>
-            <Column body={publishButtonTemplate} exportable={false}
-                    style={{minWidth: '8rem'}}></Column>
-            <Column body={deleteButtonTemplate} exportable={false}
-                    style={{minWidth: '8rem'}}></Column>
+            <Column field="id" header="ID" sortable></Column>
+            <Column field="name" header="Name" sortable></Column>
+            <Column field="startDate" header="Start Date" sortable></Column>
+            <Column field="endDate" header="End Date" sortable></Column>
+            <Column field="createDate" header="Created Date" sortable></Column>
+            <Column field="updateDate" header="Updated Date" sortable></Column>
+            <Column body={(rowData) => rowData.assignedUserIds?.join(', ')} header="Assigned Users" exportable={false}></Column>
+            <Column body={editButtonTemplate} exportable={false} style={{ minWidth: '8rem' }}></Column>
+            <Column body={publishButtonTemplate} exportable={false} style={{ minWidth: '8rem' }}></Column>
+            <Column body={deleteButtonTemplate} exportable={false} style={{ minWidth: '8rem' }}></Column>
         </DataTable>
     )
 };

@@ -31,21 +31,55 @@ const ShiftPlanForm: React.FC<ShiftPlanFormProps> =
         return (
             <div>
                 <h1>
-                    {shiftPlan.absentFrom && shiftPlan.absentUntil && shiftPlan.absentDay ? `ShiftPlan from ${shiftPlan.absentFrom?.toLocaleTimeString()} until ${shiftPlan.absentUntil?.toLocaleTimeString()} on ${shiftPlan.absentDay}`
+                    {shiftPlan.startDate && shiftPlan.endDate && shiftPlan.name
+                        ? `ShiftPlan "${shiftPlan.name}" from ${new Date(shiftPlan.startDate).toLocaleDateString()} to ${new Date(shiftPlan.endDate).toLocaleDateString()}`
                         : "No shiftPlan selected"}
                 </h1>
-                {/* create form */}
-
+                {/* Create form */}
                 <div className="card p-fluid flex flex-wrap gap-3">
-
                     <div className="flex-auto mb-3">
-                        <label htmlFor="absentDay" className="font-bold block">Absent Day</label>
-                        <InputText id="absentDay" name="absentDay" value={shiftPlan.absentDay}
+                        <label htmlFor="name" className="font-bold block">Shift Plan Name</label>
+                        <InputText
+                            id="name"
+                            name="name"
+                            value={shiftPlan.name}
                             onChange={onInputChange}
-                            placeholder="Weekday" />
+                            placeholder="Enter shift plan name"
+                        />
+                    </div>
+                    <div className="flex-auto mb-3">
+                        <label htmlFor="startDate" className="font-bold block">Start Date</label>
+                        <InputText
+                            id="startDate"
+                            name="startDate"
+                            value={shiftPlan.startDate}
+                            onChange={onInputChange}
+                            placeholder="YYYY-MM-DD"
+                        />
+                    </div>
+                    <div className="flex-auto mb-3">
+                        <label htmlFor="endDate" className="font-bold block">End Date</label>
+                        <InputText
+                            id="endDate"
+                            name="endDate"
+                            value={shiftPlan.endDate}
+                            onChange={onInputChange}
+                            placeholder="YYYY-MM-DD"
+                        />
+                    </div>
+                    <div className="flex-auto mb-3">
+                        <label htmlFor="assignedUserIds" className="font-bold block">Assigned Users</label>
+                        <InputText
+                            id="assignedUserIds"
+                            name="assignedUserIds"
+                            value={shiftPlan.assignedUserIds.join(', ')}
+                            onChange={onInputChange}
+                            placeholder="Enter user IDs, comma-separated"
+                        />
                     </div>
                 </div>
             </div>
+
         )
 
     }

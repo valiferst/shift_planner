@@ -1,129 +1,85 @@
-/**
- * This code is part of the skeleton project provided for students of the course "Software
- * Architecture" offered by Innsbruck University.
- */
-
-
-export enum DayOfWeek {
-    MONDAY = 'MONDAY',
-    TUESDAY = 'TUESDAY',
-    WEDNESDAY = 'WEDNESDAY',
-    FRIDAY = 'FRIDAY',
-    SATURDAY = 'SATURDAY',
-    SUNDAY = 'SUNDAY'
-}
-
-/**
- * Absence DTO
- */
 export interface ShiftPlanDTO {
-    id?: number;
-    userId: number | null;
-    validFrom: Date | null;
-    validUntil: Date | null;
-    absentFrom: Date | null;
-    absentUntil: Date | null;
-    absentDay: DayOfWeek | null;
+    id: number | null;
+    createDate: string | null;
+    updateDate: string | null;
+    name: string;
+    startDate: string;
+    endDate: string;
+    assignedUserIds: number[];
 }
 
-/**
- * Absence class with methods for serialization
- */
 export class ShiftPlan implements ShiftPlanDTO {
-    id?: number;
-    userId: number | null;
-    validFrom: Date | null;
-    validUntil: Date | null;
-    absentFrom: Date | null;
-    absentUntil: Date | null;
-    absentDay: DayOfWeek | null;
-
-    /**
-     * Constructor for the ShiftPlan class
-     * @param data :ShiftPlanDTO object
-     */
     constructor(data: ShiftPlanDTO) {
         this.id = data.id;
-        this.userId = data.userId ?? null;
-        this.validFrom = data.validFrom ? new Date(data.validFrom) : null;
-        this.validUntil = data.validUntil ? new Date(data.validUntil) : null;
-        this.absentFrom = data.absentFrom ? new Date(data.absentFrom) : null;
-        this.absentUntil = data.absentUntil ? new Date(data.absentUntil) : null;
-        this.absentDay = data.absentDay;
+        this.createDate = data.createDate;
+        this.updateDate = data.updateDate;
+        this.name = data.name;
+        this.startDate = data.startDate;
+        this.endDate = data.endDate;
+        this.assignedUserIds = data.assignedUserIds;
     }
 
-
-    /**
-     * Serialize the Absence instance to JSON
-     * @returns JSON object
-     */
-    toJSON(): ShiftPlanDTO {
-        return {
-            id: this.id,
-            userId: this.userId,
-            validFrom: this.validFrom,
-            validUntil: this.validUntil,
-            absentFrom: this.absentFrom,
-            absentUntil: this.absentUntil,
-            absentDay: this.absentDay
-        };
-    }
-
-    /**
-     * Serialize the Absence instance to JSON for creating a new absence
-     * @returns JSON object with the fields required for creating a new absence
-     */
-    toCreateJSON(): Pick<ShiftPlanDTO, 'userId' | 'validFrom' | 'validUntil' | 'absentFrom' | 'absentUntil' | 'absentDay' > {
-        return {
-            userId: this.userId,
-            validFrom: this.validFrom,
-            validUntil: this.validUntil,
-            absentFrom: this.absentFrom,
-            absentUntil: this.absentUntil,
-            absentDay: this.absentDay
-        };
-    }
-
-    /**
-     * Serialize the Absence instance to JSON for updating an existing user
-     * @returns JSON object with the fields required for updating a user
-     */
-    toUpdateJSON(): Pick<ShiftPlanDTO, 'userId' | 'validFrom' | 'validUntil' | 'absentFrom' | 'absentUntil' | 'absentDay'> {
-        return {
-            userId: this.userId,
-            validFrom: this.validFrom,
-            validUntil: this.validUntil,
-            absentFrom: this.absentFrom,
-            absentUntil: this.absentUntil,
-            absentDay: this.absentDay
-        };
-    }
-
-    /**
-     * Create an empty Absence instance
-     * @returns Absence instance with empty fields
-     */
-    static empty(): ShiftPlan {
+    static fromJSON(json: any): ShiftPlan {
         return new ShiftPlan({
-            id: undefined,
-            userId: null,
-            validFrom: null,
-            validUntil: null,
-            absentFrom: null,
-            absentUntil: null,
-            absentDay: null
+            id: json.id ?? null,
+            createDate: json.createDate ?? null,
+            updateDate: json.updateDate ?? null,
+            name: json.name ?? '',
+            startDate: json.startDate ?? '',
+            endDate: json.endDate ?? '',
+            assignedUserIds: json.assignedUserIds ?? []
         });
     }
 
-    /**
-     * Create an Absence instance from a JSON object
-     * @param json
-     * @returns Absence instance
-     */
-    static fromJSON(json: any): ShiftPlan {
-        if (!json || typeof json !== 'object') {
-            throw new Error('Invalid JSON for Absence');
-        }
-        return new ShiftPlan(json);
+    static empty(): ShiftPlan {
+        return new ShiftPlan({
+            id: null,
+            createDate: null,
+            updateDate: null,
+            name: '',
+            startDate: '',
+            endDate: '',
+            assignedUserIds: []
+        });
     }
+
+    toJSON(): any {
+        return {
+            id: this.id,
+            createDate: this.createDate,
+            updateDate: this.updateDate,
+            name: this.name,
+            startDate: this.startDate,
+            endDate: this.endDate,
+            assignedUserIds: this.assignedUserIds
+        };
+    }
+
+    toCreateJSON(): any {
+        return {
+            name: this.name,
+            startDate: this.startDate,
+            endDate: this.endDate,
+            assignedUserIds: this.assignedUserIds
+        };
+    }
+
+    toUpdateJSON(): any {
+        return {
+            id: this.id,
+            name: this.name,
+            startDate: this.startDate,
+            endDate: this.endDate,
+            assignedUserIds: this.assignedUserIds,
+            updateDate: this.updateDate
+        };
+    }
+
+    id: number | null;
+    createDate: string | null;
+    updateDate: string | null;
+    name: string;
+    startDate: string;
+    endDate: string;
+    assignedUserIds: number[];
 }

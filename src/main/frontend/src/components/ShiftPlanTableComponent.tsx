@@ -55,15 +55,14 @@ const ShiftPlanTable = () => {
      * Validate the shiftPlan object.
      * @param shiftPlan
      */
-    const validateShiftPlan = (shiftPlan: ShiftPlanDTO | null): boolean => {
+    const  validateShiftPlan = (shiftPlan: ShiftPlanDTO | null): boolean => {
         if (!shiftPlan) return false;
-        return shiftPlan.validFrom !== null &&
-            shiftPlan.validUntil !== null &&
-            shiftPlan.absentFrom !== null &&
-            shiftPlan.absentUntil !== null &&
-            shiftPlan.absentDay !== null &&
-            shiftPlan.validFrom <= shiftPlan.validUntil;
+        return shiftPlan.startDate !== null &&
+            shiftPlan.endDate !== null &&
+            shiftPlan.name !== null &&
+            new Date(shiftPlan.startDate) <= new Date(shiftPlan.endDate);
     }
+
 
     /**
      * Handle the submit event for the shiftPlan dialog.
