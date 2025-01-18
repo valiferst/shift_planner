@@ -20,7 +20,7 @@ import {API_BASE_URL} from "../config/config";
 const fetchAllShiftPlans = async (): Promise<ShiftPlanDTO[]> => {
     try {
         // TODO: check in backend/discuss if this is the right url
-        const response = await axios.get(`${API_BASE_URL}/api/shiftPlans`, {
+        const response = await axios.get(`${API_BASE_URL}/api/shiftplans`, {
             withCredentials: true
         });
         return response.data;
@@ -36,7 +36,7 @@ const fetchAllShiftPlans = async (): Promise<ShiftPlanDTO[]> => {
  * @throws Error if the request fails
  */
 const createShiftPlan = async (selectedShiftPlan: ShiftPlanDTO): Promise<ShiftPlan> => { try { const shiftPlanInstance = createShiftPlanFromInterfaces(selectedShiftPlan);
-        const response = await axios.post(`${API_BASE_URL}/api/shiftPlans`, shiftPlanInstance.toCreateJSON(), {
+        const response = await axios.post(`${API_BASE_URL}/api/shiftplans`, shiftPlanInstance.toCreateJSON(), {
             withCredentials: true
         });
         return ShiftPlan.fromJSON(response.data);
@@ -54,7 +54,7 @@ const createShiftPlan = async (selectedShiftPlan: ShiftPlanDTO): Promise<ShiftPl
 const updateShiftPlan = async (selectedShiftPlan: ShiftPlanDTO): Promise<ShiftPlan> => {
     try {
         const shiftPlanInstance = createShiftPlanFromInterfaces(selectedShiftPlan);
-        const response = await axios.patch(`${API_BASE_URL}/api/shiftPlans/${selectedShiftPlan.id}`, shiftPlanInstance.toUpdateJSON(), {
+        const response = await axios.patch(`${API_BASE_URL}/api/shiftplans/${selectedShiftPlan.id}`, shiftPlanInstance.toUpdateJSON(), {
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -70,7 +70,7 @@ const publishShiftPlan = async (selectedShiftPlan: ShiftPlanDTO): Promise<ShiftP
     try {
         const shiftPlanInstance = createShiftPlanFromInterfaces(selectedShiftPlan);
         // TODO: discuss if patch is the correct axios call
-        const response = await axios.patch(`${API_BASE_URL}/api/shiftPlans/${selectedShiftPlan.id}/publish`, shiftPlanInstance.toUpdateJSON(), {
+        const response = await axios.patch(`${API_BASE_URL}/api/shiftplans/${selectedShiftPlan.id}/publish`, shiftPlanInstance.toUpdateJSON(), {
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -92,7 +92,7 @@ const publishShiftPlan = async (selectedShiftPlan: ShiftPlanDTO): Promise<ShiftP
  */
 const deleteShiftPlan = async (selectedShiftPlan: ShiftPlanDTO) => {
     try {
-        return await axios.delete(`${API_BASE_URL}/api/shiftPlans/${selectedShiftPlan.id}`, {
+        return await axios.delete(`${API_BASE_URL}/api/shiftplans/${selectedShiftPlan.id}`, {
             withCredentials: true
         });
     } catch (error: any) {
