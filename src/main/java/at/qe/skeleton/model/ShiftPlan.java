@@ -5,9 +5,7 @@ import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 import java.util.List;
 
 @Entity
@@ -37,14 +35,6 @@ public class ShiftPlan implements Persistable<Long>, Serializable, Comparable<Sh
     private LocalDateTime startDate; // Start date of the ShiftPlan
 
     private LocalDateTime endDate; // End date of the ShiftPlan
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "shiftplan_assigned_users",
-            joinColumns = @JoinColumn(name = "shiftplan_id"),
-            inverseJoinColumns = @JoinColumn(name = "userx_id")
-    )
-    private Set<Userx> assignedUsers = new HashSet<>(); // Users assigned to this ShiftPlan (null-safe initialization)
 
     // No-args constructor (required by JPA)
     public ShiftPlan() {}
@@ -136,14 +126,6 @@ public class ShiftPlan implements Persistable<Long>, Serializable, Comparable<Sh
 
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
-    }
-
-    public Set<Userx> getAssignedUsers() {
-        return assignedUsers;
-    }
-
-    public void setAssignedUsers(Set<Userx> assignedUsers) {
-        this.assignedUsers = assignedUsers;
     }
 
     // Standard methods

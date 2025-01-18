@@ -6,14 +6,16 @@ import React from "react";
 import { ShiftPlanDTO } from "../DTO/ShiftPlan";
 import { InputMaskChangeEvent } from "primereact/inputmask";
 import { InputText } from "primereact/inputtext";
+import {Calendar} from "primereact/calendar";
+import {Nullable} from "primereact/ts-helpers";
 
 
 interface ShiftPlanFormProps {
     shiftPlan: ShiftPlanDTO,
     isNewShiftPlan: boolean,
     onInputChange: (event: React.ChangeEvent<HTMLInputElement> | InputMaskChangeEvent) => void,
+    onTimeChange: (name: 'startDate' | 'endDate', event: Nullable<Date>) => void,
 }
-// TODO: make ShiftPlan form essentially a shift table view? Then this form would be obsolete
 
 /**
  * Form for creating or editing an shiftPlan.
@@ -27,6 +29,7 @@ const ShiftPlanForm: React.FC<ShiftPlanFormProps> =
         shiftPlan,
         isNewShiftPlan,
         onInputChange,
+        onTimeChange
     }) => {
         return (
             <div>
@@ -49,33 +52,11 @@ const ShiftPlanForm: React.FC<ShiftPlanFormProps> =
                     </div>
                     <div className="flex-auto mb-3">
                         <label htmlFor="startDate" className="font-bold block">Start Date</label>
-                        <InputText
-                            id="startDate"
-                            name="startDate"
-                            value={shiftPlan.startDate}
-                            onChange={onInputChange}
-                            placeholder="YYYY-MM-DD"
-                        />
+                        <Calendar dateFormat="dd/mm/yy" value={shiftPlan.startDate} onChange={(e) => onTimeChange('startDate', e.value)} />
                     </div>
                     <div className="flex-auto mb-3">
                         <label htmlFor="endDate" className="font-bold block">End Date</label>
-                        <InputText
-                            id="endDate"
-                            name="endDate"
-                            value={shiftPlan.endDate}
-                            onChange={onInputChange}
-                            placeholder="YYYY-MM-DD"
-                        />
-                    </div>
-                    <div className="flex-auto mb-3">
-                        <label htmlFor="assignedUserIds" className="font-bold block">Assigned Users</label>
-                        <InputText
-                            id="assignedUserIds"
-                            name="assignedUserIds"
-                            value={shiftPlan.assignedUserIds.join(', ')}
-                            onChange={onInputChange}
-                            placeholder="Enter user IDs, comma-separated"
-                        />
+                        <Calendar dateFormat="dd/mm/yy" value={shiftPlan.endDate} onChange={(e) => onTimeChange('endDate', e.value)} />
                     </div>
                 </div>
             </div>

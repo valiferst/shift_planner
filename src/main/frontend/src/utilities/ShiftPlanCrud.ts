@@ -19,7 +19,6 @@ import {API_BASE_URL} from "../config/config";
  */
 const fetchAllShiftPlans = async (): Promise<ShiftPlanDTO[]> => {
     try {
-        // TODO: check in backend/discuss if this is the right url
         const response = await axios.get(`${API_BASE_URL}/api/shiftplans`, {
             withCredentials: true
         });
@@ -54,7 +53,7 @@ const createShiftPlan = async (selectedShiftPlan: ShiftPlanDTO): Promise<ShiftPl
 const updateShiftPlan = async (selectedShiftPlan: ShiftPlanDTO): Promise<ShiftPlan> => {
     try {
         const shiftPlanInstance = createShiftPlanFromInterfaces(selectedShiftPlan);
-        const response = await axios.patch(`${API_BASE_URL}/api/shiftplans/${selectedShiftPlan.id}`, shiftPlanInstance.toUpdateJSON(), {
+        const response = await axios.patch(`${API_BASE_URL}/api/shiftplans/${selectedShiftPlan.id}`, shiftPlanInstance.toJSON(), {
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -70,7 +69,7 @@ const publishShiftPlan = async (selectedShiftPlan: ShiftPlanDTO): Promise<ShiftP
     try {
         const shiftPlanInstance = createShiftPlanFromInterfaces(selectedShiftPlan);
         // TODO: discuss if patch is the correct axios call
-        const response = await axios.patch(`${API_BASE_URL}/api/shiftplans/${selectedShiftPlan.id}/publish`, shiftPlanInstance.toUpdateJSON(), {
+        const response = await axios.patch(`${API_BASE_URL}/api/shiftplans/${selectedShiftPlan.id}/publish`, shiftPlanInstance.toJSON(), {
             headers: {
                 'Content-Type': 'application/json'
             },

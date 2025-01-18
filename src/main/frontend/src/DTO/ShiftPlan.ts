@@ -1,55 +1,49 @@
-export const ShiftPlanState = {
-    DRAFT: 'DRAFT',
-    PUBLISHED: 'PUBLISHED',
-    CANCELLED: 'CANCELLED',
-};
+
+export enum ShiftPlanState {
+    DRAFT = 'DRAFT',
+    PUBLISHED = 'PUBLISHED',
+    CANCELLED = 'CANCELLED',
+}
 
 export interface ShiftPlanDTO {
-    id: number | null;
+    id?: number;
     createDate: string | null;
     updateDate: string | null;
     name: string;
-    startDate: string;
-    endDate: string;
-    state: string;
-    assignedUserIds: number[];
+    startDate: Date | null;
+    endDate: Date | null;
+    state: ShiftPlanState | null;
 }
 
 export class ShiftPlan implements ShiftPlanDTO {
+
+    id?: number;
+    createDate: string | null;
+    updateDate: string | null;
+    name: string;
+    startDate: Date | null;
+    endDate: Date | null;
+    state: ShiftPlanState | null;
+
     constructor(data: ShiftPlanDTO) {
         this.id = data.id;
         this.createDate = data.createDate;
         this.updateDate = data.updateDate;
         this.name = data.name;
-        this.startDate = data.startDate;
-        this.endDate = data.endDate;
+        this.startDate = data.startDate ? new Date(data.startDate) : null;
+        this.endDate = data.endDate? new Date(data.endDate) : null;
         this.state = data.state;
-        this.assignedUserIds = data.assignedUserIds;
-    }
-
-    static fromJSON(json: any) {
-        return new ShiftPlan({
-            id: json.id ?? null,
-            createDate: json.createDate ?? null,
-            updateDate: json.updateDate ?? null,
-            name: json.name ?? '',
-            startDate: json.startDate ?? '',
-            endDate: json.endDate ?? '',
-            state: json.state ?? ShiftPlanState.DRAFT,
-            assignedUserIds: json.assignedUserIds ?? [],
-        });
     }
 
     static empty() {
         return new ShiftPlan({
-            id: null,
+            id: undefined,
             createDate: null,
             updateDate: null,
             name: '',
-            startDate: '',
-            endDate: '',
-            state: ShiftPlanState.DRAFT,
-            assignedUserIds: [],
+            startDate: null,
+            endDate: null,
+            state: null,
         });
     }
 
@@ -62,38 +56,27 @@ export class ShiftPlan implements ShiftPlanDTO {
             startDate: this.startDate,
             endDate: this.endDate,
             state: this.state,
-            assignedUserIds: this.assignedUserIds,
         };
     }
 
-    toCreateJSON() {
+    /**
+     * Serialize the ShiftPlan instance to JSON for creating a new shiftPlan
+     * @returns JSON object with the fields required for creating a new shiftPlan
+     */
+    toCreateJSON(): Pick<ShiftPlanDTO, 'name' | 'startDate' | 'endDate' | 'state'> {
         return {
             name: this.name,
             startDate: this.startDate,
             endDate: this.endDate,
             state: this.state,
-            assignedUserIds: this.assignedUserIds,
         };
     }
 
-    toUpdateJSON() {
-        return {
-            id: this.id,
-            name: this.name,
-            startDate: this.startDate,
-            endDate: this.endDate,
-            state: this.state,
-            assignedUserIds: this.assignedUserIds,
-            updateDate: this.updateDate,
-        };
+    static fromJSON(json: any): ShiftPlan {
+        if (!json || typeof json !== 'object') {
+            throw new Error('Invalid JSON for ShiftPlan');
+        }
+        return new ShiftPlan(json);
     }
 
-    id: number | null;
-    createDate: string | null;
-    updateDate: string | null;
-    name: string;
-    startDate: string;
-    endDate: string;
-    state: string;
-    assignedUserIds: number[];
 }

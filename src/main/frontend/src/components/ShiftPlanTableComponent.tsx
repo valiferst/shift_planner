@@ -19,6 +19,7 @@ import { ShiftPlanCrud } from "../utilities/ShiftPlanCrud";
 import {
     createShiftPlanFromInterfaces
 } from '../factories/shiftPlanFactory';
+import {Nullable} from "primereact/ts-helpers";
 
 /**
  * Component for managing shiftPlans.
@@ -59,8 +60,7 @@ const ShiftPlanTable = () => {
         if (!shiftPlan) return false;
         return shiftPlan.startDate !== null &&
             shiftPlan.endDate !== null &&
-            shiftPlan.name !== null &&
-            new Date(shiftPlan.startDate) <= new Date(shiftPlan.endDate);
+            shiftPlan.name !== null && shiftPlan.startDate <= shiftPlan.endDate;
     }
 
 
@@ -214,6 +214,15 @@ const ShiftPlanTable = () => {
         setSelectedShiftPlan({ ...selectedShiftPlan, [name]: value });
     }
 
+    /**
+     * Handle input changes for the absence dialog: times.
+     * @param event
+     */
+    const handleTimeChange = (name: 'startDate' | 'endDate' , event: Nullable<Date>) => {
+        if (!selectedShiftPlan) return;
+        setSelectedShiftPlan({ ...selectedShiftPlan, [name]: event });
+    }
+
 
     return (<Card title="ShiftPlan List" className="m-4">
         {/* Button that opens a new shiftPlan dialog on click */}
@@ -225,7 +234,8 @@ const ShiftPlanTable = () => {
         {/* Dialog for creating or editing an shiftPlan */}
         <ShiftPlanDialog visible={dialogVisible} shiftPlan={selectedShiftPlan} isNewShiftPlan={isNewShiftPlan}
             onHide={hideDialog} onSubmit={handleSubmit}
-            onInputChange={handleInputChange} />
+            onInputChange={handleInputChange} onTimeChange={handleTimeChange}/>
+
         {/* Dialog for creating or publishing an shiftPlan */}
         <ShiftPlanPublishDialog visible={publishDialogVisible} shiftPlan={selectedShiftPlan}
                          onHide={hidePublishDialog} onPublish={publishShiftPlan}

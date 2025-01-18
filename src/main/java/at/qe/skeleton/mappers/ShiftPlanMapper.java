@@ -2,14 +2,9 @@ package at.qe.skeleton.mappers;
 
 import at.qe.skeleton.dtos.ShiftPlanDTO;
 import at.qe.skeleton.model.ShiftPlan;
-import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.services.ShiftPlanService;
-import at.qe.skeleton.services.UserxService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Mapping between ShiftPlan and ShiftPlanDTOs.
@@ -18,12 +13,10 @@ import java.util.stream.Collectors;
 public class ShiftPlanMapper implements DTOMapper<ShiftPlan, ShiftPlanDTO> {
 
     private final ShiftPlanService shiftPlanService;
-    private final UserxService userxService;
 
     @Autowired
-    public ShiftPlanMapper(ShiftPlanService shiftPlanService, UserxService userxService) {
+    public ShiftPlanMapper(ShiftPlanService shiftPlanService) {
         this.shiftPlanService = shiftPlanService;
-        this.userxService = userxService;
     }
 
     @Override
@@ -38,10 +31,7 @@ public class ShiftPlanMapper implements DTOMapper<ShiftPlan, ShiftPlanDTO> {
                 shiftPlan.getName(),
                 shiftPlan.getStartDate(),
                 shiftPlan.getEndDate(),
-                shiftPlan.getState(),
-                shiftPlan.getAssignedUsers().stream()
-                        .map(Userx::getId)  // Map Userx to Long (ID)
-                        .collect(Collectors.toSet())
+                shiftPlan.getState()
         );
     }
 
@@ -62,13 +52,6 @@ public class ShiftPlanMapper implements DTOMapper<ShiftPlan, ShiftPlanDTO> {
         shiftPlan.setStartDate(shiftPlanDto.startDate());
         shiftPlan.setEndDate(shiftPlanDto.endDate());
         shiftPlan.setState(shiftPlanDto.state());
-        shiftPlan.setAssignedUsers(
-                shiftPlanDto.assignedUserIds().stream()
-                        .map(userxService::loadUser)
-                        .filter(Optional::isPresent)
-                        .map(Optional::get)
-                        .collect(Collectors.toSet())
-        );
 
 
         return shiftPlan;
