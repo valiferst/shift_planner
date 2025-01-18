@@ -44,7 +44,7 @@ const NavbarComponent: React.FC = () => {
 
 
     const getItems = () => {
-        const filterLabels= ["Employee Submenu"]
+        const filterLabels= ["Employee Submenu", "Home", "Logout"]
         if (currentUser?.roles.includes(UserxRole.ADMIN)) {
             filterLabels.push("Admin Submenu")
         }
