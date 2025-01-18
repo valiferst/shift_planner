@@ -22,6 +22,7 @@ interface AbsenceFormProps {
  * @param absence the absence to be edited
  * @param isNewAbsence whether the absence is new
  * @param onInputChange callback when the input changes
+ * @param onTimeChange
  */
 const AbsenceForm: React.FC<AbsenceFormProps> =
     ({
