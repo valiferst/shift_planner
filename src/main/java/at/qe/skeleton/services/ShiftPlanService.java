@@ -30,7 +30,7 @@ public class ShiftPlanService {
      *
      * @return the collection of shift plans
      */
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('MANAGER')")
     public Collection<ShiftPlan> getAllShiftPlans() {
         return shiftPlanRepository.findAll();
     }
