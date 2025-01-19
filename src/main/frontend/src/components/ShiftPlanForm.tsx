@@ -8,6 +8,9 @@ import { InputMaskChangeEvent } from "primereact/inputmask";
 import { InputText } from "primereact/inputtext";
 import {Calendar} from "primereact/calendar";
 import {Nullable} from "primereact/ts-helpers";
+import {DataTable} from "primereact/datatable";
+import {Column} from "primereact/column";
+import {ShiftDTO} from "../DTO/Shift";
 
 
 interface ShiftPlanFormProps {
@@ -52,12 +55,35 @@ const ShiftPlanForm: React.FC<ShiftPlanFormProps> =
                     </div>
                     <div className="flex-auto mb-3">
                         <label htmlFor="startDate" className="font-bold block">Start Date</label>
-                        <Calendar dateFormat="dd/mm/yy" value={shiftPlan.startDate} onChange={(e) => onTimeChange('startDate', e.value)} />
+                        <Calendar dateFormat="dd/mm/yy" value={shiftPlan.startDate}
+                                  onChange={(e) => onTimeChange('startDate', e.value)}/>
                     </div>
                     <div className="flex-auto mb-3">
                         <label htmlFor="endDate" className="font-bold block">End Date</label>
-                        <Calendar dateFormat="dd/mm/yy" value={shiftPlan.endDate} onChange={(e) => onTimeChange('endDate', e.value)} />
+                        <Calendar dateFormat="dd/mm/yy" value={shiftPlan.endDate}
+                                  onChange={(e) => onTimeChange('endDate', e.value)}/>
                     </div>
+                </div>
+                <div className="card">
+                    <h2>Shifts</h2>
+                    <DataTable value={shiftPlan.shifts || []} paginator rows={5} emptyMessage="No shifts available.">
+                        <Column field="id" header="ID"/>
+                        <Column
+                            field="startTime"
+                            header="Start Time"
+                            body={(rowData: ShiftDTO) => rowData.startTime ? new Date(rowData.startTime).toLocaleString() : ''}
+                        />
+                        <Column
+                            field="endTime"
+                            header="End Time"
+                            body={(rowData: ShiftDTO) => rowData.endTime ? new Date(rowData.endTime).toLocaleString() : ''}
+                        />
+                        <Column
+                            field="shiftWorkers"
+                            header="Workers"
+                            body={(rowData: ShiftDTO) => rowData.shiftWorkerNames?.join(', ') || 'No workers assigned'}
+                        />
+                    </DataTable>
                 </div>
             </div>
 

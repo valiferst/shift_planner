@@ -2,6 +2,7 @@ package at.qe.skeleton.mappers;
 
 import at.qe.skeleton.dtos.ShiftPlanDTO;
 import at.qe.skeleton.model.ShiftPlan;
+import at.qe.skeleton.repositories.ShiftPlanRepository;
 import at.qe.skeleton.services.ShiftPlanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,10 +14,14 @@ import org.springframework.stereotype.Service;
 public class ShiftPlanMapper implements DTOMapper<ShiftPlan, ShiftPlanDTO> {
 
     private final ShiftPlanService shiftPlanService;
+    private final ShiftMapper shiftMapper;
+    private final ShiftPlanRepository shiftPlanRepository;
 
     @Autowired
-    public ShiftPlanMapper(ShiftPlanService shiftPlanService) {
+    public ShiftPlanMapper(ShiftPlanService shiftPlanService, ShiftMapper shiftMapper, ShiftPlanRepository shiftPlanRepository) {
         this.shiftPlanService = shiftPlanService;
+        this.shiftMapper = shiftMapper;
+        this.shiftPlanRepository = shiftPlanRepository;
     }
 
     @Override
@@ -31,10 +36,14 @@ public class ShiftPlanMapper implements DTOMapper<ShiftPlan, ShiftPlanDTO> {
                 shiftPlan.getName(),
                 shiftPlan.getStartDate(),
                 shiftPlan.getEndDate(),
-                shiftPlan.getState()
+                shiftPlan.getState(),
+                shiftPlan.getDepartment().getName(),
+                shiftPlan.getDepartment().getId(),
+                shiftPlan.getShifts().stream().map(shiftMapper::mapTo).toList()
         );
     }
 
+    // TODO handle the newly introduced fields in the DTO (departmentName and departmentId, shiftDTO-list), when receiving it from the frontend (new shiftplan-creation)
     @Override
     public ShiftPlan mapFrom(ShiftPlanDTO shiftPlanDto) {
         if (null == shiftPlanDto) {
