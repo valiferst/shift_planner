@@ -13,6 +13,7 @@ export interface ShiftPlanDTO {
     startDate: Date | null;
     endDate: Date | null;
     state: ShiftPlanState | null;
+    departmentName: string;
 }
 
 export class ShiftPlan implements ShiftPlanDTO {
@@ -24,6 +25,7 @@ export class ShiftPlan implements ShiftPlanDTO {
     startDate: Date | null;
     endDate: Date | null;
     state: ShiftPlanState | null;
+    departmentName: string;
 
     constructor(data: ShiftPlanDTO) {
         this.id = data.id;
@@ -33,6 +35,7 @@ export class ShiftPlan implements ShiftPlanDTO {
         this.startDate = data.startDate ? new Date(data.startDate) : null;
         this.endDate = data.endDate? new Date(data.endDate) : null;
         this.state = data.state;
+        this.departmentName = data.departmentName;
     }
 
     static empty() {
@@ -44,6 +47,7 @@ export class ShiftPlan implements ShiftPlanDTO {
             startDate: null,
             endDate: null,
             state: null,
+            departmentName: ''
         });
     }
 
@@ -56,6 +60,7 @@ export class ShiftPlan implements ShiftPlanDTO {
             startDate: this.startDate,
             endDate: this.endDate,
             state: this.state,
+            departmentName: this.departmentName
         };
     }
 
@@ -63,12 +68,13 @@ export class ShiftPlan implements ShiftPlanDTO {
      * Serialize the ShiftPlan instance to JSON for creating a new shiftPlan
      * @returns JSON object with the fields required for creating a new shiftPlan
      */
-    toCreateJSON(): Pick<ShiftPlanDTO, 'name' | 'startDate' | 'endDate' | 'state'> {
+    toCreateJSON(): Pick<ShiftPlanDTO, 'name' | 'startDate' | 'endDate' | 'state' | 'departmentName'> {
         return {
             name: this.name,
             startDate: this.startDate,
             endDate: this.endDate,
             state: this.state,
+            departmentName: this.departmentName
         };
     }
 
