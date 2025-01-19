@@ -14,5 +14,7 @@ public record ShiftPlanDTO (
         String name,
         LocalDateTime startDate,
         LocalDateTime endDate,
-        ShiftPlanState state
+        ShiftPlanState state,
+        String departmentName,
+        Long departmentId
 ) {}

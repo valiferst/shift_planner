@@ -31,10 +31,13 @@ public class ShiftPlanMapper implements DTOMapper<ShiftPlan, ShiftPlanDTO> {
                 shiftPlan.getName(),
                 shiftPlan.getStartDate(),
                 shiftPlan.getEndDate(),
-                shiftPlan.getState()
+                shiftPlan.getState(),
+                shiftPlan.getDepartment().getName(),
+                shiftPlan.getDepartment().getId()
         );
     }
 
+    // TODO handle the newly introduced fields in the DTO (departmentName and departmentId), when receiving it from the frontend (new shiftplan-creation)
     @Override
     public ShiftPlan mapFrom(ShiftPlanDTO shiftPlanDto) {
         if (null == shiftPlanDto) {

@@ -47,11 +47,13 @@ class ShiftPlanControllerTest {
     void getAllShiftPlans() throws Exception {
         Long id = 1L;
         String name = "Test Plan";
+        String departmentName = "Test Department";
+        Long departmentId = 1L;
         ShiftPlan shiftPlan = new ShiftPlan();
         shiftPlan.setId(id);
         shiftPlan.setName(name);
 
-        ShiftPlanDTO shiftPlanDTO = new ShiftPlanDTO(id, LocalDateTime.now(), LocalDateTime.now(), name, LocalDateTime.now(), LocalDateTime.now(), ShiftPlanState.DRAFT);
+        ShiftPlanDTO shiftPlanDTO = new ShiftPlanDTO(id, LocalDateTime.now(), LocalDateTime.now(), name, LocalDateTime.now(), LocalDateTime.now(), ShiftPlanState.DRAFT, departmentName, departmentId);
 
         Mockito.when(shiftPlanService.getAllShiftPlans()).thenReturn(List.of(shiftPlan));
         Mockito.when(shiftPlanMapper.mapTo(Mockito.any(ShiftPlan.class))).thenReturn(shiftPlanDTO);
@@ -67,11 +69,13 @@ class ShiftPlanControllerTest {
     void getShiftPlanById() throws Exception {
         Long id = 1L;
         String name = "Test Plan";
+        String departmentName = "Test Department";
+        Long departmentId = 1L;
         ShiftPlan shiftPlan = new ShiftPlan();
         shiftPlan.setId(id);
         shiftPlan.setName(name);
 
-        ShiftPlanDTO shiftPlanDTO = new ShiftPlanDTO(id, LocalDateTime.now(), LocalDateTime.now(), name, LocalDateTime.now(), LocalDateTime.now(), ShiftPlanState.DRAFT);
+        ShiftPlanDTO shiftPlanDTO = new ShiftPlanDTO(id, LocalDateTime.now(), LocalDateTime.now(), name, LocalDateTime.now(), LocalDateTime.now(), ShiftPlanState.DRAFT, departmentName, departmentId);
 
         Mockito.when(shiftPlanService.loadShiftPlan(id)).thenReturn(Optional.of(shiftPlan));
         Mockito.when(shiftPlanMapper.mapTo(shiftPlan)).thenReturn(shiftPlanDTO);
