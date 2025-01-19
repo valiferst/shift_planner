@@ -2,7 +2,9 @@ package at.qe.skeleton.controllers;
 
 import at.qe.skeleton.dtos.ShiftPlanDTO;
 import at.qe.skeleton.mappers.ShiftPlanMapper;
+import at.qe.skeleton.model.Department;
 import at.qe.skeleton.model.ShiftPlan;
+import at.qe.skeleton.services.DepartmentService;
 import at.qe.skeleton.services.ShiftPlanService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,11 +25,13 @@ import java.util.Optional;
 public class ShiftPlanController {
 
     private final ShiftPlanService shiftPlanService;
+    private final DepartmentService departmentService;
     private final ShiftPlanMapper shiftPlanMapper;
 
     @Autowired
-    public ShiftPlanController(ShiftPlanService shiftPlanService, ShiftPlanMapper shiftPlanMapper) {
+    public ShiftPlanController(ShiftPlanService shiftPlanService, DepartmentService departmentService, ShiftPlanMapper shiftPlanMapper) {
         this.shiftPlanService = shiftPlanService;
+        this.departmentService = departmentService;
         this.shiftPlanMapper = shiftPlanMapper;
     }
 
@@ -39,6 +44,37 @@ public class ShiftPlanController {
     @PreAuthorize("hasAuthority('MANAGER')")
     public ResponseEntity<List<ShiftPlanDTO>> getAllShiftPlans() {
         List<ShiftPlanDTO> shiftPlans = shiftPlanService.getAllShiftPlans().stream()
+                .map(shiftPlanMapper::mapTo)
+                .toList();
+        return ResponseEntity.ok(shiftPlans);
+    }
+
+    /**
+     * Retrieves all shift plans for a manager.
+     *
+     * @return List of all ShiftPlans DTOs for departments where the user is manager.
+     */
+    @GetMapping("/my")
+    @PreAuthorize("hasAuthority('MANAGER')")
+    public ResponseEntity<List<ShiftPlanDTO>> getAllShiftPlansForManager() {
+        Collection<Department> departments = departmentService.getDepartmentsByManagerId();
+        List<ShiftPlanDTO> shiftPlans = departments.stream()
+                .map(Department::getId)
+                .flatMap(id -> shiftPlanService.getShiftPlansByDepartmentId(id).stream())
+                .map(shiftPlanMapper::mapTo)
+                .toList();
+        return ResponseEntity.ok(shiftPlans);
+    }
+
+    /**
+     * Retrieves all shift plans for a department.
+     *
+     * @return List of all ShiftPlans as DTOs for a department.
+     */
+    @GetMapping("/by_department_id")
+    @PreAuthorize("hasAuthority('MANAGER')")
+    public ResponseEntity<List<ShiftPlanDTO>> getShiftPlansByDepartmentId(@RequestParam Long departmentId) {
+        List<ShiftPlanDTO> shiftPlans = shiftPlanService.getShiftPlansByDepartmentId(departmentId).stream()
                 .map(shiftPlanMapper::mapTo)
                 .toList();
         return ResponseEntity.ok(shiftPlans);
