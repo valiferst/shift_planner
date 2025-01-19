@@ -2,11 +2,14 @@ package at.qe.skeleton.tests;
 
 import at.qe.skeleton.controllers.ShiftPlanController;
 import at.qe.skeleton.dtos.ShiftPlanDTO;
+import at.qe.skeleton.mappers.ShiftMapper;
 import at.qe.skeleton.mappers.ShiftPlanMapper;
+import at.qe.skeleton.model.Shift;
 import at.qe.skeleton.model.ShiftPlan;
 import at.qe.skeleton.model.ShiftPlanState;
 import at.qe.skeleton.services.DepartmentService;
 import at.qe.skeleton.services.ShiftPlanService;
+import at.qe.skeleton.services.ShiftService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +45,9 @@ class ShiftPlanControllerTest {
     @MockBean
     private ShiftPlanMapper shiftPlanMapper;
 
+    @MockBean
+    private ShiftMapper shiftMapper;
+
     @Test
     @WithMockUser(username = "manager", authorities = {"MANAGER"})
     void getAllShiftPlans() throws Exception {
@@ -52,8 +58,9 @@ class ShiftPlanControllerTest {
         ShiftPlan shiftPlan = new ShiftPlan();
         shiftPlan.setId(id);
         shiftPlan.setName(name);
+        Shift shift = new Shift();
 
-        ShiftPlanDTO shiftPlanDTO = new ShiftPlanDTO(id, LocalDateTime.now(), LocalDateTime.now(), name, LocalDateTime.now(), LocalDateTime.now(), ShiftPlanState.DRAFT, departmentName, departmentId);
+        ShiftPlanDTO shiftPlanDTO = new ShiftPlanDTO(id, LocalDateTime.now(), LocalDateTime.now(), name, LocalDateTime.now(), LocalDateTime.now(), ShiftPlanState.DRAFT, departmentName, departmentId, List.of(shiftMapper.mapTo(shift)));
 
         Mockito.when(shiftPlanService.getAllShiftPlans()).thenReturn(List.of(shiftPlan));
         Mockito.when(shiftPlanMapper.mapTo(Mockito.any(ShiftPlan.class))).thenReturn(shiftPlanDTO);
@@ -74,8 +81,10 @@ class ShiftPlanControllerTest {
         ShiftPlan shiftPlan = new ShiftPlan();
         shiftPlan.setId(id);
         shiftPlan.setName(name);
+        Shift shift = new Shift();
 
-        ShiftPlanDTO shiftPlanDTO = new ShiftPlanDTO(id, LocalDateTime.now(), LocalDateTime.now(), name, LocalDateTime.now(), LocalDateTime.now(), ShiftPlanState.DRAFT, departmentName, departmentId);
+
+        ShiftPlanDTO shiftPlanDTO = new ShiftPlanDTO(id, LocalDateTime.now(), LocalDateTime.now(), name, LocalDateTime.now(), LocalDateTime.now(), ShiftPlanState.DRAFT, departmentName, departmentId, List.of(shiftMapper.mapTo(shift)));
 
         Mockito.when(shiftPlanService.loadShiftPlan(id)).thenReturn(Optional.of(shiftPlan));
         Mockito.when(shiftPlanMapper.mapTo(shiftPlan)).thenReturn(shiftPlanDTO);

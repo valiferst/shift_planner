@@ -1,3 +1,4 @@
+import {Shift} from "./Shift";
 
 export enum ShiftPlanState {
     DRAFT = 'DRAFT',
@@ -14,6 +15,7 @@ export interface ShiftPlanDTO {
     endDate: Date | null;
     state: ShiftPlanState | null;
     departmentName: string;
+    shifts: Shift[] | null;
 }
 
 export class ShiftPlan implements ShiftPlanDTO {
@@ -26,6 +28,7 @@ export class ShiftPlan implements ShiftPlanDTO {
     endDate: Date | null;
     state: ShiftPlanState | null;
     departmentName: string;
+    shifts: Shift[] | null;
 
     constructor(data: ShiftPlanDTO) {
         this.id = data.id;
@@ -36,6 +39,7 @@ export class ShiftPlan implements ShiftPlanDTO {
         this.endDate = data.endDate? new Date(data.endDate) : null;
         this.state = data.state;
         this.departmentName = data.departmentName;
+        this.shifts = data.shifts ? data.shifts.map(shift => new Shift(shift)) : null;
     }
 
     static empty() {
@@ -47,7 +51,8 @@ export class ShiftPlan implements ShiftPlanDTO {
             startDate: null,
             endDate: null,
             state: null,
-            departmentName: ''
+            departmentName: '',
+            shifts: []
         });
     }
 
@@ -60,9 +65,12 @@ export class ShiftPlan implements ShiftPlanDTO {
             startDate: this.startDate,
             endDate: this.endDate,
             state: this.state,
-            departmentName: this.departmentName
+            departmentName: this.departmentName,
+            shifts: this.shifts
         };
     }
+
+    // TODO enable shift creation
 
     /**
      * Serialize the ShiftPlan instance to JSON for creating a new shiftPlan
