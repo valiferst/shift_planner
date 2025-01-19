@@ -55,7 +55,7 @@ const createAbsence = async (selectedAbsence: AbsenceDTO): Promise<Absence> => {
 const updateAbsence = async (selectedAbsence: AbsenceDTO): Promise<Absence> => {
     try {
         const absenceInstance = createAbsenceFromInterfaces(selectedAbsence);
-        const response = await axios.patch(`${API_BASE_URL}/api/users/absences/${selectedAbsence.id}`, absenceInstance.toUpdateJSON(), {
+        const response = await axios.patch(`${API_BASE_URL}/api/users/absences/${selectedAbsence.id}`, absenceInstance.toJSON(), {
             headers: {
                 'Content-Type': 'application/json'
             },

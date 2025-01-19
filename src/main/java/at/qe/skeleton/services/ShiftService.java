@@ -87,7 +87,8 @@ public class ShiftService {
      */
     @PreAuthorize("hasAuthority('MANAGER')")
     public void deleteShift(Shift shift) {
-        shiftRepository.findById(shift.getId()).ifPresent(shiftRepository::delete);
+        Optional<Shift> shiftOpt = shiftRepository.findById(shift.getId());
+        shiftOpt.ifPresent(shiftRepository::delete);
     }
 
     /**

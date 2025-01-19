@@ -102,7 +102,7 @@ public class UserxService {
                 Userx dummyManager = userRepository.findById(9999L)
                         .orElseThrow(() -> new IllegalStateException("Dummy manager with ID 9999L does not exist."));
 
-                departmentRepository.getDepartmentByManager(userToDelete).forEach(department -> {
+                departmentRepository.getDepartmentsByManagerId(userToDelete.getId()).forEach(department -> {
                     department.setManager(dummyManager);
                     departmentRepository.save(department);
                 });

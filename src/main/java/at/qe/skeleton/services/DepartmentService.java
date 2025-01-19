@@ -11,8 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Service class for managing Departments.
@@ -22,10 +21,12 @@ import java.util.Optional;
 public class DepartmentService {
 
     private final DepartmentRepository departmentRepository;
+    private final UserxService userxService;
 
     @Autowired
-    public DepartmentService(DepartmentRepository departmentRepository) {
+    public DepartmentService(DepartmentRepository departmentRepository, UserxService userxService) {
         this.departmentRepository = departmentRepository;
+        this.userxService = userxService;
     }
 
     /**
@@ -90,15 +91,12 @@ public class DepartmentService {
     }
 
     /**
-     * Gets all shift plans for a department.
-     * @param departmentId The ID of the department.
-     * @return A list of shift plans for the department.
+     * get the departments managed by the authenticated user.
      */
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public List<ShiftPlan> getShiftPlansByDepartment(Long departmentId) {
-        Department department = departmentRepository.findById(departmentId)
-                .orElseThrow(() -> new IllegalArgumentException("Department not found with ID: " + departmentId));
-        return department.getShiftPlans();
+    @PreAuthorize("hasAuthority('MANAGER')")
+    public Collection<Department> getDepartmentsByManagerId() {
+        Long managerId = userxService.getAuthenticatedUser().getId();
+        return departmentRepository.getDepartmentsByManagerId(managerId);
     }
 
     /**
@@ -123,7 +121,7 @@ public class DepartmentService {
      * @param departmentId The ID of the department.
      * @return The PUBLISHED shift plan, or null if none exists.
      */
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('MANAGER')")
     public ShiftPlan getPublishedShiftPlan(Long departmentId) {
         Department department = departmentRepository.findById(departmentId)
                 .orElseThrow(() -> new IllegalArgumentException("Department not found with ID: " + departmentId));
@@ -149,4 +147,5 @@ public class DepartmentService {
         return department.getManager().getFirstName() + " " + department.getManager().getLastName() + " ("  +
                 department.getManager().getUsername() + ")";
     }
+
 }

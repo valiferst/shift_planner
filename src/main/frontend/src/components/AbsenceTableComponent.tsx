@@ -2,22 +2,23 @@
  * This code is part of the skeleton project provided for students of the course "Software
  * Architecture" offered by Innsbruck University.
  */
-import React, {useEffect, useState} from 'react';
+import React, { SyntheticEvent, useEffect, useState } from 'react';
 
-import {Button} from "primereact/button";
-import {Card} from 'primereact/card';
-import {InputMaskChangeEvent} from "primereact/inputmask";
+import { Button } from "primereact/button";
+import { Card } from 'primereact/card';
+import { InputMaskChangeEvent } from "primereact/inputmask";
 import 'primeicons/primeicons.css';
 
 import AbsenceListComponent from "./AbsenceListComponent";
 import AbsenceDialog from "./AbsenceDialog";
 import AbsenceDeleteDialog from "./AbsenceDeleteDialog";
 
-import {AbsenceDTO, Absence} from "../DTO/Absence";
-import {AbsenceCrud} from "../utilities/AbsenceCrud";
+import { AbsenceDTO, Absence } from "../DTO/Absence";
+import { AbsenceCrud } from "../utilities/AbsenceCrud";
 import {
     createAbsenceFromInterfaces
 } from '../factories/absenceFactory';
+import { FormEvent, Nullable } from 'primereact/ts-helpers';
 
 /**
  * Component for managing absences.
@@ -177,30 +178,39 @@ const AbsenceTable = () => {
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement> | InputMaskChangeEvent) => {
         if (!selectedAbsence) return;
 
-        const {name, value} = event.target;
+        const { name, value } = event.target;
 
-        setSelectedAbsence({...selectedAbsence, [name]: value});
+        setSelectedAbsence({ ...selectedAbsence, [name]: value });
     }
 
+    /**
+     * Handle input changes for the absence dialog: times.
+     * @param event
+     */
+    const handleTimeChange = (name: 'absentFrom' | 'absentUntil' | 'validFrom' | 'validUntil', event: Nullable<Date>) => {
+        if (!selectedAbsence) return;
+        setSelectedAbsence({ ...selectedAbsence, [name]: event });
+    }
 
     return (<Card title="Absence List" className="m-4">
-            {/* Button that opens a new absence dialog on click */}
-            <Button label="Add Absence" icon="pi pi-plus" className="p-button-raised p-button-rounded"
-                    style={{marginBottom: "10px"}} onClick={openNewAbsenceDialog}/>
-            <AbsenceListComponent absences={absences} loading={loading} onEditAbsence={openEditDialog}
-                                  onDeleteAbsence={openDeleteDialog}/>
+        {/* Button that opens a new absence dialog on click */}
+        <Button label="Add Absence" icon="pi pi-plus" className="p-button-raised p-button-rounded"
+            style={{ marginBottom: "10px" }} onClick={openNewAbsenceDialog} />
+        <AbsenceListComponent absences={absences} loading={loading} onEditAbsence={openEditDialog}
+            onDeleteAbsence={openDeleteDialog} />
 
-            {/* Dialog for creating or editing an absence */}
-            <AbsenceDialog visible={dialogVisible} absence={selectedAbsence} isNewAbsence={isNewAbsence}
-                           onHide={hideDialog} onSubmit={handleSubmit}
-                           onInputChange={handleInputChange}/>
-            {/* Dialog for deleting an absence */}
-            <AbsenceDeleteDialog
-                visible={deleteDialogVisible}
-                onHide={() => setDeleteDialogVisible(false)}
-                onDelete={deleteAbsence}
-                absence={selectedAbsence}/>
-        </Card>
+        {/* Dialog for creating or editing an absence */}
+        <AbsenceDialog visible={dialogVisible} absence={selectedAbsence} isNewAbsence={isNewAbsence}
+            onHide={hideDialog} onSubmit={handleSubmit}
+            onInputChange={handleInputChange}
+            onTimeChange={handleTimeChange} />
+        {/* Dialog for deleting an absence */}
+        <AbsenceDeleteDialog
+            visible={deleteDialogVisible}
+            onHide={() => setDeleteDialogVisible(false)}
+            onDelete={deleteAbsence}
+            absence={selectedAbsence} />
+    </Card>
     );
 };
 

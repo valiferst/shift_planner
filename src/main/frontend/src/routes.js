@@ -7,8 +7,9 @@ import HomePage from "./views/HomePage";
 import ManageUsers from "./views/ManageUsers";
 import Login from "./views/Login";
 import Logout from "./views/Logout";
-import ManageDepartments from "./views/ManageDepartments"
+import ManageDepartments from "./views/ManageDepartments";
 import ManageAbsences from "./views/ManageAbsences";
+import ManageShiftplans from "./views/ManageShiftplans";
 
 /**
  * Define the routes of the application.
@@ -32,6 +33,11 @@ export const ManageDepartmentsRoute = {
 export const ManageAbsencesRoute = {
     url: '/manage-absences',
     component: ManageAbsences
+}
+
+export const ManageShiftplansRoute = {
+    url: '/manage-shiftplans',
+    component: ManageShiftplans
 }
 
 export const LoginsRoute = {
