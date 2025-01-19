@@ -1,6 +1,5 @@
 package at.qe.skeleton.services;
 
-import at.qe.skeleton.model.Department;
 import at.qe.skeleton.model.ShiftPlan;
 import at.qe.skeleton.repositories.ShiftPlanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 import static at.qe.skeleton.model.ShiftPlanState.PUBLISHED;
@@ -40,11 +38,6 @@ public class ShiftPlanService {
     @PreAuthorize("hasAuthority('MANAGER')")
     public Collection<ShiftPlan> getAllShiftPlans() {
         return shiftPlanRepository.findAll();
-    }
-
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
-    public Collection<ShiftPlan> getAllShiftPlansForDepartment(Department department) {
-        return List.of(); // TODO implement getting list of shift plans per department
     }
 
     /**
@@ -97,6 +90,17 @@ public class ShiftPlanService {
 
         shiftPlan.setState(PUBLISHED);
         return shiftPlanRepository.save(shiftPlan);
+    }
+
+    /**
+     * Get all shift plans for a department.
+     * @param departmentId The ID of the department.
+     * @return A collection of shift plans for the department.
+     */
+    @PreAuthorize("hasAuthority('MANAGER')")
+    public Collection<ShiftPlan> getShiftPlansByDepartmentId(Long departmentId) {
+        // findByDepartment_Id was suggested by Intellij not sure if this is correct
+        return shiftPlanRepository.findByDepartment_Id(departmentId);
     }
 
     /**
