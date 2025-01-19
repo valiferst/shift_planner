@@ -85,21 +85,6 @@ export class Absence implements AbsenceDTO {
     }
 
     /**
-     * Serialize the Absence instance to JSON for updating an existing user
-     * @returns JSON object with the fields required for updating a user
-     */
-    toUpdateJSON(): Pick<AbsenceDTO, 'userId' | 'validFrom' | 'validUntil' | 'absentFrom' | 'absentUntil' | 'absentDay'> {
-        return {
-            userId: this.userId,
-            validFrom: this.validFrom,
-            validUntil: this.validUntil,
-            absentFrom: this.absentFrom,
-            absentUntil: this.absentUntil,
-            absentDay: this.absentDay
-        };
-    }
-
-    /**
      * Create an empty Absence instance
      * @returns Absence instance with empty fields
      */

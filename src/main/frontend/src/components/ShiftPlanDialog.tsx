@@ -5,35 +5,35 @@
 import React from 'react';
 import { Dialog } from 'primereact/dialog';
 import { Button } from "primereact/button";
-import { AbsenceDTO } from "../DTO/Absence";
-import AbsenceForm from './AbsenceForm';
+import { ShiftPlanDTO } from "../DTO/ShiftPlan";
+import ShiftPlanForm from './ShiftPlanForm';
 import { InputMaskChangeEvent } from "primereact/inputmask";
-import { Nullable } from 'primereact/ts-helpers';
+import {Nullable} from "primereact/ts-helpers";
 
-interface AbsenceDialogProps {
+interface ShiftPlanDialogProps {
     visible: boolean,
-    absence: AbsenceDTO | null,
-    isNewAbsence: boolean,
+    shiftPlan: ShiftPlanDTO | null,
+    isNewShiftPlan: boolean,
     onHide: () => void,
     onSubmit: () => void,
     onInputChange: (event: React.ChangeEvent<HTMLInputElement> | InputMaskChangeEvent) => void,
-    onTimeChange: (name: 'absentFrom' | 'absentUntil' | 'validFrom' | 'validUntil', event: Nullable<Date>) => void,
+    onTimeChange: (name: 'startDate' | 'endDate', event: Nullable<Date>) => void,
 }
 
 /**
- * Dialog for creating or editing an absence.
+ * Dialog for creating or editing an shiftPlan.
  * @param visible whether the dialog is visible
- * @param absence the absence to be edited
- * @param isNewAbsence whether the absence is new
+ * @param shiftPlan the shiftPlan to be edited
+ * @param isNewShiftPlan whether the shiftPlan is new
  * @param onHide callback when the dialog is hidden
- * @param onSubmit callback when the absence is submitted
+ * @param onSubmit callback when the shiftPlan is submitted
  * @param onInputChange callback when the input changes
- * @param onTimeChange callback when the input of a date field is changed
+ * @param onTimeChange callback when the date in datepicker field changes
  */
-const AbsenceDialog: React.FC<AbsenceDialogProps> = ({
+const ShiftPlanDialog: React.FC<ShiftPlanDialogProps> = ({
     visible,
-    absence,
-    isNewAbsence,
+    shiftPlan,
+    isNewShiftPlan,
     onHide,
     onSubmit,
     onInputChange,
@@ -46,23 +46,23 @@ const AbsenceDialog: React.FC<AbsenceDialogProps> = ({
     const renderFooter = () => (
         <div>
             <Button label="Cancel" icon="pi pi-times" onClick={onHide} className="p-button-text" />
-            <Button label={isNewAbsence ? "Create" : "Save"} icon="pi pi-check" onClick={onSubmit}
+            <Button label={isNewShiftPlan ? "Create" : "Save"} icon="pi pi-check" onClick={onSubmit}
                 autoFocus />
         </div>
     );
 
     return (
         <Dialog
-            header={isNewAbsence ? "Create New Absence" : "Edit Absence"}
+            header={isNewShiftPlan ? "Create New ShiftPlan" : "Edit ShiftPlan"}
             visible={visible}
             style={{ width: '50vw' }}
             onHide={onHide}
             footer={renderFooter}
         >
-            {absence && (
-                <AbsenceForm
-                    absence={absence}
-                    isNewAbsence={isNewAbsence}
+            {shiftPlan && (
+                <ShiftPlanForm
+                    shiftPlan={shiftPlan}
+                    isNewShiftPlan={isNewShiftPlan}
                     onInputChange={onInputChange}
                     onTimeChange={onTimeChange}
                 />
@@ -71,4 +71,4 @@ const AbsenceDialog: React.FC<AbsenceDialogProps> = ({
     );
 };
 
-export default AbsenceDialog;
+export default ShiftPlanDialog;
