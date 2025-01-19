@@ -5,9 +5,7 @@ import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 import java.util.List;
 
 @Entity
@@ -28,13 +26,7 @@ public class ShiftPlan implements Persistable<Long>, Serializable, Comparable<Sh
 
     private LocalDateTime date; // Date associated with the start or week of the ShiftPlan
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Userx createUser; // User who created the plan
-
     private LocalDateTime createDate; // Date when the plan was created
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Userx updateUser; // User who last updated the plan
 
     private LocalDateTime updateDate; // Date when the plan was last updated
 
@@ -43,14 +35,6 @@ public class ShiftPlan implements Persistable<Long>, Serializable, Comparable<Sh
     private LocalDateTime startDate; // Start date of the ShiftPlan
 
     private LocalDateTime endDate; // End date of the ShiftPlan
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "shiftplan_assigned_users",
-            joinColumns = @JoinColumn(name = "shiftplan_id"),
-            inverseJoinColumns = @JoinColumn(name = "userx_id")
-    )
-    private Set<Userx> assignedUsers = new HashSet<>(); // Users assigned to this ShiftPlan (null-safe initialization)
 
     // No-args constructor (required by JPA)
     public ShiftPlan() {}
@@ -104,28 +88,12 @@ public class ShiftPlan implements Persistable<Long>, Serializable, Comparable<Sh
         this.date = date;
     }
 
-    public Userx getCreateUser() {
-        return createUser;
-    }
-
-    public void setCreateUser(Userx createUser) {
-        this.createUser = createUser;
-    }
-
     public LocalDateTime getCreateDate() {
         return createDate;
     }
 
     public void setCreateDate(LocalDateTime createDate) {
         this.createDate = createDate;
-    }
-
-    public Userx getUpdateUser() {
-        return updateUser;
-    }
-
-    public void setUpdateUser(Userx updateUser) {
-        this.updateUser = updateUser;
     }
 
     public LocalDateTime getUpdateDate() {
@@ -158,14 +126,6 @@ public class ShiftPlan implements Persistable<Long>, Serializable, Comparable<Sh
 
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
-    }
-
-    public Set<Userx> getAssignedUsers() {
-        return assignedUsers;
-    }
-
-    public void setAssignedUsers(Set<Userx> assignedUsers) {
-        this.assignedUsers = assignedUsers;
     }
 
     // Standard methods

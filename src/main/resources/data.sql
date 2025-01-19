@@ -1,5 +1,7 @@
 -- Drop the not null constraint (you can use ALTER TABLE depending on your database)
 ALTER TABLE USERX ALTER COLUMN CREATE_USER_ID DROP NOT NULL;
+ALTER TABLE DEPARTMENT ALTER COLUMN MANAGER_ID DROP NOT NULL;
+ALTER TABLE SHIFT_PLAN ALTER COLUMN DEPARTMENT_ID DROP NOT NULL;
 
 -- Insert users into USERX table
 INSERT INTO USERX (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, CREATE_USER_ID, CREATE_DATE)
@@ -13,6 +15,42 @@ VALUES (TRUE, 'Max', 'Mustermann', '$2b$12$yQ76rvYlAr8jsWq8gwu.oeuJv/JR3CojbCew9
 
 INSERT INTO USERX (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, CREATE_USER_ID, CREATE_DATE) 
 VALUES (TRUE, 'Elvis', 'The King', '$2b$12$yQ76rvYlAr8jsWq8gwu.oeuJv/JR3CojbCew9hUWoMruF8emD7XFm', 'elvis', NULL, '2024-01-01 00:00:00');
+
+-- DUMMY MANAGER
+INSERT INTO USERX (ID, ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, CREATE_USER_ID, CREATE_DATE)
+VALUES (9999, TRUE, 'Dummy', 'Manager', 'passwd', 'dummy_manager', NULL, '2024-01-01 00:00:00');
+
+
+-- Insert departments into DEPARTMENT table
+
+INSERT INTO DEPARTMENT (CLOSING_TIME,
+                        MANAGER_ID,
+                        OPENING_TIME,
+                        NAME)
+VALUES ('2024-01-01 00:00:00',
+        NULL,
+        '2024-01-01 00:00:00',
+        'Test Department');
+
+-- Insert shiftplans into SHIFT_PLAN table
+
+INSERT INTO SHIFT_PLAN (CREATE_DATE,
+                        DATE,
+                        DEPARTMENT_ID,
+                        END_DATE,
+                        START_DATE,
+                        UPDATE_DATE,
+                        NAME,
+                        STATE)
+VALUES ('2025-01-14',
+        '2025-01-14',
+        NULL,
+        '2025-12-31',
+        '2025-01-01',
+        '2025-01-15',
+        'Test Shiftplan',
+        'DRAFT');
+
 
 -- Insert roles into USERX_USERX_ROLE table by looking up the corresponding user ID
 INSERT INTO USERX_USERX_ROLE (USERX_ID, ROLES) 
@@ -36,11 +74,25 @@ VALUES ((SELECT ID FROM USERX WHERE USERNAME = 'elvis'), 'ADMIN');
 INSERT INTO USERX_USERX_ROLE (USERX_ID, ROLES) 
 VALUES ((SELECT ID FROM USERX WHERE USERNAME = 'elvis'), 'EMPLOYEE');
 
+-- dummy manager
+INSERT INTO USERX_USERX_ROLE (USERX_ID, ROLES)
+VALUES ((SELECT ID FROM USERX WHERE USERNAME = 'dummy_manager'), 'MANAGER');
+
+
 -- Update CREATE_USER_ID fields after the initial insert
 UPDATE USERX SET CREATE_USER_ID = (SELECT ID FROM USERX WHERE USERNAME = 'admin') WHERE USERNAME = 'admin';
 UPDATE USERX SET CREATE_USER_ID = (SELECT ID FROM USERX WHERE USERNAME = 'admin') WHERE USERNAME = 'user1';
 UPDATE USERX SET CREATE_USER_ID = (SELECT ID FROM USERX WHERE USERNAME = 'admin') WHERE USERNAME = 'user2';
 UPDATE USERX SET CREATE_USER_ID = (SELECT ID FROM USERX WHERE USERNAME = 'elvis') WHERE USERNAME = 'elvis';
+UPDATE USERX SET CREATE_USER_ID = (SELECT ID FROM USERX WHERE USERNAME = 'admin') WHERE USERNAME = 'dummy_manager';
+
+-- Update MANAGER_ID fields after the initial insert
+UPDATE DEPARTMENT SET MANAGER_ID = (SELECT ID FROM USERX WHERE USERNAME = 'user1') WHERE NAME = 'Test Department';
+
+-- Update DEPARTMENT_ID fields after the initial insert
+UPDATE SHIFT_PLAN SET DEPARTMENT_ID = (SELECT ID FROM DEPARTMENT WHERE NAME = 'Test Department') WHERE NAME = 'Test Shiftplan';
 
 -- Add the not null constraint back
 ALTER TABLE USERX ALTER COLUMN CREATE_USER_ID SET NOT NULL;
+ALTER TABLE DEPARTMENT ALTER COLUMN MANAGER_ID SET NOT NULL;
+ALTER TABLE SHIFT_PLAN ALTER COLUMN DEPARTMENT_ID SET NOT NULL;
