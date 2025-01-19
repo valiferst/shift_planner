@@ -1,9 +1,8 @@
 package at.qe.skeleton.repositories;
 
 import at.qe.skeleton.model.Department;
-import at.qe.skeleton.model.Userx;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * Repository for managing {@link Department} entities.
@@ -14,5 +13,5 @@ public interface DepartmentRepository extends AbstractRepository<Department, Lon
 
     boolean existsByManagerId(Long userId);
 
-    List<Department> getDepartmentByManager(Userx manager);
+    Collection<Department> getDepartmentsByManagerId(Long userId);
 }
