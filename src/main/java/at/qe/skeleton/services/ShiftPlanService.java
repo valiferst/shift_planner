@@ -1,11 +1,15 @@
 package at.qe.skeleton.services;
 
+import at.qe.skeleton.model.Department;
 import at.qe.skeleton.model.ShiftPlan;
 import at.qe.skeleton.repositories.ShiftPlanRepository;
+import at.qe.skeleton.repositories.ShiftRepository;
+import at.qe.skeleton.repositories.ShiftRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -22,12 +26,13 @@ public class ShiftPlanService {
 
     private final ShiftPlanRepository shiftPlanRepository;
     private final DepartmentService departmentService;
+    private final ShiftRepository shiftRepository;
 
     @Autowired
-    public ShiftPlanService(ShiftPlanRepository shiftPlanRepository, DepartmentService departmentService) {
-
+    public ShiftPlanService(ShiftPlanRepository shiftPlanRepository, ShiftRepository shiftRepository, ShiftService shiftService, DepartmentService departmentService) {
         this.shiftPlanRepository = shiftPlanRepository;
         this.departmentService = departmentService;
+        this.shiftRepository = shiftRepository;
     }
 
     /**
@@ -35,6 +40,7 @@ public class ShiftPlanService {
      *
      * @return the collection of shift plans
      */
+    // TODO might want to change authority back to admin
     @PreAuthorize("hasAuthority('MANAGER')")
     public Collection<ShiftPlan> getAllShiftPlans() {
         return shiftPlanRepository.findAll();
@@ -108,6 +114,7 @@ public class ShiftPlanService {
      *
      * @param shiftPlan the shift plan to delete
      */
+    @Transactional
     @PreAuthorize("hasAuthority('MANAGER')")
     public void deleteShiftPlan(ShiftPlan shiftPlan) {
         Optional<ShiftPlan> shiftPlanOpt = shiftPlanRepository.findById(shiftPlan.getId());

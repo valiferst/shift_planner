@@ -1,4 +1,3 @@
-// Dummy class for Department
 package at.qe.skeleton.model;
 
 import jakarta.persistence.*;
@@ -20,7 +19,7 @@ public class Department implements Persistable<Long>, Serializable, Comparable<D
     private LocalDateTime closingTime;
 
 
-    @OneToMany(mappedBy = "department")
+    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
     private List<ShiftPlan> shiftPlans;
 
     @ManyToOne
