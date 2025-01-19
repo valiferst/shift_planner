@@ -99,8 +99,6 @@ public class ShiftPlanService {
         return shiftPlanRepository.save(shiftPlan);
     }
 
-    // TODO create methods that update individual parts of a shiftplan
-
     /**
      * Deletes the shift plan.
      *

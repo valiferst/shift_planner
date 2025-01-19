@@ -4,6 +4,7 @@ import at.qe.skeleton.dtos.ShiftPlanDTO;
 import at.qe.skeleton.mappers.ShiftPlanMapper;
 import at.qe.skeleton.model.ShiftPlan;
 import at.qe.skeleton.services.ShiftPlanService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +43,6 @@ public class ShiftPlanController {
                 .toList();
         return ResponseEntity.ok(shiftPlans);
     }
-    // TODO: Implement publish shiftplan
 
     /**
      * Retrieves a single shift plan by ID.
@@ -66,7 +66,7 @@ public class ShiftPlanController {
      */
     @PostMapping("")
     @PreAuthorize("hasAuthority('MANAGER')")
-    public ResponseEntity<ShiftPlanDTO> createShiftPlan(@RequestBody ShiftPlanDTO shiftPlanDTO) {
+    public ResponseEntity<ShiftPlanDTO> createShiftPlan(@Valid @RequestBody ShiftPlanDTO shiftPlanDTO) {
         ShiftPlan shiftPlan = shiftPlanMapper.mapFrom(shiftPlanDTO);
         ShiftPlan savedShiftPlan = shiftPlanService.saveShiftPlan(shiftPlan);
         return ResponseEntity.status(HttpStatus.CREATED).body(shiftPlanMapper.mapTo(savedShiftPlan));
@@ -79,9 +79,9 @@ public class ShiftPlanController {
      * @param shiftPlanDTO DTO containing updated shift plan details.
      * @return The updated shift plan as a DTO.
      */
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     @PreAuthorize("hasAuthority('MANAGER')")
-    public ResponseEntity<ShiftPlanDTO> updateShiftPlan(@PathVariable Long id, @RequestBody ShiftPlanDTO shiftPlanDTO) {
+    public ResponseEntity<ShiftPlanDTO> updateShiftPlan(@PathVariable Long id, @Valid @RequestBody ShiftPlanDTO shiftPlanDTO) {
         Optional<ShiftPlan> existingPlan = shiftPlanService.loadShiftPlan(id);
         if (existingPlan.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -90,6 +90,25 @@ public class ShiftPlanController {
         shiftPlan.setId(id);
         ShiftPlan updatedShiftPlan = shiftPlanService.saveShiftPlan(shiftPlan);
         return ResponseEntity.ok(shiftPlanMapper.mapTo(updatedShiftPlan));
+    }
+
+    /**
+     * Publishes an existing shift plan.
+     *
+     * @param id ID of the shift plan to publish.
+     * @param shiftPlanDTO DTO containing to be published shift plan details.
+     * @return The published shift plan as a DTO.
+     */
+    @PatchMapping("/{id}/publish")
+    @PreAuthorize("hasAuthority('MANAGER')")
+    public ResponseEntity<ShiftPlanDTO> publishShiftPlan(@PathVariable Long id, @RequestBody ShiftPlanDTO shiftPlanDTO) {
+        Optional<ShiftPlan> existingPlan = shiftPlanService.loadShiftPlan(id);
+        if (existingPlan.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        ShiftPlan shiftPlan = shiftPlanMapper.mapFrom(shiftPlanDTO);
+        ShiftPlan publishedShiftPlan = shiftPlanService.publishShiftPlan(shiftPlan);
+        return ResponseEntity.ok(shiftPlanMapper.mapTo(publishedShiftPlan));
     }
 
     /**
