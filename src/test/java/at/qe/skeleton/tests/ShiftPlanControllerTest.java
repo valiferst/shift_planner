@@ -60,7 +60,9 @@ class ShiftPlanControllerTest {
         shiftPlan.setName(name);
         Shift shift = new Shift();
 
-        ShiftPlanDTO shiftPlanDTO = new ShiftPlanDTO(id, LocalDateTime.now(), LocalDateTime.now(), name, LocalDateTime.now(), LocalDateTime.now(), ShiftPlanState.DRAFT, departmentName, departmentId, List.of(shiftMapper.mapTo(shift)));
+        List<at.qe.skeleton.dtos.ShiftDTO> shiftDTOS = new java.util.ArrayList<>();
+        shiftDTOS.add(shiftMapper.mapTo(shift));
+        ShiftPlanDTO shiftPlanDTO = new ShiftPlanDTO(id, LocalDateTime.now(), LocalDateTime.now(), name, LocalDateTime.now(), LocalDateTime.now(), ShiftPlanState.DRAFT, departmentName, departmentId, shiftDTOS);
 
         Mockito.when(shiftPlanService.getAllShiftPlans()).thenReturn(List.of(shiftPlan));
         Mockito.when(shiftPlanMapper.mapTo(Mockito.any(ShiftPlan.class))).thenReturn(shiftPlanDTO);
@@ -84,7 +86,9 @@ class ShiftPlanControllerTest {
         Shift shift = new Shift();
 
 
-        ShiftPlanDTO shiftPlanDTO = new ShiftPlanDTO(id, LocalDateTime.now(), LocalDateTime.now(), name, LocalDateTime.now(), LocalDateTime.now(), ShiftPlanState.DRAFT, departmentName, departmentId, List.of(shiftMapper.mapTo(shift)));
+        List<at.qe.skeleton.dtos.ShiftDTO> shiftDTOS = new java.util.ArrayList<>();
+        shiftDTOS.add(shiftMapper.mapTo(shift));
+        ShiftPlanDTO shiftPlanDTO = new ShiftPlanDTO(id, LocalDateTime.now(), LocalDateTime.now(), name, LocalDateTime.now(), LocalDateTime.now(), ShiftPlanState.DRAFT, departmentName, departmentId, shiftDTOS);
 
         Mockito.when(shiftPlanService.loadShiftPlan(id)).thenReturn(Optional.of(shiftPlan));
         Mockito.when(shiftPlanMapper.mapTo(shiftPlan)).thenReturn(shiftPlanDTO);
