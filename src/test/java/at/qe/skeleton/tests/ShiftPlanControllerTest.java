@@ -5,6 +5,7 @@ import at.qe.skeleton.dtos.ShiftPlanDTO;
 import at.qe.skeleton.mappers.ShiftPlanMapper;
 import at.qe.skeleton.model.ShiftPlan;
 import at.qe.skeleton.model.ShiftPlanState;
+import at.qe.skeleton.services.DepartmentService;
 import at.qe.skeleton.services.ShiftPlanService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -34,6 +35,9 @@ class ShiftPlanControllerTest {
 
     @MockBean
     private ShiftPlanService shiftPlanService;
+
+    @MockBean
+    private DepartmentService departmentService;
 
     @MockBean
     private ShiftPlanMapper shiftPlanMapper;
@@ -78,6 +82,7 @@ class ShiftPlanControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(name));
     }
 
+    // TODO: add test for getAllShiftPlansForManager
 
     @Test
     @WithMockUser(username = "manager", authorities = {"MANAGER"})

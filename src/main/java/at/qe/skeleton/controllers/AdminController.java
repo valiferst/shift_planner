@@ -85,7 +85,6 @@ public class AdminController {
     
     /**
      * Partially updates user of given id.
-     *
      * The update is partial because only a select subset of user fields can be modified after create.
      * 
      * @param id the id of the user tb updated
@@ -97,6 +96,7 @@ public class AdminController {
         Optional<Userx> existingUserx = userService.loadUser(id);
         if (existingUserx.isPresent()) {
             Userx user = userMapper.mapFrom(userxDto);
+            // TODO: investigate why cascading absences hinders update of user data
             Userx savedUser = userService.saveUser(user);
             return ResponseEntity.ok(userMapper.mapTo(savedUser));
         } else {
