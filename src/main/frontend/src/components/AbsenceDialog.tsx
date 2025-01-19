@@ -28,6 +28,7 @@ interface AbsenceDialogProps {
  * @param onHide callback when the dialog is hidden
  * @param onSubmit callback when the absence is submitted
  * @param onInputChange callback when the input changes
+ * @param onTimeChange callback when the input of a date field is changed
  */
 const AbsenceDialog: React.FC<AbsenceDialogProps> = ({
     visible,
