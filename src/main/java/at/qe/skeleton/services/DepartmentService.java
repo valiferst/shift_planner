@@ -2,6 +2,7 @@ package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.Department;
 import at.qe.skeleton.model.ShiftPlan;
+import at.qe.skeleton.model.ShiftPlanState;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.repositories.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Service class for managing Departments.
@@ -21,10 +21,12 @@ import java.util.Optional;
 public class DepartmentService {
 
     private final DepartmentRepository departmentRepository;
+    private final UserxService userxService;
 
     @Autowired
-    public DepartmentService(DepartmentRepository departmentRepository) {
+    public DepartmentService(DepartmentRepository departmentRepository, UserxService userxService) {
         this.departmentRepository = departmentRepository;
+        this.userxService = userxService;
     }
 
     /**
@@ -89,15 +91,12 @@ public class DepartmentService {
     }
 
     /**
-     * Gets all shift plans for a department.
-     * @param departmentId The ID of the department.
-     * @return A list of shift plans for the department.
+     * get the departments managed by the authenticated user.
      */
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public List<ShiftPlan> getShiftPlansByDepartment(Long departmentId) {
-        Department department = departmentRepository.findById(departmentId)
-                .orElseThrow(() -> new IllegalArgumentException("Department not found with ID: " + departmentId));
-        return department.getShiftPlans();
+    @PreAuthorize("hasAuthority('MANAGER')")
+    public Collection<Department> getDepartmentsByManagerId() {
+        Long managerId = userxService.getAuthenticatedUser().getId();
+        return departmentRepository.getDepartmentsByManagerId(managerId);
     }
 
     /**
@@ -115,6 +114,31 @@ public class DepartmentService {
     }
 
     /**
+     * Retrieves the single PUBLISHED shift plan for a department.
+     * If there is no PUBLISHED shift plan, returns null.
+     * If multiple PUBLISHED shift plans exist, an exception is thrown.
+     *
+     * @param departmentId The ID of the department.
+     * @return The PUBLISHED shift plan, or null if none exists.
+     */
+    @PreAuthorize("hasAuthority('MANAGER')")
+    public ShiftPlan getPublishedShiftPlan(Long departmentId) {
+        Department department = departmentRepository.findById(departmentId)
+                .orElseThrow(() -> new IllegalArgumentException("Department not found with ID: " + departmentId));
+
+        List<ShiftPlan> publishedShiftPlans = department.getShiftPlans().stream()
+                .filter(shiftPlan -> shiftPlan.getState() == ShiftPlanState.PUBLISHED)
+                .toList();
+
+        if (publishedShiftPlans.size() > 1) {
+            throw new IllegalStateException("Multiple PUBLISHED shift plans found for the department.");
+        }
+
+        return publishedShiftPlans.isEmpty() ? null : publishedShiftPlans.get(0);
+    }
+
+
+    /**
      * Returns the full name of the manager of a department (First Name, Last Name, username),
      * so it can be used in the frontend to set the manager of a department.
      * @param department The opening time.
@@ -123,4 +147,5 @@ public class DepartmentService {
         return department.getManager().getFirstName() + " " + department.getManager().getLastName() + " ("  +
                 department.getManager().getUsername() + ")";
     }
+
 }

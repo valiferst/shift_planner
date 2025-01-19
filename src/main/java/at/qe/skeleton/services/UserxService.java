@@ -3,6 +3,8 @@ package at.qe.skeleton.services;
 import at.qe.skeleton.exceptions.UsernameDuplicateException;
 import at.qe.skeleton.model.Userx;
 import java.util.Collection;
+
+import at.qe.skeleton.repositories.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Component;
 import at.qe.skeleton.repositories.UserxRepository;
 import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service for accessing and manipulating user data.
@@ -25,13 +28,15 @@ public class UserxService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserxRepository userRepository;
+    private final DepartmentRepository departmentRepository;
 
     @Autowired
     public UserxService(UserxRepository userRepository,
-                        PasswordEncoder passwordEncoder
-                        ) {
+                        PasswordEncoder passwordEncoder,
+                        DepartmentRepository departmentRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.departmentRepository = departmentRepository;
     }
     
     /**
@@ -79,16 +84,32 @@ public class UserxService {
         return userRepository.save(user);
     }
 
+    private boolean isReferenced(Userx user) {
+        return departmentRepository.existsByManagerId(user.getId());
+    }
+
     /**
      * Deletes the user.
      *
      * @param user the user to delete
      */
+    @Transactional
     @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteUser(Userx user) {
-        // :TODO: write some audit log stating who and when this user was permanently deleted.
-        Optional<Userx> userOpt = userRepository.findById(user.getId());
-        userOpt.ifPresent(userx -> userRepository.delete(userx));
+        userRepository.findById(user.getId()).ifPresent(userToDelete -> {
+            if (isReferenced(userToDelete)) {
+                // Reassign departments to a dummy manager
+                Userx dummyManager = userRepository.findById(9999L)
+                        .orElseThrow(() -> new IllegalStateException("Dummy manager with ID 9999L does not exist."));
+
+                departmentRepository.getDepartmentsByManagerId(userToDelete.getId()).forEach(department -> {
+                    department.setManager(dummyManager);
+                    departmentRepository.save(department);
+                });
+            }
+            // Delete the user after all references are reassigned
+            userRepository.delete(userToDelete);
+        });
     }
 
     /**
