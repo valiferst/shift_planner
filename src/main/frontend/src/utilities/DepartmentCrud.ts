@@ -19,7 +19,7 @@ import {API_BASE_URL} from "../config/config";
  */
 const fetchAllDepartments = async (): Promise<DepartmentDTO[]> => {
     try {
-        const response = await axios.get(`${API_BASE_URL}/api/admin`, {
+        const response = await axios.get(`${API_BASE_URL}/api/departments`, {
             withCredentials: true
         });
         return response.data;
@@ -27,6 +27,7 @@ const fetchAllDepartments = async (): Promise<DepartmentDTO[]> => {
         throw new Error(`Error fetching departments: ${error.message}`);
     }
 }
+
 
 /**
  * Create a new department
@@ -37,7 +38,7 @@ const fetchAllDepartments = async (): Promise<DepartmentDTO[]> => {
 const createDepartment = async (selectedDepartment: DepartmentDTO): Promise<Department> => {
     try {
         const departmentInstance = createDepartmentFromInterfaces(selectedDepartment);
-        const response = await axios.post(`${API_BASE_URL}/api/admin`, departmentInstance.toCreateJSON(), {
+        const response = await axios.post(`${API_BASE_URL}/api/departments/`, departmentInstance.toCreateJSON(), {
             withCredentials: true
         });
         return Department.fromJSON(response.data);
@@ -55,7 +56,7 @@ const createDepartment = async (selectedDepartment: DepartmentDTO): Promise<Depa
 const updateDepartment = async (selectedDepartment: DepartmentDTO): Promise<Department> => {
     try {
         const departmentInstance = createDepartmentFromInterfaces(selectedDepartment);
-        const response = await axios.patch(`${API_BASE_URL}/api/admin/${selectedDepartment.id}`, departmentInstance.toUpdateJSON(), {
+        const response = await axios.patch(`${API_BASE_URL}/api/departments/${selectedDepartment.id}`, departmentInstance.toUpdateJSON(), {
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -75,7 +76,7 @@ const updateDepartment = async (selectedDepartment: DepartmentDTO): Promise<Depa
  */
 const deleteDepartment = async (selectedDepartment: DepartmentDTO) => {
     try {
-        return await axios.delete(`${API_BASE_URL}/api/admin/${selectedDepartment.id}`, {
+        return await axios.delete(`${API_BASE_URL}/api/departments/${selectedDepartment.id}`, {
             withCredentials: true
         });
     } catch (error: any) {
