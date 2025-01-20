@@ -32,10 +32,20 @@ public class DepartmentController {
 
 
     /**
-     * Retrieves all departments managed by the authenticated user.
+     * Retrieves all departments.
      *
      * @return List of all departments as DTOs.
      */
+    @GetMapping("")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<List<DepartmentDTO>> getAllDepartments() {
+        List<DepartmentDTO> departments = departmentService.getAllDepartments().stream()
+                .map(departmentMapper::mapTo)
+                .toList();
+        return ResponseEntity.ok(departments);
+    }
+
+
     @GetMapping("/my")
     @PreAuthorize("hasAuthority('MANAGER')")
     public ResponseEntity<List<DepartmentDTO>> getDepartmentsByManagerId() {
