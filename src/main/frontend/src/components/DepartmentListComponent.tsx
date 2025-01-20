@@ -47,15 +47,49 @@ const DepartmentListComponent: React.FC<DepartmentListProps> = ({
         );
     }
 
-    //TODO missing datatable columns: opening and closing time
+    /**
+     * Formats the opening and closing times.
+     * @param value
+     */
+    const formatTime = (value: Date | null) => {
+        if (!value) {
+            return "-"; // Fallback für null-Werte
+        }
+        return new Date(value).toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+        });
+    };
+
 
     return (
-        <DataTable value={departments} loading={loading}>
+        <DataTable value={departments} loading={loading} responsiveLayout="scroll">
             <Column field="name" header="Name" sortable></Column>
             <Column field="managerName" header="Manager Name" sortable></Column>
+            <Column
+                field="openingTime"
+                header="Opening Time"
+                body={(rowData: Department) => formatTime(rowData.openingTime)}
+                sortable
+            ></Column>
+            <Column
+                field="closingTime"
+                header="Closing Time"
+                body={(rowData: Department) => formatTime(rowData.closingTime)}
+                sortable
+            ></Column>
+            <Column
+                body={editButtonTemplate}
+                header="Actions"
+                style={{textAlign: 'center', width: '8rem'}}
+            ></Column>
+            <Column
+                body={deleteButtonTemplate}
+                header=""
+                style={{textAlign: 'center', width: '8rem'}}
+            ></Column>
         </DataTable>
-
-    )
+    );
 };
 
 export default DepartmentListComponent;
