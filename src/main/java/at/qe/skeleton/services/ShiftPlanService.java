@@ -79,11 +79,15 @@ public class ShiftPlanService {
                 for (Userx user : shift.getShiftWorkers()) {
                     try {
                         shiftService.overlapUserShift(shift, user);
+                        shiftService.overlapUserAbsences(shift, user);
                     } catch (ShiftOverlapException e) {
                         validationErrors.add(new ValidationError(ValidationErrorType.SHIFT_CONFLICT, shift, user, null));
+                    } catch (ShiftOverlapException e) {
+
                     }
                 }
             }
+
 
         if (validationErrors.isEmpty()) {
             ValidationError noError = new ValidationError(ValidationErrorType.NO_CONFLICT, null, null, null);

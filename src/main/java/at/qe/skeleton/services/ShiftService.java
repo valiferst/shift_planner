@@ -1,5 +1,6 @@
 package at.qe.skeleton.services;
 
+import at.qe.skeleton.exceptions.AbsenceOverlapException;
 import at.qe.skeleton.exceptions.ShiftDuplicateException;
 import at.qe.skeleton.exceptions.ShiftOverlapException;
 import at.qe.skeleton.model.Absence;
@@ -143,7 +144,7 @@ public class ShiftService {
                     && shift.getStartTime().getDayOfWeek() == absence.getAbsentDay()
                     && shift.getStartTime().toLocalTime().isBefore(absence.getAbsentFrom())
                     && shift.getEndTime().toLocalTime().isAfter(absence.getAbsentFrom())){
-                throw new ShiftOverlapException("The shift "+ shift.getId() + "overlaps with absence of user " + user.getUsername());
+                throw new AbsenceOverlapException("The shift "+ shift.getId() + "overlaps with absence of user " + user.getUsername());
             }
         }
     }
