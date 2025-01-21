@@ -73,6 +73,18 @@ public class ShiftPlanService {
         return shiftPlanRepository.save(shiftPlan);
     }
 
+    /**
+     * Validates the shift plan to ensure that there are no conflicts between shifts and absences for users.
+     * This method checks each shift in the provided shiftPlan and validates whether there are
+     * overlapping shifts or absences for the assigned users.
+     * If an overlap is found between a shift and another shift or an absence, an appropriate validation error
+     * is added to the list of validation errors.
+     *
+     * @param shiftPlan The ShiftPlan to validate, containing a list of shifts and assigned users.
+     * @return A list of ValidationError objects, each representing a validation error encountered
+     *         during the shift plan validation. If no errors are found, an empty list is returned.
+     */
+
     public List<ValidationError> validateShiftPlan(ShiftPlan shiftPlan) {
         List<ValidationError> validationErrors = new ArrayList<>();
         List<Shift> shifts = shiftPlan.getShifts();
