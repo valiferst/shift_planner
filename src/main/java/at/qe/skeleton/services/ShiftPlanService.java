@@ -1,5 +1,6 @@
 package at.qe.skeleton.services;
 
+import at.qe.skeleton.exceptions.AbsenceOverlapException;
 import at.qe.skeleton.exceptions.ShiftOverlapException;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.repositories.ShiftPlanRepository;
@@ -81,16 +82,14 @@ public class ShiftPlanService {
                         shiftService.overlapUserShift(shift, user);
                         shiftService.overlapUserAbsences(shift, user);
                     } catch (ShiftOverlapException e) {
-                        validationErrors.add(new ValidationError(ValidationErrorType.SHIFT_CONFLICT, shift, user, null));
-                    } catch (ShiftOverlapException e) {
-
+                        validationErrors.add(new ValidationError(ValidationErrorType.SHIFT_CONFLICT, shift, user));
+                    } catch (AbsenceOverlapException e) {
+                        validationErrors.add(new ValidationError(ValidationErrorType.ABSENCE_CONFLICT, shift, user));
                     }
                 }
             }
-
-
         if (validationErrors.isEmpty()) {
-            ValidationError noError = new ValidationError(ValidationErrorType.NO_CONFLICT, null, null, null);
+            ValidationError noError = new ValidationError(ValidationErrorType.NO_CONFLICT, null, null);
             validationErrors.add(noError);
         }
         return validationErrors;
