@@ -73,7 +73,7 @@ public class ShiftPlanService {
     }
 
     public boolean validateShiftPlan(ShiftPlan shiftPlan) {
-        List<ShiftPlanValidationError> validationErrors = new ArrayList<>();
+        List<ValidationError> validationErrors = new ArrayList<>();
         List<Shift> shifts = shiftPlan.getShifts();
             for (Shift shift : shifts) {
                 for (Userx user : shift.getShiftWorkers()) {
@@ -85,7 +85,7 @@ public class ShiftPlanService {
                 }
             }
         if (validationErrors.isEmpty()) {
-            ShiftPlanValidationError noError = new ShiftPlanValidationError()
+            ValidationError noError = new ValidationError(ValidationErrorType.NO_CONFLICT, null, null, null)
         }
         return true;
     }
