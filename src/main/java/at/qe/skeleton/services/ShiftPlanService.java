@@ -88,10 +88,6 @@ public class ShiftPlanService {
                     }
                 }
             }
-        if (validationErrors.isEmpty()) {
-            ValidationError noError = new ValidationError(ValidationErrorType.NO_CONFLICT, null, null);
-            validationErrors.add(noError);
-        }
         return validationErrors;
     }
 
@@ -105,20 +101,17 @@ public class ShiftPlanService {
      */
 
     @PreAuthorize("hasAuthority ('MANAGER')")
-    public ShiftPlan publishShiftPlan(ShiftPlan shiftPlan) {
-        if (!validateShiftPlan(shiftPlan)){
-            throw new IllegalArgumentException("Shift plan is not valid");
+    public List<ValidationError> publishShiftPlan(ShiftPlan shiftPlan) {
+        List<ValidationError> validationErrors = validateShiftPlan(shiftPlan);
+        if (validationErrors.isEmpty()) {
+            ShiftPlan oldShiftPlan = departmentService.getPublishedShiftPlan(shiftPlan.getDepartment().getId());
+            if (oldShiftPlan != null) {
+                oldShiftPlan.setState(CANCELLED);
+                shiftPlanRepository.save(oldShiftPlan);
+            }
+            shiftPlan.setState(PUBLISHED);
         }
-
-        ShiftPlan oldShiftPlan = departmentService.getPublishedShiftPlan(shiftPlan.getDepartment().getId());
-
-        if (oldShiftPlan != null) {
-            oldShiftPlan.setState(CANCELLED);
-            shiftPlanRepository.save(oldShiftPlan);
-        }
-
-        shiftPlan.setState(PUBLISHED);
-        return shiftPlanRepository.save(shiftPlan);
+        return validationErrors;
     }
 
     /**
