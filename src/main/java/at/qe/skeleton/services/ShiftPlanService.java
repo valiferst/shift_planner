@@ -1,7 +1,7 @@
 package at.qe.skeleton.services;
 
-import at.qe.skeleton.model.Department;
-import at.qe.skeleton.model.ShiftPlan;
+import at.qe.skeleton.exceptions.ShiftOverlapException;
+import at.qe.skeleton.model.*;
 import at.qe.skeleton.repositories.ShiftPlanRepository;
 import at.qe.skeleton.repositories.ShiftRepository;
 import at.qe.skeleton.repositories.ShiftRepository;
@@ -11,7 +11,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import static at.qe.skeleton.model.ShiftPlanState.PUBLISHED;
@@ -26,6 +28,7 @@ public class ShiftPlanService {
 
     private final ShiftPlanRepository shiftPlanRepository;
     private final DepartmentService departmentService;
+    private final ShiftService shiftService;
     private final ShiftRepository shiftRepository;
 
     @Autowired
@@ -33,6 +36,7 @@ public class ShiftPlanService {
         this.shiftPlanRepository = shiftPlanRepository;
         this.departmentService = departmentService;
         this.shiftRepository = shiftRepository;
+        this.shiftService = shiftService;
     }
 
     /**
@@ -69,6 +73,20 @@ public class ShiftPlanService {
     }
 
     public boolean validateShiftPlan(ShiftPlan shiftPlan) {
+        List<ShiftPlanValidationError> validationErrors = new ArrayList<>();
+        List<Shift> shifts = shiftPlan.getShifts();
+            for (Shift shift : shifts) {
+                for (Userx user : shift.getShiftWorkers()) {
+                    try {
+                        shiftService.overlapUserShift(shift, user);
+                    } catch (ShiftOverlapException e) {
+
+                    }
+                }
+            }
+        if (validationErrors.isEmpty()) {
+            ShiftPlanValidationError noError = new ShiftPlanValidationError()
+        }
         return true;
     }
 
