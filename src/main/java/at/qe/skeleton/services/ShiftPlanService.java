@@ -72,7 +72,7 @@ public class ShiftPlanService {
         return shiftPlanRepository.save(shiftPlan);
     }
 
-    public boolean validateShiftPlan(ShiftPlan shiftPlan) {
+    public List<ValidationError> validateShiftPlan(ShiftPlan shiftPlan) {
         List<ValidationError> validationErrors = new ArrayList<>();
         List<Shift> shifts = shiftPlan.getShifts();
             for (Shift shift : shifts) {
@@ -80,14 +80,16 @@ public class ShiftPlanService {
                     try {
                         shiftService.overlapUserShift(shift, user);
                     } catch (ShiftOverlapException e) {
-
+                        validationErrors.add(new ValidationError(ValidationErrorType.SHIFT_CONFLICT, shift, user, null));
                     }
                 }
             }
+
         if (validationErrors.isEmpty()) {
-            ValidationError noError = new ValidationError(ValidationErrorType.NO_CONFLICT, null, null, null)
+            ValidationError noError = new ValidationError(ValidationErrorType.NO_CONFLICT, null, null, null);
+            validationErrors.add(noError);
         }
-        return true;
+        return validationErrors;
     }
 
     /**
