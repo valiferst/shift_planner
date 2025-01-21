@@ -4,8 +4,12 @@ import at.qe.skeleton.dtos.ShiftDTO;
 import at.qe.skeleton.model.Shift;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.services.ShiftService;
+import at.qe.skeleton.services.UserxService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Mapping between Shift and ShiftDTOs.
@@ -15,10 +19,12 @@ import org.springframework.stereotype.Service;
 public class ShiftMapper implements DTOMapper<Shift, ShiftDTO>{
 
     private final ShiftService shiftService;
+    private final UserxService userxService;
 
     @Autowired
-    public ShiftMapper(ShiftService shiftService){
+    public ShiftMapper(ShiftService shiftService, UserxService userxService){
         this.shiftService = shiftService;
+        this.userxService = userxService;
     }
 
     @Override
@@ -30,8 +36,7 @@ public class ShiftMapper implements DTOMapper<Shift, ShiftDTO>{
                 shift.getId(),
                 shift.getStartTime(),
                 shift.getEndTime(),
-                shift.getShiftPlan(),
-                shift.getShiftWorkers(),
+                shift.getShiftWorkers().stream().map(Userx::getId).toList(),
                 shift.getShiftWorkers().stream().map(Userx::getUsername).toList()
         );
 
@@ -51,8 +56,7 @@ public class ShiftMapper implements DTOMapper<Shift, ShiftDTO>{
         }
         shift.setStartTime(shiftDto.startTime());
         shift.setEndTime(shiftDto.endTime());
-        shift.setShiftPlan(shiftDto.toShiftPlan());
-        shift.setShiftWorkers(shiftDto.shiftWorkers());
+        shift.setShiftWorkers(shiftDto.shiftWorkerIds().stream().map(userxService::loadUser).map(Optional::get).collect(Collectors.toSet()));
 
         return shift;
     }
