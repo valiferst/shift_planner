@@ -51,7 +51,7 @@ public class Userx implements Persistable<Long>, Serializable, Comparable<Userx>
   @ManyToMany
   private Set<Shift> shifts;
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
   private Set<Absence> absences;
   boolean enabled;
   
