@@ -55,7 +55,7 @@ public class UserxService {
      * @param id the id to search for
      * @return the user with the id
      */
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('MANAGER')")
     public Optional<Userx> loadUser(Long id) {
         return userRepository.findById(id);
     }

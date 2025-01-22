@@ -1,6 +1,8 @@
 package at.qe.skeleton.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
@@ -18,7 +20,7 @@ public class ShiftPlan implements Persistable<Long>, Serializable, Comparable<Sh
     @ManyToOne
     private Department department; // Associated department
 
-    @OneToMany(mappedBy = "shiftPlan", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "shiftPlan", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Shift> shifts; // List of shifts in the plan
 
     @Enumerated(EnumType.STRING)
@@ -26,8 +28,10 @@ public class ShiftPlan implements Persistable<Long>, Serializable, Comparable<Sh
 
     private LocalDateTime date; // Date associated with the start or week of the ShiftPlan
 
+    @CreationTimestamp
     private LocalDateTime createDate; // Date when the plan was created
 
+    @UpdateTimestamp
     private LocalDateTime updateDate; // Date when the plan was last updated
 
     private String name; // Name of the ShiftPlan

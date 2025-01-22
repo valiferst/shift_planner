@@ -59,7 +59,7 @@ public class DepartmentService {
      * @param id The ID of the department.
      * @return The department, if found.
      */
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('MANAGER')")
     public Optional<Department> loadDepartment(Long id) {
         return departmentRepository.findById(id);
     }
