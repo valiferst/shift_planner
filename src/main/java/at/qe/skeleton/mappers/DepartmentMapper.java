@@ -2,8 +2,10 @@ package at.qe.skeleton.mappers;
 
 import at.qe.skeleton.dtos.DepartmentDTO;
 import at.qe.skeleton.model.Department;
+import at.qe.skeleton.model.ShiftPlan;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.services.DepartmentService;
+import at.qe.skeleton.services.ShiftPlanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +19,12 @@ import java.util.Optional;
 public class DepartmentMapper implements DTOMapper<Department, DepartmentDTO> {
 
     private final DepartmentService departmentService;
+    private final ShiftPlanService shiftPlanService;
 
     @Autowired
-    public DepartmentMapper(DepartmentService departmentService) {
+    public DepartmentMapper(DepartmentService departmentService, ShiftPlanService shiftPlanService) {
         this.departmentService = departmentService;
+        this.shiftPlanService = shiftPlanService;
     }
 
     @Override
@@ -35,7 +39,7 @@ public class DepartmentMapper implements DTOMapper<Department, DepartmentDTO> {
                 department.getClosingTime(),
                 department.getManager() != null ? department.getManager().getId() : null,
                 departmentService.getFullManagerName(department),
-                department.getShiftPlans()
+                department.getShiftPlans().stream().map(ShiftPlan::getId).toList()
         );
     }
 
@@ -59,7 +63,7 @@ public class DepartmentMapper implements DTOMapper<Department, DepartmentDTO> {
             managerOpt.ifPresent(department::setManager);
         }
 
-        department.setShiftPlans(departmentDTO.shiftPlans());
+        department.setShiftPlans(departmentDTO.shiftPlanIds().stream().map(shiftPlanService::loadShiftPlan).map(Optional::get).toList());
         return department;
     }
 }
