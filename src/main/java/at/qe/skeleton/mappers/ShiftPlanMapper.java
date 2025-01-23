@@ -39,7 +39,8 @@ public class ShiftPlanMapper implements DTOMapper<ShiftPlan, ShiftPlanDTO> {
                 shiftPlan.getState(),
                 shiftPlan.getDepartment().getName(),
                 shiftPlan.getDepartment().getId(),
-                shiftPlan.getShifts().stream().map(shiftMapper::mapTo).toList()
+                shiftPlan.getShifts().stream().map(shiftMapper::mapTo).toList(),
+                null
         );
     }
 
