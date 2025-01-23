@@ -5,7 +5,6 @@ import at.qe.skeleton.exceptions.ShiftOverlapException;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.repositories.ShiftPlanRepository;
 import at.qe.skeleton.repositories.ShiftRepository;
-import at.qe.skeleton.repositories.ShiftRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.prepost.PreAuthorize;

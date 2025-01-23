@@ -4,6 +4,7 @@ import at.qe.skeleton.dtos.ShiftPlanDTO;
 import at.qe.skeleton.mappers.ShiftPlanMapper;
 import at.qe.skeleton.model.Department;
 import at.qe.skeleton.model.ShiftPlan;
+import at.qe.skeleton.model.ValidationError;
 import at.qe.skeleton.services.DepartmentService;
 import at.qe.skeleton.services.ShiftPlanService;
 import jakarta.validation.Valid;
@@ -13,9 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * REST controller for managing Shift Plans.
@@ -143,8 +143,13 @@ public class ShiftPlanController {
             return ResponseEntity.notFound().build();
         }
         ShiftPlan shiftPlan = shiftPlanMapper.mapFrom(shiftPlanDTO);
-        ShiftPlan publishedShiftPlan = shiftPlanService.publishShiftPlan(shiftPlan);
-        return ResponseEntity.ok(shiftPlanMapper.mapTo(publishedShiftPlan));
+        List<ValidationError> errors = shiftPlanService.publishShiftPlan(shiftPlan);
+
+        if (!errors.isEmpty()) {
+            return null;
+        }
+        ShiftPlanDTO publishedShiftPlanDTO = shiftPlanMapper.mapTo(shiftPlan);
+        return ResponseEntity.ok(publishedShiftPlanDTO);
     }
 
     /**
