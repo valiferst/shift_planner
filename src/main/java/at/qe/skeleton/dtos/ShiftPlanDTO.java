@@ -18,5 +18,6 @@ public record ShiftPlanDTO (
         ShiftPlanState state,
         String departmentName,
         Long departmentId,
-        List<ShiftDTO> shifts
+        List<ShiftDTO> shifts,
+        List<String> errorMessages
 ) {}

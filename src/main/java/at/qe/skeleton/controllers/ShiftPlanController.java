@@ -156,7 +156,20 @@ public class ShiftPlanController {
                 );
                 errorMessages.add(errorDTO.toFormattedString());
             }
-            return ResponseEntity.badRequest().body(Map.of("errors", errorMessages));
+            ShiftPlanDTO publishedShiftPlanDTO = new ShiftPlanDTO(
+                    shiftPlanDTO.id(),
+                    shiftPlanDTO.createDate(),
+                    shiftPlanDTO.updateDate(),
+                    shiftPlanDTO.name(),
+                    shiftPlanDTO.startDate(),
+                    shiftPlanDTO.endDate(),
+                    shiftPlanDTO.state(),
+                    shiftPlanDTO.departmentName(),
+                    shiftPlanDTO.departmentId(),
+                    shiftPlanDTO.shifts(),
+                    errorMessages
+            );
+            return ResponseEntity.badRequest().body(publishedShiftPlanDTO);
         }
         ShiftPlanDTO publishedShiftPlanDTO = shiftPlanMapper.mapTo(shiftPlan);
         return ResponseEntity.ok(publishedShiftPlanDTO);
