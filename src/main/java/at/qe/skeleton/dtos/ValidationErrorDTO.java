@@ -8,6 +8,10 @@ public record ValidationErrorDTO (
     ValidationErrorType error,
     Shift shift,
     Userx user
-){}
+){
+    public String toFormattedString(){
+        return String.format("Error: %s, Shift:  %s, User: %s", error, shift, user);
+    }
+}
 
 

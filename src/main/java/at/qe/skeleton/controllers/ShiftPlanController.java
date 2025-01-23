@@ -1,6 +1,7 @@
 package at.qe.skeleton.controllers;
 
 import at.qe.skeleton.dtos.ShiftPlanDTO;
+import at.qe.skeleton.dtos.ValidationErrorDTO;
 import at.qe.skeleton.mappers.ShiftPlanMapper;
 import at.qe.skeleton.model.Department;
 import at.qe.skeleton.model.ShiftPlan;
@@ -146,7 +147,16 @@ public class ShiftPlanController {
         List<ValidationError> errors = shiftPlanService.publishShiftPlan(shiftPlan);
 
         if (!errors.isEmpty()) {
-            return null;
+            List<String> errorMessages = new ArrayList<>();
+            for (ValidationError error : errors) {
+                ValidationErrorDTO errorDTO = new ValidationErrorDTO(
+                        error.getValidationErrorType(),
+                        error.getShift(),
+                        error.getUser()
+                );
+                errorMessages.add(errorDTO.toFormattedString());
+            }
+            return ResponseEntity.badRequest().body(Map.of("errors", errorMessages));
         }
         ShiftPlanDTO publishedShiftPlanDTO = shiftPlanMapper.mapTo(shiftPlan);
         return ResponseEntity.ok(publishedShiftPlanDTO);
