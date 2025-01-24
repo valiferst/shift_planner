@@ -1,9 +1,9 @@
 package at.qe.skeleton.services;
 
-import at.qe.skeleton.model.Department;
+import at.qe.skeleton.model.Shift;
 import at.qe.skeleton.model.ShiftPlan;
+import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.repositories.ShiftPlanRepository;
-import at.qe.skeleton.repositories.ShiftRepository;
 import at.qe.skeleton.repositories.ShiftRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -11,7 +11,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import static at.qe.skeleton.model.ShiftPlanState.PUBLISHED;
@@ -44,6 +46,27 @@ public class ShiftPlanService {
     @PreAuthorize("hasAuthority('MANAGER')")
     public Collection<ShiftPlan> getAllShiftPlans() {
         return shiftPlanRepository.findAll();
+    }
+
+    /**
+     * Find all shifts of published shiftplans of user
+     *
+     * @param user of whom we want the shifts
+     * @return all user shifts which are part of a published shiftplan
+     */
+    @PreAuthorize("hasAuthority('MANAGER')")
+    public Collection<Shift> getAllPublishedUserShifts(Userx user) {
+        Collection<Shift> userShifts = shiftRepository.findByShiftWorker(user);
+        Collection<ShiftPlan> shiftPlan = shiftPlanRepository.findByState_Published();
+        List<Shift> publishedUserShifts = new ArrayList<>();
+        for (Shift shift : userShifts) {
+            for (ShiftPlan plan : shiftPlan) {
+                if(shift.getShiftPlan().equals(plan)) {
+                    publishedUserShifts.add(shift);
+                }
+            }
+        }
+        return publishedUserShifts;
     }
 
     /**
