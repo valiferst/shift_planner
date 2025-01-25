@@ -57,10 +57,10 @@ public class ShiftPlanService {
     @PreAuthorize("hasAuthority('MANAGER')")
     public Collection<Shift> getAllPublishedUserShifts(Userx user) {
         Collection<Shift> userShifts = shiftRepository.findByShiftWorker(user);
-        Collection<ShiftPlan> shiftPlan = shiftPlanRepository.findByState_Published();
-        List<Shift> publishedUserShifts = new ArrayList<>();
+        Collection<ShiftPlan> shiftPlans = shiftPlanRepository.findByState_Published();
+        Collection<Shift> publishedUserShifts = new ArrayList<>();
         for (Shift shift : userShifts) {
-            for (ShiftPlan plan : shiftPlan) {
+            for (ShiftPlan plan : shiftPlans) {
                 if(shift.getShiftPlan().equals(plan)) {
                     publishedUserShifts.add(shift);
                 }
