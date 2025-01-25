@@ -1,17 +1,16 @@
 package at.qe.skeleton.services;
 
-import at.qe.skeleton.model.Department;
-import at.qe.skeleton.model.ShiftPlan;
+import at.qe.skeleton.model.*;
 import at.qe.skeleton.repositories.ShiftPlanRepository;
-import at.qe.skeleton.repositories.ShiftRepository;
-import at.qe.skeleton.repositories.ShiftRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import static at.qe.skeleton.model.ShiftPlanState.PUBLISHED;
@@ -26,13 +25,13 @@ public class ShiftPlanService {
 
     private final ShiftPlanRepository shiftPlanRepository;
     private final DepartmentService departmentService;
-    private final ShiftRepository shiftRepository;
+    private final ShiftService shiftService;
 
     @Autowired
-    public ShiftPlanService(ShiftPlanRepository shiftPlanRepository, ShiftRepository shiftRepository, ShiftService shiftService, DepartmentService departmentService) {
+    public ShiftPlanService(ShiftPlanRepository shiftPlanRepository, ShiftService shiftService, DepartmentService departmentService) {
         this.shiftPlanRepository = shiftPlanRepository;
         this.departmentService = departmentService;
-        this.shiftRepository = shiftRepository;
+        this.shiftService = shiftService;
     }
 
     /**
@@ -68,34 +67,42 @@ public class ShiftPlanService {
         return shiftPlanRepository.save(shiftPlan);
     }
 
-    public boolean validateShiftPlan(ShiftPlan shiftPlan) {
-        return true;
+    /**
+     * Validates the shift plan to ensure that there are no conflicts between shifts and absences for users.
+     *
+     * @param shiftPlan The ShiftPlan to validate, containing a list of shifts and assigned users.
+     * @return A list of ValidationErrors encountered during the shift plan validation. If no errors are found, an empty list is returned.
+     */
+
+    public List<ValidationError> validateShiftPlan(ShiftPlan shiftPlan) {
+        List<ValidationError> validationErrors = new ArrayList<>();
+        List<Shift> shifts = shiftPlan.getShifts();
+            for (Shift shift : shifts) {
+                List<ValidationError> shiftErrors = shiftService.validateShift(shift);
+                validationErrors.addAll(shiftErrors);
+                }
+        return validationErrors;
     }
 
     /**
-     * publishes the ShiftPlan
-     * change State of old PUBLISHED shift plan to CANCELLED
-     * changes state of shift plan to be published to PUBLISHED
+     * publishes the ShiftPlan and sets previously published ShiftPlan to CANCELLED
      *
      * @param shiftPlan the shift plan to be published
      * @return the published ShiftPlan
      */
 
     @PreAuthorize("hasAuthority ('MANAGER')")
-    public ShiftPlan publishShiftPlan(ShiftPlan shiftPlan) {
-        if (!validateShiftPlan(shiftPlan)){
-            throw new IllegalArgumentException("Shift plan is not valid");
+    public List<ValidationError> publishShiftPlan(ShiftPlan shiftPlan) {
+        List<ValidationError> validationErrors = validateShiftPlan(shiftPlan);
+        if (validationErrors.isEmpty()) {
+            ShiftPlan oldShiftPlan = departmentService.getPublishedShiftPlan(shiftPlan.getDepartment().getId());
+            if (oldShiftPlan != null) {
+                oldShiftPlan.setState(CANCELLED);
+                shiftPlanRepository.save(oldShiftPlan);
+            }
+            shiftPlan.setState(PUBLISHED);
         }
-
-        ShiftPlan oldShiftPlan = departmentService.getPublishedShiftPlan(shiftPlan.getDepartment().getId());
-
-        if (oldShiftPlan != null) {
-            oldShiftPlan.setState(CANCELLED);
-            shiftPlanRepository.save(oldShiftPlan);
-        }
-
-        shiftPlan.setState(PUBLISHED);
-        return shiftPlanRepository.save(shiftPlan);
+        return validationErrors;
     }
 
     /**

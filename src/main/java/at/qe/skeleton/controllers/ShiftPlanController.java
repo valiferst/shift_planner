@@ -1,9 +1,11 @@
 package at.qe.skeleton.controllers;
 
 import at.qe.skeleton.dtos.ShiftPlanDTO;
+import at.qe.skeleton.dtos.ValidationErrorDTO;
 import at.qe.skeleton.mappers.ShiftPlanMapper;
 import at.qe.skeleton.model.Department;
 import at.qe.skeleton.model.ShiftPlan;
+import at.qe.skeleton.model.ValidationError;
 import at.qe.skeleton.services.DepartmentService;
 import at.qe.skeleton.services.ShiftPlanService;
 import jakarta.validation.Valid;
@@ -13,9 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * REST controller for managing Shift Plans.
@@ -28,6 +28,7 @@ public class ShiftPlanController {
     private final DepartmentService departmentService;
     private final ShiftPlanMapper shiftPlanMapper;
 
+    // TODO: check how to handle non singleton bean autowiring
     @Autowired
     public ShiftPlanController(ShiftPlanService shiftPlanService, DepartmentService departmentService, ShiftPlanMapper shiftPlanMapper) {
         this.shiftPlanService = shiftPlanService;
@@ -136,14 +137,21 @@ public class ShiftPlanController {
      */
     @PatchMapping("/{id}/publish")
     @PreAuthorize("hasAuthority('MANAGER')")
-    public ResponseEntity<ShiftPlanDTO> publishShiftPlan(@PathVariable Long id) {
+    public ResponseEntity<List<ValidationErrorDTO>> publishShiftPlan(@PathVariable Long id) {
         Optional<ShiftPlan> existingPlan = shiftPlanService.loadShiftPlan(id);
         if (existingPlan.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        ShiftPlan toBePublished = existingPlan.get();
-        ShiftPlan publishedShiftPlan = shiftPlanService.publishShiftPlan(toBePublished);
-        return ResponseEntity.ok(shiftPlanMapper.mapTo(publishedShiftPlan));
+
+        List<ValidationError> errors = shiftPlanService.publishShiftPlan(existingPlan.get());
+
+        if (!errors.isEmpty()) {
+            List<ValidationErrorDTO> validationErrorDTOS = errors.stream()
+                    .map(ValidationError::mapToDto)
+                    .toList();
+            return ResponseEntity.badRequest().body(validationErrorDTOS);
+        }
+        return ResponseEntity.ok(new ArrayList<>());
     }
 
     /**
