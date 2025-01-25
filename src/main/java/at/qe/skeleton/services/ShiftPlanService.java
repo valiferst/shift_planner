@@ -55,7 +55,7 @@ public class ShiftPlanService {
      * @return shiftPlan with all user shifts which are part of a published shiftplan
      */
     @PreAuthorize("hasAuthority('MANAGER')")
-    public ShiftPlan getAllPublishedUserShifts(Userx user) {
+    public Collection<Shift> getAllPublishedUserShifts(Userx user) {
         Collection<Shift> userShifts = shiftRepository.findByShiftWorker(user);
         Collection<ShiftPlan> shiftPlan = shiftPlanRepository.findByState_Published();
         List<Shift> publishedUserShifts = new ArrayList<>();
@@ -66,9 +66,7 @@ public class ShiftPlanService {
                 }
             }
         }
-        ShiftPlan plan = new ShiftPlan();
-        plan.setShifts(publishedUserShifts);
-        return plan;
+        return publishedUserShifts;
     }
 
     /**
