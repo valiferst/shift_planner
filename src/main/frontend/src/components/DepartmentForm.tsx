@@ -2,7 +2,6 @@ import {DepartmentDTO} from "../DTO/Department";
 import React from "react";
 import {InputText} from "primereact/inputtext";
 import {InputMaskChangeEvent} from "primereact/inputmask";
-import UserForm from "./UserForm";
 
 interface DepartmentFormProps {
     department: DepartmentDTO
@@ -31,7 +30,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> =
                 <div className="card p-fluid flex flex-wrap gap-3">
                     <div className="flex-auto mb-3">
                         <label htmlFor="name" className="font-bold block">Departmentname</label>
-                        <InputText id="departmentname" name="departmentname" value={department.name}
+                        <InputText id="name" name="name" value={department.name}
                                    onChange={onInputChange} required={true}
                                    placeholder="Departmentname"/>
 
