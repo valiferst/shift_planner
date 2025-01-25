@@ -133,46 +133,25 @@ public class ShiftPlanController {
      * Publishes an existing shift plan.
      *
      * @param id ID of the shift plan to publish.
-     * @param shiftPlanDTO DTO containing to be published shift plan details.
      * @return The published shift plan as a DTO.
      */
     @PatchMapping("/{id}/publish")
     @PreAuthorize("hasAuthority('MANAGER')")
-    public ResponseEntity<ShiftPlanDTO> publishShiftPlan(@PathVariable Long id, @RequestBody ShiftPlanDTO shiftPlanDTO) {
+    public ResponseEntity<List<ValidationErrorDTO>> publishShiftPlan(@PathVariable Long id) {
         Optional<ShiftPlan> existingPlan = shiftPlanService.loadShiftPlan(id);
         if (existingPlan.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        ShiftPlan shiftPlan = shiftPlanMapper.mapFrom(shiftPlanDTO);
-        List<ValidationError> errors = shiftPlanService.publishShiftPlan(shiftPlan);
+
+        List<ValidationError> errors = shiftPlanService.publishShiftPlan(existingPlan.get());
 
         if (!errors.isEmpty()) {
-            List<String> errorMessages = new ArrayList<>();
-            for (ValidationError error : errors) {
-                ValidationErrorDTO errorDTO = new ValidationErrorDTO(
-                        error.getValidationErrorType(),
-                        error.getShift(),
-                        error.getUser()
-                );
-                errorMessages.add(errorDTO.toFormattedString());
-            }
-            ShiftPlanDTO publishedShiftPlanDTO = new ShiftPlanDTO(
-                    shiftPlanDTO.id(),
-                    shiftPlanDTO.createDate(),
-                    shiftPlanDTO.updateDate(),
-                    shiftPlanDTO.name(),
-                    shiftPlanDTO.startDate(),
-                    shiftPlanDTO.endDate(),
-                    shiftPlanDTO.state(),
-                    shiftPlanDTO.departmentName(),
-                    shiftPlanDTO.departmentId(),
-                    shiftPlanDTO.shifts(),
-                    errorMessages
-            );
-            return ResponseEntity.badRequest().body(publishedShiftPlanDTO);
+            List<ValidationErrorDTO> validationErrorDTOS = errors.stream()
+                    .map(ValidationError::mapToDto)
+                    .toList();
+            return ResponseEntity.badRequest().body(validationErrorDTOS);
         }
-        ShiftPlanDTO publishedShiftPlanDTO = shiftPlanMapper.mapTo(shiftPlan);
-        return ResponseEntity.ok(publishedShiftPlanDTO);
+        return ResponseEntity.ok(new ArrayList<>());
     }
 
     /**

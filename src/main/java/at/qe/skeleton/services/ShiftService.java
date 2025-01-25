@@ -3,10 +3,7 @@ package at.qe.skeleton.services;
 import at.qe.skeleton.exceptions.AbsenceOverlapException;
 import at.qe.skeleton.exceptions.ShiftDuplicateException;
 import at.qe.skeleton.exceptions.ShiftOverlapException;
-import at.qe.skeleton.model.Absence;
-import at.qe.skeleton.model.Shift;
-import at.qe.skeleton.model.ShiftPlan;
-import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.model.*;
 import at.qe.skeleton.repositories.ShiftRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -148,4 +145,5 @@ public class ShiftService {
             }
         }
     }
+
 }

@@ -1,5 +1,7 @@
 package at.qe.skeleton.model;
 
+import at.qe.skeleton.dtos.ValidationErrorDTO;
+
 public class ValidationError {
 
         private final ValidationErrorType error;
@@ -22,6 +24,14 @@ public class ValidationError {
 
         public Userx getUser() {
             return user;
+        }
+
+        public ValidationErrorDTO mapToDto() {
+            return new ValidationErrorDTO(
+                    this.getValidationErrorType(),
+                    this.getShift(),
+                    this.getUser()
+            );
         }
 
 }
