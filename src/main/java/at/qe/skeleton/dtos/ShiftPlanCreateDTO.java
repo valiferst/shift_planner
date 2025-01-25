@@ -16,6 +16,6 @@ public record ShiftPlanCreateDTO(
     String name,
     LocalDateTime startDate,
     LocalDateTime endDate,
-    Long departmentId,
-    List<ShiftDTO> shifts            // -- at least one shift
+    Long departmentId
+    // List<ShiftDTO> shifts            // -- removed from DTO because of errors in the persistence layer
 ) {}

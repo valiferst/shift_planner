@@ -1,9 +1,7 @@
 package at.qe.skeleton.services;
 
-import at.qe.skeleton.model.Department;
 import at.qe.skeleton.model.ShiftPlan;
 import at.qe.skeleton.repositories.ShiftPlanRepository;
-import at.qe.skeleton.repositories.ShiftRepository;
 import at.qe.skeleton.repositories.ShiftRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -40,7 +38,6 @@ public class ShiftPlanService {
      *
      * @return the collection of shift plans
      */
-    // TODO might want to change authority back to admin
     @PreAuthorize("hasAuthority('MANAGER')")
     public Collection<ShiftPlan> getAllShiftPlans() {
         return shiftPlanRepository.findAll();

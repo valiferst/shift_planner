@@ -1,6 +1,7 @@
 package at.qe.skeleton.mappers;
 
 import at.qe.skeleton.dtos.ShiftPlanCreateDTO;
+import at.qe.skeleton.dtos.ShiftPlanDTO;
 import at.qe.skeleton.model.ShiftPlan;
 import at.qe.skeleton.model.ShiftPlanState;
 import at.qe.skeleton.services.DepartmentService;
@@ -18,8 +19,17 @@ public class ShiftPlanCreateMapper implements DTOMapper<ShiftPlan, ShiftPlanCrea
     }
 
     @Override
-    public ShiftPlanCreateDTO mapTo(ShiftPlan entity) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public ShiftPlanCreateDTO mapTo(ShiftPlan shiftPlan) {
+        if (shiftPlan == null) {
+            return null;
+        }
+        return new ShiftPlanCreateDTO(
+                shiftPlan.getName(),
+                shiftPlan.getStartDate(),
+                shiftPlan.getEndDate(),
+                shiftPlan.getDepartment().getId()
+        );
+
     }
 
     @Override
@@ -38,7 +48,7 @@ public class ShiftPlanCreateMapper implements DTOMapper<ShiftPlan, ShiftPlanCrea
         shiftPlan.setStartDate(dto.startDate());
         shiftPlan.setEndDate(dto.endDate());
         shiftPlan.setDepartment(departmentService.loadDepartment(dto.departmentId()).orElseThrow(() -> new IllegalArgumentException("Department not found")));
-        shiftPlan.setShifts(dto.shifts().stream().map(shiftMapper::mapFrom).toList());
+        // shiftPlan.setShifts(dto.shifts().stream().map(shiftMapper::mapFrom).toList());
         return shiftPlan;
     }
 }
