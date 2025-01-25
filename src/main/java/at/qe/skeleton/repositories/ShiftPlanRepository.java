@@ -10,4 +10,6 @@ import java.util.Collection;
 
 public interface ShiftPlanRepository extends AbstractRepository<ShiftPlan, Long> {
     Collection<ShiftPlan> findByDepartment_Id(Long departmentId);
+
+    Collection<ShiftPlan> findByState_Published ();
 }
