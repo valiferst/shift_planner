@@ -1,11 +1,7 @@
 package at.qe.skeleton.services;
 
-import at.qe.skeleton.dtos.ShiftPlanDTO;
-import at.qe.skeleton.exceptions.AbsenceOverlapException;
-import at.qe.skeleton.exceptions.ShiftOverlapException;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.repositories.ShiftPlanRepository;
-import at.qe.skeleton.repositories.ShiftRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,13 +26,11 @@ public class ShiftPlanService {
     private final ShiftPlanRepository shiftPlanRepository;
     private final DepartmentService departmentService;
     private final ShiftService shiftService;
-    private final ShiftRepository shiftRepository;
 
     @Autowired
-    public ShiftPlanService(ShiftPlanRepository shiftPlanRepository, ShiftRepository shiftRepository, ShiftService shiftService, DepartmentService departmentService) {
+    public ShiftPlanService(ShiftPlanRepository shiftPlanRepository, ShiftService shiftService, DepartmentService departmentService) {
         this.shiftPlanRepository = shiftPlanRepository;
         this.departmentService = departmentService;
-        this.shiftRepository = shiftRepository;
         this.shiftService = shiftService;
     }
 
@@ -75,14 +69,9 @@ public class ShiftPlanService {
 
     /**
      * Validates the shift plan to ensure that there are no conflicts between shifts and absences for users.
-     * This method checks each shift in the provided shiftPlan and validates whether there are
-     * overlapping shifts or absences for the assigned users.
-     * If an overlap is found between a shift and another shift or an absence, an appropriate validation error
-     * is added to the list of validation errors.
      *
      * @param shiftPlan The ShiftPlan to validate, containing a list of shifts and assigned users.
-     * @return A list of ValidationError objects, each representing a validation error encountered
-     *         during the shift plan validation. If no errors are found, an empty list is returned.
+     * @return A list of ValidationErrors encountered during the shift plan validation. If no errors are found, an empty list is returned.
      */
 
     public List<ValidationError> validateShiftPlan(ShiftPlan shiftPlan) {
@@ -96,9 +85,7 @@ public class ShiftPlanService {
     }
 
     /**
-     * publishes the ShiftPlan
-     * change State of old PUBLISHED shift plan to CANCELLED
-     * changes state of shift plan to be published to PUBLISHED
+     * publishes the ShiftPlan and sets previously published ShiftPlan to CANCELLED
      *
      * @param shiftPlan the shift plan to be published
      * @return the published ShiftPlan

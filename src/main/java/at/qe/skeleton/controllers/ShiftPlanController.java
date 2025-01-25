@@ -16,7 +16,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * REST controller for managing Shift Plans.
@@ -29,6 +28,7 @@ public class ShiftPlanController {
     private final DepartmentService departmentService;
     private final ShiftPlanMapper shiftPlanMapper;
 
+    // TODO: check how to handle non singleton bean autowiring
     @Autowired
     public ShiftPlanController(ShiftPlanService shiftPlanService, DepartmentService departmentService, ShiftPlanMapper shiftPlanMapper) {
         this.shiftPlanService = shiftPlanService;

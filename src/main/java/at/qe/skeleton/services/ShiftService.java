@@ -143,15 +143,23 @@ public class ShiftService {
         }
     }
 
+    /**
+     * check a shift for overlaps in shifts or absences for the assigned users.
+     *
+     * @param shift the shift to check for overlaps
+     * @return List of ValidationErrors for users, specifying absence or shift conflicts
+     */
     @PreAuthorize("hasAuthority('MANAGER')")
     public List<ValidationError> validateShift(Shift shift){
         List<ValidationError> shiftErrors = new ArrayList<>();
         for (Userx user : shift.getShiftWorkers()) {
             try {
                 overlapUserShift(shift, user);
-                overlapUserAbsences(shift, user);
             } catch (ShiftOverlapException e) {
                 shiftErrors.add(new ValidationError(ValidationErrorType.SHIFT_CONFLICT, shift, user));
+            }
+            try {
+                overlapUserAbsences(shift, user);
             } catch (AbsenceOverlapException e) {
                 shiftErrors.add(new ValidationError(ValidationErrorType.ABSENCE_CONFLICT, shift, user));
             }
