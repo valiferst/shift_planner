@@ -1,12 +1,18 @@
 package at.qe.skeleton.mappers;
 
 import at.qe.skeleton.dtos.DepartmentDTO;
+import at.qe.skeleton.dtos.ShiftPlanDTO;
 import at.qe.skeleton.model.Department;
+import at.qe.skeleton.model.Shift;
+import at.qe.skeleton.model.ShiftPlan;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.services.DepartmentService;
+import at.qe.skeleton.services.ShiftPlanService;
+import org.hibernate.sql.ast.tree.expression.Collation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -17,10 +23,12 @@ import java.util.Optional;
 public class DepartmentMapper implements DTOMapper<Department, DepartmentDTO> {
 
     private final DepartmentService departmentService;
+    private final ShiftPlanService shiftPlanService;
 
     @Autowired
-    public DepartmentMapper(DepartmentService departmentService) {
+    public DepartmentMapper(DepartmentService departmentService, ShiftPlanService shiftPlanService) {
         this.departmentService = departmentService;
+        this.shiftPlanService = shiftPlanService;
     }
 
     @Override
@@ -35,7 +43,7 @@ public class DepartmentMapper implements DTOMapper<Department, DepartmentDTO> {
                 department.getClosingTime(),
                 department.getManager() != null ? department.getManager().getId() : null,
                 departmentService.getFullManagerName(department),
-                department.getShiftPlans()
+                department.getShiftPlans().stream().map(ShiftPlan::getId).toList()
         );
     }
 
@@ -59,7 +67,9 @@ public class DepartmentMapper implements DTOMapper<Department, DepartmentDTO> {
             managerOpt.ifPresent(department::setManager);
         }
 
-        department.setShiftPlans(departmentDTO.shiftPlans());
+        Collection<ShiftPlan> shiftPlans = shiftPlanService.getShiftPlansByDepartmentId(department.getId());
+
+        department.setShiftPlans(shiftPlans.stream().toList());
         return department;
     }
 }
