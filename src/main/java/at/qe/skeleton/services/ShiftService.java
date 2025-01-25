@@ -11,10 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Component
 @Scope("application")
@@ -146,4 +143,19 @@ public class ShiftService {
         }
     }
 
+    @PreAuthorize("hasAuthority('MANAGER')")
+    public List<ValidationError> validateShift(Shift shift){
+        List<ValidationError> shiftErrors = new ArrayList<>();
+        for (Userx user : shift.getShiftWorkers()) {
+            try {
+                overlapUserShift(shift, user);
+                overlapUserAbsences(shift, user);
+            } catch (ShiftOverlapException e) {
+                shiftErrors.add(new ValidationError(ValidationErrorType.SHIFT_CONFLICT, shift, user));
+            } catch (AbsenceOverlapException e) {
+                shiftErrors.add(new ValidationError(ValidationErrorType.ABSENCE_CONFLICT, shift, user));
+            }
+        }
+        return shiftErrors;
+    }
 }

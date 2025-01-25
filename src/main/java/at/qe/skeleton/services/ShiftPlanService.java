@@ -1,5 +1,6 @@
 package at.qe.skeleton.services;
 
+import at.qe.skeleton.dtos.ShiftPlanDTO;
 import at.qe.skeleton.exceptions.AbsenceOverlapException;
 import at.qe.skeleton.exceptions.ShiftOverlapException;
 import at.qe.skeleton.model.*;
@@ -88,17 +89,9 @@ public class ShiftPlanService {
         List<ValidationError> validationErrors = new ArrayList<>();
         List<Shift> shifts = shiftPlan.getShifts();
             for (Shift shift : shifts) {
-                for (Userx user : shift.getShiftWorkers()) {
-                    try {
-                        shiftService.overlapUserShift(shift, user);
-                        shiftService.overlapUserAbsences(shift, user);
-                    } catch (ShiftOverlapException e) {
-                        validationErrors.add(new ValidationError(ValidationErrorType.SHIFT_CONFLICT, shift, user));
-                    } catch (AbsenceOverlapException e) {
-                        validationErrors.add(new ValidationError(ValidationErrorType.ABSENCE_CONFLICT, shift, user));
-                    }
+                List<ValidationError> shiftErrors = shiftService.validateShift(shift);
+                validationErrors.addAll(shiftErrors);
                 }
-            }
         return validationErrors;
     }
 
