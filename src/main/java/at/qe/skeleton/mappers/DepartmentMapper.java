@@ -1,14 +1,18 @@
 package at.qe.skeleton.mappers;
 
 import at.qe.skeleton.dtos.DepartmentDTO;
+import at.qe.skeleton.dtos.ShiftPlanDTO;
 import at.qe.skeleton.model.Department;
+import at.qe.skeleton.model.Shift;
 import at.qe.skeleton.model.ShiftPlan;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.services.DepartmentService;
 import at.qe.skeleton.services.ShiftPlanService;
+import org.hibernate.sql.ast.tree.expression.Collation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -63,7 +67,9 @@ public class DepartmentMapper implements DTOMapper<Department, DepartmentDTO> {
             managerOpt.ifPresent(department::setManager);
         }
 
-        department.setShiftPlans(departmentDTO.shiftPlanIds().stream().map(shiftPlanService::loadShiftPlan).map(Optional::get).toList());
+        Collection<ShiftPlan> shiftPlans = shiftPlanService.getShiftPlansByDepartmentId(department.getId());
+
+        department.setShiftPlans(shiftPlans.stream().toList());
         return department;
     }
 }

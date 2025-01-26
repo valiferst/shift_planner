@@ -6,8 +6,8 @@ import '../styles/App.css';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import React from "react";
 import NavbarComponent from "../components/NavbarComponent";
-import UserTableComponent from "../components/UserTableComponent";
 import {FooterComponent} from "../components/FooterComponent";
+import DepartmentTableComponent from "../components/DepartmentTableComponent";
 
 /**
  * Component / View for managing departments.
@@ -19,7 +19,7 @@ class ManageUsers extends React.Component {
         return (
             <div>
                 <NavbarComponent />
-                <UserTableComponent />
+                <DepartmentTableComponent />
                 <FooterComponent />
             </div>
         );
