@@ -2,8 +2,8 @@ package at.qe.skeleton.mappers;
 
 import at.qe.skeleton.dtos.ShiftPlanDTO;
 import at.qe.skeleton.model.ShiftPlan;
-import at.qe.skeleton.repositories.ShiftPlanRepository;
 import at.qe.skeleton.services.ShiftPlanService;
+import at.qe.skeleton.services.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +15,14 @@ public class ShiftPlanMapper implements DTOMapper<ShiftPlan, ShiftPlanDTO> {
 
     private final ShiftPlanService shiftPlanService;
     private final ShiftMapper shiftMapper;
-    private final ShiftPlanRepository shiftPlanRepository;
+    private final DepartmentService departmentService;
 
     @Autowired
-    public ShiftPlanMapper(ShiftPlanService shiftPlanService, ShiftMapper shiftMapper, ShiftPlanRepository shiftPlanRepository) {
+    public ShiftPlanMapper(ShiftPlanService shiftPlanService, ShiftMapper shiftMapper, DepartmentService departmentService) {
         this.shiftPlanService = shiftPlanService;
+
         this.shiftMapper = shiftMapper;
-        this.shiftPlanRepository = shiftPlanRepository;
+        this.departmentService = departmentService;
     }
 
     @Override
@@ -43,7 +44,6 @@ public class ShiftPlanMapper implements DTOMapper<ShiftPlan, ShiftPlanDTO> {
         );
     }
 
-    // TODO handle the newly introduced fields in the DTO (departmentName and departmentId, shiftDTO-list), when receiving it from the frontend (new shiftplan-creation)
     @Override
     public ShiftPlan mapFrom(ShiftPlanDTO shiftPlanDto) {
         if (null == shiftPlanDto) {
@@ -61,6 +61,8 @@ public class ShiftPlanMapper implements DTOMapper<ShiftPlan, ShiftPlanDTO> {
         shiftPlan.setStartDate(shiftPlanDto.startDate());
         shiftPlan.setEndDate(shiftPlanDto.endDate());
         shiftPlan.setState(shiftPlanDto.state());
+        shiftPlan.setDepartment(departmentService.loadDepartment(shiftPlanDto.departmentId()).orElseThrow(() -> new IllegalArgumentException("Department not found")));
+        shiftPlan.setShifts(shiftPlanDto.shifts().stream().map(shiftMapper::mapFrom).toList());
 
 
         return shiftPlan;

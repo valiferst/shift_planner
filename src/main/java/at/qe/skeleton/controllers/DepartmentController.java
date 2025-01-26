@@ -94,8 +94,8 @@ public class DepartmentController {
     @PatchMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<DepartmentDTO> updateDepartment(@PathVariable Long id, @Valid @RequestBody DepartmentDTO departmentDTO) {
-        Optional<Department> existingPlan = departmentService.loadDepartment(id);
-        if (existingPlan.isEmpty()) {
+        Optional<Department> existingDepartment = departmentService.loadDepartment(id);
+        if (existingDepartment.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         Department department = departmentMapper.mapFrom(departmentDTO);
@@ -112,9 +112,9 @@ public class DepartmentController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Void> deleteDepartment(@PathVariable Long id) {
-        Optional<Department> existingPlan = departmentService.loadDepartment(id);
-        if (existingPlan.isPresent()) {
-            departmentService.deleteDepartment(existingPlan.get());
+        Optional<Department> existingDepartment = departmentService.loadDepartment(id);
+        if (existingDepartment.isPresent()) {
+            departmentService.deleteDepartment(existingDepartment.get());
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();

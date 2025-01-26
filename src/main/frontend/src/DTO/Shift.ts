@@ -57,6 +57,15 @@ export class Shift implements ShiftDTO{
     }
 
     /**
+     * Getter method for the full name of the user with the username
+     * Get the full name of the user and add the username
+     * @returns Full name of the user with the username
+     */
+    get shiftIdentification(): string {
+        return `${this.id} from ${this.startTime} to ${this.endTime}`;
+    }
+
+    /**
      * Serialize the Shift instance to JSON for updating an existing shift
      * @returns JSON object with the fields required for updating a shift
      */
