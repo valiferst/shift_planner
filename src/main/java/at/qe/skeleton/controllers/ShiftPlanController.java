@@ -1,5 +1,7 @@
 package at.qe.skeleton.controllers;
 
+import at.qe.skeleton.dtos.ShiftPlanCreateDTO;
+import at.qe.skeleton.mappers.ShiftPlanCreateMapper;
 import at.qe.skeleton.dtos.ShiftPlanDTO;
 import at.qe.skeleton.dtos.ValidationErrorDTO;
 import at.qe.skeleton.mappers.ShiftPlanMapper;
@@ -27,13 +29,15 @@ public class ShiftPlanController {
     private final ShiftPlanService shiftPlanService;
     private final DepartmentService departmentService;
     private final ShiftPlanMapper shiftPlanMapper;
+    private final ShiftPlanCreateMapper shiftPlanCreateMapper;
 
     // TODO: check how to handle non singleton bean autowiring
     @Autowired
-    public ShiftPlanController(ShiftPlanService shiftPlanService, DepartmentService departmentService, ShiftPlanMapper shiftPlanMapper) {
+    public ShiftPlanController(ShiftPlanService shiftPlanService, DepartmentService departmentService, ShiftPlanMapper shiftPlanMapper, ShiftPlanCreateMapper shiftPlanCreateMapper) {
         this.shiftPlanService = shiftPlanService;
         this.departmentService = departmentService;
         this.shiftPlanMapper = shiftPlanMapper;
+        this.shiftPlanCreateMapper = shiftPlanCreateMapper;
     }
 
     /**
@@ -98,15 +102,15 @@ public class ShiftPlanController {
     /**
      * Creates a new shift plan.
      *
-     * @param shiftPlanDTO DTO containing shift plan details.
+     * @param shiftPlanCreateDTO DTO containing shift plan details.
      * @return The created shift plan as a DTO.
      */
     @PostMapping("")
     @PreAuthorize("hasAuthority('MANAGER')")
-    public ResponseEntity<ShiftPlanDTO> createShiftPlan(@Valid @RequestBody ShiftPlanDTO shiftPlanDTO) {
-        ShiftPlan shiftPlan = shiftPlanMapper.mapFrom(shiftPlanDTO);
+    public ResponseEntity<ShiftPlanCreateDTO> createShiftPlan(@Valid @RequestBody ShiftPlanCreateDTO shiftPlanCreateDTO) {
+        ShiftPlan shiftPlan = shiftPlanCreateMapper.mapFrom(shiftPlanCreateDTO);
         ShiftPlan savedShiftPlan = shiftPlanService.saveShiftPlan(shiftPlan);
-        return ResponseEntity.status(HttpStatus.CREATED).body(shiftPlanMapper.mapTo(savedShiftPlan));
+        return ResponseEntity.status(HttpStatus.CREATED).body(shiftPlanCreateMapper.mapTo(savedShiftPlan));
     }
 
     /**

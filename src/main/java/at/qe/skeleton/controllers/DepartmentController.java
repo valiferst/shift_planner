@@ -32,10 +32,20 @@ public class DepartmentController {
 
 
     /**
-     * Retrieves all departments managed by the authenticated user.
+     * Retrieves all departments.
      *
      * @return List of all departments as DTOs.
      */
+    @GetMapping("")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<List<DepartmentDTO>> getAllDepartments() {
+        List<DepartmentDTO> departments = departmentService.getAllDepartments().stream()
+                .map(departmentMapper::mapTo)
+                .toList();
+        return ResponseEntity.ok(departments);
+    }
+
+
     @GetMapping("/my")
     @PreAuthorize("hasAuthority('MANAGER')")
     public ResponseEntity<List<DepartmentDTO>> getDepartmentsByManagerId() {
@@ -84,8 +94,8 @@ public class DepartmentController {
     @PatchMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<DepartmentDTO> updateDepartment(@PathVariable Long id, @Valid @RequestBody DepartmentDTO departmentDTO) {
-        Optional<Department> existingPlan = departmentService.loadDepartment(id);
-        if (existingPlan.isEmpty()) {
+        Optional<Department> existingDepartment = departmentService.loadDepartment(id);
+        if (existingDepartment.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         Department department = departmentMapper.mapFrom(departmentDTO);
@@ -102,9 +112,9 @@ public class DepartmentController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Void> deleteDepartment(@PathVariable Long id) {
-        Optional<Department> existingPlan = departmentService.loadDepartment(id);
-        if (existingPlan.isPresent()) {
-            departmentService.deleteDepartment(existingPlan.get());
+        Optional<Department> existingDepartment = departmentService.loadDepartment(id);
+        if (existingDepartment.isPresent()) {
+            departmentService.deleteDepartment(existingDepartment.get());
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();

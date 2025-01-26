@@ -2,7 +2,8 @@ package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.UsernameDuplicateException;
 import at.qe.skeleton.model.Userx;
-import java.util.Collection;
+
+import java.util.*;
 
 import at.qe.skeleton.repositories.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import at.qe.skeleton.repositories.UserxRepository;
-import java.util.Optional;
+
+import java.util.stream.Collectors;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,12 +53,23 @@ public class UserxService {
     }
 
     /**
+     * Returns a collection of users by id.
+     *
+     * @return the userx collection
+     */
+    @PreAuthorize("hasAuthority('EMPLOYEE')") // TODO: find out why this fails if using "MANAGER"
+    public Collection<Userx> getUsersById(List<Long> userIds) {
+
+        return userRepository.findByIdIn(userIds);
+    }
+
+    /**
      * Loads a single user identified by its id.
      *
      * @param id the id to search for
      * @return the user with the id
      */
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('MANAGER')")
     public Optional<Userx> loadUser(Long id) {
         return userRepository.findById(id);
     }

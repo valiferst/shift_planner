@@ -39,7 +39,6 @@ public class ShiftPlanService {
      *
      * @return the collection of shift plans
      */
-    // TODO might want to change authority back to admin
     @PreAuthorize("hasAuthority('MANAGER')")
     public Collection<ShiftPlan> getAllShiftPlans() {
         return shiftPlanRepository.findAll();
@@ -101,6 +100,7 @@ public class ShiftPlanService {
                 shiftPlanRepository.save(oldShiftPlan);
             }
             shiftPlan.setState(PUBLISHED);
+            shiftPlanRepository.save(shiftPlan);
         }
         return validationErrors;
     }
