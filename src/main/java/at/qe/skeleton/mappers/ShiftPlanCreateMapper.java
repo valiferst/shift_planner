@@ -5,6 +5,7 @@ import at.qe.skeleton.dtos.ShiftPlanDTO;
 import at.qe.skeleton.model.ShiftPlan;
 import at.qe.skeleton.model.ShiftPlanState;
 import at.qe.skeleton.services.DepartmentService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,6 +14,7 @@ public class ShiftPlanCreateMapper implements DTOMapper<ShiftPlan, ShiftPlanCrea
     private final DepartmentService departmentService;
     private final ShiftMapper shiftMapper;
 
+    @Autowired
     public ShiftPlanCreateMapper(DepartmentService departmentService, ShiftMapper shiftMapper) {
         this.departmentService = departmentService;
         this.shiftMapper = shiftMapper;
