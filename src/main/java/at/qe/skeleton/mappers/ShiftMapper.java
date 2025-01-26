@@ -56,7 +56,7 @@ public class ShiftMapper implements DTOMapper<Shift, ShiftDTO>{
         }
         shift.setStartTime(shiftDto.startTime());
         shift.setEndTime(shiftDto.endTime());
-        shift.setShiftWorkers(shiftDto.shiftWorkerIds().stream().map(userxService::loadUser).map(Optional::get).collect(Collectors.toSet()));
+        shift.setShiftWorkers(userxService.getUsersById(shiftDto.shiftWorkerIds()).stream().collect(Collectors.toSet()));
 
         return shift;
     }

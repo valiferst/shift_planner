@@ -7,6 +7,7 @@ import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.List;
 
@@ -73,7 +74,14 @@ public class ShiftPlan implements Persistable<Long>, Serializable, Comparable<Sh
     }
 
     public void setShifts(List<Shift> shifts) {
-        this.shifts = shifts;
+        if (this.shifts == null) {
+            this.shifts = new ArrayList<>();
+        } else {
+            this.shifts.clear();
+        }
+        if (shifts != null) {
+            this.shifts.addAll(shifts);
+        }
     }
 
     public ShiftPlanState getState() {

@@ -6,6 +6,7 @@ export interface ShiftDTO {
     startTime: Date | null;
     endTime: Date | null;
     toShiftPlan: number | null;
+    shiftWorkerIds: number[];
     shiftWorkerNames: string[];
 }
 
@@ -15,6 +16,7 @@ export class Shift implements ShiftDTO{
     startTime: Date | null;
     endTime: Date | null;
     toShiftPlan: number| null;
+    shiftWorkerIds: number[];
     shiftWorkerNames: string[];
 
     /**
@@ -26,6 +28,7 @@ export class Shift implements ShiftDTO{
         this.startTime = data.startTime ? new Date(data.startTime) : null;
         this.endTime = data.endTime ? new Date(data.endTime) : null;
         this.toShiftPlan = data.toShiftPlan ?? null;
+        this.shiftWorkerIds = data.shiftWorkerIds;
         this.shiftWorkerNames = data.shiftWorkerNames;
     }
 
@@ -39,6 +42,7 @@ export class Shift implements ShiftDTO{
             startTime: this.startTime,
             endTime: this.endTime,
             toShiftPlan: this.toShiftPlan,
+            shiftWorkerIds: this.shiftWorkerIds,
             shiftWorkerNames: this.shiftWorkerNames
         };
     }
@@ -47,12 +51,12 @@ export class Shift implements ShiftDTO{
      * Serialize the Shift instance to JSON for creating a new shift
      * @returns JSON object with the fields required for creating a new shift
      */
-    toCreateJSON(): Pick<ShiftDTO, 'startTime' | 'endTime' | 'toShiftPlan' | 'shiftWorkerNames' > {
+    toCreateJSON(): Pick<ShiftDTO, 'startTime' | 'endTime' | 'toShiftPlan' | 'shiftWorkerIds' > {
         return {
             startTime: this.startTime,
             endTime: this.endTime,
             toShiftPlan: this.toShiftPlan,
-            shiftWorkerNames: this.shiftWorkerNames
+            shiftWorkerIds: this.shiftWorkerIds,
         };
     }
 
@@ -66,20 +70,6 @@ export class Shift implements ShiftDTO{
     }
 
     /**
-     * Serialize the Shift instance to JSON for updating an existing shift
-     * @returns JSON object with the fields required for updating a shift
-     */
-    toUpdateJSON(): Pick<ShiftDTO, 'id' | 'startTime' | 'endTime' | 'toShiftPlan' | 'shiftWorkerNames'> {
-        return {
-            id: this.id,
-            startTime: this.startTime,
-            endTime: this.endTime,
-            toShiftPlan: this.toShiftPlan,
-            shiftWorkerNames: this.shiftWorkerNames
-        };
-    }
-
-    /**
      * Create an empty Shift instance
      * @returns Shift instance with empty fields
      */
@@ -89,6 +79,7 @@ export class Shift implements ShiftDTO{
             startTime: null,
             endTime: null,
             toShiftPlan: null,
+            shiftWorkerIds: [],
             shiftWorkerNames: []
         });
     }
