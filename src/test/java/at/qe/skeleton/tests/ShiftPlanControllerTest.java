@@ -3,6 +3,7 @@ package at.qe.skeleton.tests;
 import at.qe.skeleton.controllers.ShiftPlanController;
 import at.qe.skeleton.dtos.ShiftPlanDTO;
 import at.qe.skeleton.mappers.ShiftMapper;
+import at.qe.skeleton.mappers.ShiftPlanCreateMapper;
 import at.qe.skeleton.mappers.ShiftPlanMapper;
 import at.qe.skeleton.model.Shift;
 import at.qe.skeleton.model.ShiftPlan;
@@ -47,6 +48,9 @@ class ShiftPlanControllerTest {
 
     @MockBean
     private ShiftMapper shiftMapper;
+
+    @MockBean
+    private ShiftPlanCreateMapper shiftPlanCreateMapper;
 
     @Test
     @WithMockUser(username = "manager", authorities = {"MANAGER"})
