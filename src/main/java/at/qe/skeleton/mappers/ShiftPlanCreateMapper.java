@@ -2,8 +2,10 @@ package at.qe.skeleton.mappers;
 
 import at.qe.skeleton.dtos.ShiftPlanCreateDTO;
 import at.qe.skeleton.dtos.ShiftPlanDTO;
+import at.qe.skeleton.dtos.UserxCreateDTO;
 import at.qe.skeleton.model.ShiftPlan;
 import at.qe.skeleton.model.ShiftPlanState;
+import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.services.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,16 +24,7 @@ public class ShiftPlanCreateMapper implements DTOMapper<ShiftPlan, ShiftPlanCrea
 
     @Override
     public ShiftPlanCreateDTO mapTo(ShiftPlan shiftPlan) {
-        if (shiftPlan == null) {
-            return null;
-        }
-        return new ShiftPlanCreateDTO(
-                shiftPlan.getName(),
-                shiftPlan.getStartDate(),
-                shiftPlan.getEndDate(),
-                shiftPlan.getDepartment().getId()
-        );
-
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override

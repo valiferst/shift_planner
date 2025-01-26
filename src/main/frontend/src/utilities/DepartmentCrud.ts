@@ -28,6 +28,22 @@ const fetchAllDepartments = async (): Promise<DepartmentDTO[]> => {
     }
 }
 
+/**
+ * Fetch all departments from the backend
+ * @returns Promise<DepartmentDTO[]> a promise that resolves with an array of DepartmentDTO objects
+ * @throws Error if the request fails
+ */
+const fetchManagerDepartments= async (): Promise<DepartmentDTO[]> => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/departments/my`, {
+            withCredentials: true
+        });
+        return response.data;
+    } catch (error: any) {
+        throw new Error(`Error fetching departments: ${error.message}`);
+    }
+}
+
 
 /**
  * Create a new department
@@ -88,5 +104,6 @@ export const DepartmentCrud = {
     createDepartment,
     updateDepartment,
     deleteDepartment,
+    fetchManagerDepartments,
     fetchAllDepartments
 }

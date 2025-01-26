@@ -7,6 +7,8 @@ import at.qe.skeleton.services.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 /**
  * Mapping between ShiftPlan and ShiftPlanDTOs.
  */
@@ -40,7 +42,7 @@ public class ShiftPlanMapper implements DTOMapper<ShiftPlan, ShiftPlanDTO> {
                 shiftPlan.getState(),
                 shiftPlan.getDepartment().getName(),
                 shiftPlan.getDepartment().getId(),
-                shiftPlan.getShifts().stream().map(shiftMapper::mapTo).toList()
+                shiftPlan.getShifts() != null ? shiftPlan.getShifts().stream().map(shiftMapper::mapTo).toList() : new ArrayList<>()
         );
     }
 

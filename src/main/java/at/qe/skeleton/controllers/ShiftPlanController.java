@@ -107,10 +107,10 @@ public class ShiftPlanController {
      */
     @PostMapping("")
     @PreAuthorize("hasAuthority('MANAGER')")
-    public ResponseEntity<ShiftPlanCreateDTO> createShiftPlan(@Valid @RequestBody ShiftPlanCreateDTO shiftPlanCreateDTO) {
+    public ResponseEntity<ShiftPlanDTO> createShiftPlan(@Valid @RequestBody ShiftPlanCreateDTO shiftPlanCreateDTO) {
         ShiftPlan shiftPlan = shiftPlanCreateMapper.mapFrom(shiftPlanCreateDTO);
         ShiftPlan savedShiftPlan = shiftPlanService.saveShiftPlan(shiftPlan);
-        return ResponseEntity.status(HttpStatus.CREATED).body(shiftPlanCreateMapper.mapTo(savedShiftPlan));
+        return ResponseEntity.status(HttpStatus.CREATED).body(shiftPlanMapper.mapTo(savedShiftPlan));
     }
 
     /**
@@ -128,7 +128,6 @@ public class ShiftPlanController {
             return ResponseEntity.notFound().build();
         }
         ShiftPlan shiftPlan = shiftPlanMapper.mapFrom(shiftPlanDTO);
-        shiftPlan.setId(id);
         ShiftPlan updatedShiftPlan = shiftPlanService.saveShiftPlan(shiftPlan);
         return ResponseEntity.ok(shiftPlanMapper.mapTo(updatedShiftPlan));
     }
