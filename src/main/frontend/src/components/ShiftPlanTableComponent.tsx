@@ -2,11 +2,11 @@
  * This code is part of the skeleton project provided for students of the course "Software
  * Architecture" offered by Innsbruck University.
  */
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 
-import { Button } from "primereact/button";
-import { Card } from 'primereact/card';
-import { InputMaskChangeEvent } from "primereact/inputmask";
+import {Button} from "primereact/button";
+import {Card} from 'primereact/card';
+import {InputMaskChangeEvent} from "primereact/inputmask";
 import 'primeicons/primeicons.css';
 
 import ShiftPlanListComponent from "./ShiftPlanListComponent";
@@ -14,12 +14,11 @@ import ShiftPlanDialog from "./ShiftPlanDialog";
 import ShiftPlanPublishDialog from "./ShiftPlanPublishDialog";
 import ShiftPlanDeleteDialog from "./ShiftPlanDeleteDialog";
 
-import { ShiftPlanDTO, ShiftPlan } from "../DTO/ShiftPlan";
-import { ShiftPlanCrud } from "../utilities/ShiftPlanCrud";
-import {
-    createShiftPlanFromInterfaces
-} from '../factories/shiftPlanFactory';
+import {ShiftPlan, ShiftPlanDTO, ShiftPlanState} from "../DTO/ShiftPlan";
+import {ShiftPlanCrud} from "../utilities/ShiftPlanCrud";
+import {createShiftPlanFromInterfaces} from '../factories/shiftPlanFactory';
 import {Nullable} from "primereact/ts-helpers";
+import {ValidationError} from "../DTO/ValidationError";
 
 /**
  * Component for managing shiftPlans.
@@ -118,10 +117,19 @@ const ShiftPlanTable = () => {
             if (!selectedShiftPlan) return;
 
             try {
-                const publishedShiftPlan: ShiftPlan = await ShiftPlanCrud.publishShiftPlan(selectedShiftPlan);
-                setShiftPlans(shiftPlans.map((shiftPlan: ShiftPlan) => shiftPlan.id === publishedShiftPlan.id ? publishedShiftPlan : shiftPlan));
-                // TODO implement updating state of previously published ShiftPlan if there was one
-                setPublishDialogVisible(false)
+                const validationErrors: ValidationError[] = await ShiftPlanCrud.publishShiftPlan(selectedShiftPlan);
+                if (validationErrors.length === 0) {
+                    // TODO: add departmentId in ShiftPlanDTO and change filter to id
+                    shiftPlans.filter(shiftPlan => shiftPlan.departmentName === selectedShiftPlan.departmentName)
+                        .forEach(shiftPlan => {
+                            if (shiftPlan.state === ShiftPlanState.PUBLISHED) shiftPlan.state = ShiftPlanState.CANCELLED
+                        });
+                    selectedShiftPlan.state = ShiftPlanState.PUBLISHED
+                    setPublishDialogVisible(false)
+                } else {
+                    validationErrors.forEach(valError => console.error(`${valError.error} for user: ${valError.user.fullNameWithUsername} in shift ${valError.shift.shiftIdentification}`))
+                }
+
             } catch (error: any) {
                 console.error('Error publishing shiftPlan:', error);
             }

@@ -7,6 +7,7 @@ import {ShiftPlanDTO, ShiftPlan} from "../DTO/ShiftPlan";
 import {createShiftPlanFromInterfaces} from "../factories/shiftPlanFactory";
 
 import {API_BASE_URL} from "../config/config";
+import {ValidationError} from "../DTO/ValidationError";
 
 /**
  * This file provides utility functions for CRUD operations on shiftPlans.
@@ -65,17 +66,16 @@ const updateShiftPlan = async (selectedShiftPlan: ShiftPlanDTO): Promise<ShiftPl
     }
 }
 
-const publishShiftPlan = async (selectedShiftPlan: ShiftPlanDTO): Promise<ShiftPlan> => {
+const publishShiftPlan = async (selectedShiftPlan: ShiftPlanDTO): Promise<ValidationError[]> => {
     try {
         const shiftPlanInstance = createShiftPlanFromInterfaces(selectedShiftPlan);
-        // TODO: discuss if patch is the correct axios call
         const response = await axios.patch(`${API_BASE_URL}/api/shiftplans/${selectedShiftPlan.id}/publish`, shiftPlanInstance.toJSON(), {
             headers: {
                 'Content-Type': 'application/json'
             },
             withCredentials: true
         });
-        return ShiftPlan.fromJSON(response.data);
+        return response.data;
     } catch (error: any) {
         throw new Error(`Error publishing shiftPlan: ${error.message}`);
     }
