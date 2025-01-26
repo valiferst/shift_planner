@@ -17,14 +17,19 @@ import ShiftPlanDeleteDialog from "./ShiftPlanDeleteDialog";
 import {ShiftPlan, ShiftPlanDTO, ShiftPlanState} from "../DTO/ShiftPlan";
 import {ShiftPlanCrud} from "../utilities/ShiftPlanCrud";
 import {createShiftPlanFromInterfaces} from '../factories/shiftPlanFactory';
+import {createDepartmentFromInterfaces} from '../factories/departmentFactory';
 import {Nullable} from "primereact/ts-helpers";
 import {ValidationError} from "../DTO/ValidationError";
+import {DepartmentCrud} from "../utilities/DepartmentCrud";
+import {Department, DepartmentDTO} from "../DTO/Department";
+import {DropdownChangeEvent} from "primereact/dropdown";
 
 /**
  * Component for managing shiftPlans.
  */
 const ShiftPlanTable = () => {
     const [shiftPlans, setShiftPlans] = useState<ShiftPlan[]>([]);
+    const [departments, setDepartments] = useState<Department[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [selectedShiftPlan, setSelectedShiftPlan] = useState<ShiftPlanDTO | null>(null);
     const [isNewShiftPlan, setIsNewShiftPlan] = useState<boolean>(false);
@@ -32,9 +37,6 @@ const ShiftPlanTable = () => {
     const [publishDialogVisible, setPublishDialogVisible] = useState<boolean>(false);
     const [deleteDialogVisible, setDeleteDialogVisible] = useState<boolean>(false);
 
-    /**
-     * Fetch all shiftPlans from the backend on mount once.
-     */
     useEffect(() => {
         const fetchShiftPlans = async () => {
             try {
@@ -48,7 +50,17 @@ const ShiftPlanTable = () => {
                 setLoading(false); // Set loading to false regardless of success or failure
             }
         };
+        const fetchManagerDepartments = async () => {
+            try {
+                const departmentData= await DepartmentCrud.fetchManagerDepartments();
+                const departmentInstances = departmentData.map((department: DepartmentDTO) => createDepartmentFromInterfaces(department));
+                setDepartments(departmentInstances);
+            } catch (error: any) {
+                console.error('Error fetching departments:', error);
+            }
+        };
         fetchShiftPlans();
+        fetchManagerDepartments();
     }, []); // empty dependency array means this effect will only run once on mount
 
     /**
@@ -232,6 +244,19 @@ const ShiftPlanTable = () => {
     }
 
 
+    const handleDepartmentChange = (event: DropdownChangeEvent) => {
+        if (!selectedShiftPlan) return;
+
+        console.log(event)
+        const selectedDepartment = event.value
+        console.log(selectedDepartment)
+
+
+        // console.log(selectedShiftPlan)
+        setSelectedShiftPlan({...selectedShiftPlan, departmentId: selectedDepartment.id, departmentName: selectedDepartment.name});
+        console.log(selectedShiftPlan)
+    }
+
     return (<Card title="ShiftPlan List" className="m-4">
         {/* Button that opens a new shiftPlan dialog on click */}
         <Button label="Add ShiftPlan" icon="pi pi-plus" className="p-button-raised p-button-rounded"
@@ -241,8 +266,9 @@ const ShiftPlanTable = () => {
 
         {/* Dialog for creating or editing an shiftPlan */}
         <ShiftPlanDialog visible={dialogVisible} shiftPlan={selectedShiftPlan} isNewShiftPlan={isNewShiftPlan}
-            onHide={hideDialog} onSubmit={handleSubmit}
-            onInputChange={handleInputChange} onTimeChange={handleTimeChange}/>
+            departments={departments} onHide={hideDialog} onSubmit={handleSubmit}
+            onInputChange={handleInputChange} onTimeChange={handleTimeChange}
+            onDepartmentChange={handleDepartmentChange}/>
 
         {/* Dialog for creating or publishing an shiftPlan */}
         <ShiftPlanPublishDialog visible={publishDialogVisible} shiftPlan={selectedShiftPlan}

@@ -134,7 +134,7 @@ public class DepartmentService {
             throw new IllegalStateException("Multiple PUBLISHED shift plans found for the department.");
         }
 
-        return publishedShiftPlans.isEmpty() ? null : publishedShiftPlans.get(0);
+        return publishedShiftPlans.isEmpty() ? null : publishedShiftPlans.getFirst();
     }
 
 

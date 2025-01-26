@@ -11,28 +11,36 @@ import {Nullable} from "primereact/ts-helpers";
 import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
 import {ShiftDTO} from "../DTO/Shift";
+import {Department} from "../DTO/Department";
+import {Dropdown, DropdownChangeEvent} from "primereact/dropdown";
 
 
 interface ShiftPlanFormProps {
     shiftPlan: ShiftPlanDTO,
     isNewShiftPlan: boolean,
+    departments: Department[]
     onInputChange: (event: React.ChangeEvent<HTMLInputElement> | InputMaskChangeEvent) => void,
     onTimeChange: (name: 'startDate' | 'endDate', event: Nullable<Date>) => void,
+    onDepartmentChange: (event: DropdownChangeEvent) => void
 }
 
 /**
  * Form for creating or editing an shiftPlan.
  * @param shiftPlan the shiftPlan to be edited
+ * @param departments
  * @param isNewShiftPlan whether the shiftPlan is new
  * @param onInputChange callback when the input changes
  * @param onTimeChange
+ * @param onDepartmentChange
  */
 const ShiftPlanForm: React.FC<ShiftPlanFormProps> =
     ({
         shiftPlan,
+        departments,
         isNewShiftPlan,
         onInputChange,
-        onTimeChange
+        onTimeChange,
+        onDepartmentChange
     }) => {
         return (
             <div>
@@ -52,6 +60,20 @@ const ShiftPlanForm: React.FC<ShiftPlanFormProps> =
                             onChange={onInputChange}
                             placeholder="Enter shift plan name"
                         />
+                    </div>
+                    <div className="flex-auto mb-3">
+                        <label htmlFor="departmentName" className="font-bold block">Department</label>
+                        <Dropdown
+                            value={departments.find(dept => dept.name === shiftPlan.departmentName) || null} // Ensure it selects the correct department object
+                            onChange={onDepartmentChange}
+                            options={departments}
+                            optionLabel="name"
+                            placeholder="Select a Department"
+                            className="w-full md:w-14rem"
+                        />
+
+                        {/*<Dropdown value={shiftPlan.departmentName} onChange={onDepartmentChange} options={departments} optionLabel="name"*/}
+                        {/*      placeholder="Select a Department" className="w-full md:w-14rem" />*/}
                     </div>
                     <div className="flex-auto mb-3">
                         <label htmlFor="startDate" className="font-bold block">Start Date</label>

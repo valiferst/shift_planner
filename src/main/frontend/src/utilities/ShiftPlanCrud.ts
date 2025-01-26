@@ -35,7 +35,9 @@ const fetchAllShiftPlans = async (): Promise<ShiftPlanDTO[]> => {
  * @returns Promise<ShiftPlan> a promise that resolves with the created shiftPlan
  * @throws Error if the request fails
  */
-const createShiftPlan = async (selectedShiftPlan: ShiftPlanDTO): Promise<ShiftPlan> => { try { const shiftPlanInstance = createShiftPlanFromInterfaces(selectedShiftPlan);
+const createShiftPlan = async (selectedShiftPlan: ShiftPlanDTO): Promise<ShiftPlan> => {
+    try {
+        const shiftPlanInstance = createShiftPlanFromInterfaces(selectedShiftPlan);
         const response = await axios.post(`${API_BASE_URL}/api/shiftplans`, shiftPlanInstance.toCreateJSON(), {
             withCredentials: true
         });
