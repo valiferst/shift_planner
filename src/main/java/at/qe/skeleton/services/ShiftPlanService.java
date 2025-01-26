@@ -100,6 +100,7 @@ public class ShiftPlanService {
                 shiftPlanRepository.save(oldShiftPlan);
             }
             shiftPlan.setState(PUBLISHED);
+            shiftPlanRepository.save(shiftPlan);
         }
         return validationErrors;
     }
