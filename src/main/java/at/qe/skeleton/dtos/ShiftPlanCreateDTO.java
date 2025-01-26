@@ -1,7 +1,6 @@
 package at.qe.skeleton.dtos;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 // DTO for the purpose of ShiftPlan creation
 public record ShiftPlanCreateDTO(

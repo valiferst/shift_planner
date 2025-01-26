@@ -119,8 +119,7 @@ const ShiftPlanTable = () => {
             try {
                 const validationErrors: ValidationError[] = await ShiftPlanCrud.publishShiftPlan(selectedShiftPlan);
                 if (validationErrors.length === 0) {
-                    // TODO: add departmentId in ShiftPlanDTO and change filter to id
-                    shiftPlans.filter(shiftPlan => shiftPlan.departmentName === selectedShiftPlan.departmentName)
+                    shiftPlans.filter(shiftPlan => shiftPlan.departmentId === selectedShiftPlan.departmentId)
                         .forEach(shiftPlan => {
                             if (shiftPlan.state === ShiftPlanState.PUBLISHED) shiftPlan.state = ShiftPlanState.CANCELLED
                         });
@@ -224,6 +223,7 @@ const ShiftPlanTable = () => {
 
     /**
      * Handle input changes for the absence dialog: times.
+     * @param name
      * @param event
      */
     const handleTimeChange = (name: 'startDate' | 'endDate' , event: Nullable<Date>) => {

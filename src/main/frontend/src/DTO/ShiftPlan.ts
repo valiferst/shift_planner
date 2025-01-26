@@ -15,6 +15,7 @@ export interface ShiftPlanDTO {
     endDate: Date | null;
     state: ShiftPlanState | null;
     departmentName: string;
+    departmentId: number | null;
     shifts: Shift[] | null;
 }
 
@@ -28,6 +29,7 @@ export class ShiftPlan implements ShiftPlanDTO {
     endDate: Date | null;
     state: ShiftPlanState | null;
     departmentName: string;
+    departmentId: number | null;
     shifts: Shift[] | null;
 
     constructor(data: ShiftPlanDTO) {
@@ -39,6 +41,7 @@ export class ShiftPlan implements ShiftPlanDTO {
         this.endDate = data.endDate? new Date(data.endDate) : null;
         this.state = data.state;
         this.departmentName = data.departmentName;
+        this.departmentId = data.departmentId;
         this.shifts = data.shifts ? data.shifts.map(shift => new Shift(shift)) : null;
     }
 
@@ -52,6 +55,7 @@ export class ShiftPlan implements ShiftPlanDTO {
             endDate: null,
             state: null,
             departmentName: '',
+            departmentId: null,
             shifts: []
         });
     }
@@ -66,6 +70,7 @@ export class ShiftPlan implements ShiftPlanDTO {
             endDate: this.endDate,
             state: this.state,
             departmentName: this.departmentName,
+            departmentId: this.departmentId,
             shifts: this.shifts
         };
     }
@@ -76,13 +81,12 @@ export class ShiftPlan implements ShiftPlanDTO {
      * Serialize the ShiftPlan instance to JSON for creating a new shiftPlan
      * @returns JSON object with the fields required for creating a new shiftPlan
      */
-    toCreateJSON(): Pick<ShiftPlanDTO, 'name' | 'startDate' | 'endDate' | 'state' | 'departmentName'> {
+    toCreateJSON(): Pick<ShiftPlanDTO, 'name' | 'startDate' | 'endDate' | 'departmentId'> {
         return {
             name: this.name,
             startDate: this.startDate,
             endDate: this.endDate,
-            state: this.state,
-            departmentName: this.departmentName
+            departmentId: this.departmentId,
         };
     }
 
