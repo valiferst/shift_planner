@@ -33,6 +33,14 @@ VALUES ('2024-01-01 00:00:00',
         '2024-01-01 00:00:00',
         'Test Department');
 
+INSERT INTO DEPARTMENT (CLOSING_TIME,
+                        MANAGER_ID,
+                        OPENING_TIME,
+                        NAME)
+VALUES ('2024-01-01 00:00:00',
+        NULL,
+        '2024-01-01 00:00:00',
+        'Another Department');
 -- Insert shiftplans into SHIFT_PLAN table
 
 INSERT INTO SHIFT_PLAN (CREATE_DATE,
@@ -52,6 +60,22 @@ VALUES ('2025-01-14',
         'Test Shiftplan',
         'DRAFT');
 
+INSERT INTO SHIFT_PLAN (CREATE_DATE,
+                        DATE,
+                        DEPARTMENT_ID,
+                        END_DATE,
+                        START_DATE,
+                        UPDATE_DATE,
+                        NAME,
+                        STATE)
+VALUES ('2025-01-14',
+        '2025-01-14',
+        NULL,
+        '2025-12-31',
+        '2025-01-01',
+        '2025-01-15',
+        'Another Shiftplan',
+        'DRAFT');
 -- Insert shifts into SHIFT table
 
 INSERT INTO SHIFT (END_TIME, SHIFT_PLAN_ID, START_TIME)
@@ -94,9 +118,11 @@ UPDATE USERX SET CREATE_USER_ID = (SELECT ID FROM USERX WHERE USERNAME = 'admin'
 
 -- Update MANAGER_ID fields after the initial insert
 UPDATE DEPARTMENT SET MANAGER_ID = (SELECT ID FROM USERX WHERE USERNAME = 'user1') WHERE NAME = 'Test Department';
+UPDATE DEPARTMENT SET MANAGER_ID = (SELECT ID FROM USERX WHERE USERNAME = 'user1') WHERE NAME = 'Another Department';
 
 -- Update DEPARTMENT_ID fields after the initial insert
 UPDATE SHIFT_PLAN SET DEPARTMENT_ID = (SELECT ID FROM DEPARTMENT WHERE NAME = 'Test Department') WHERE NAME = 'Test Shiftplan';
+UPDATE SHIFT_PLAN SET DEPARTMENT_ID = (SELECT ID FROM DEPARTMENT WHERE NAME = 'Another Department') WHERE NAME = 'Another Shiftplan';
 
 -- Update SHIFT_PLAN_ID fields after the initial insert
 UPDATE SHIFT SET SHIFT_PLAN_ID = (SELECT ID FROM SHIFT_PLAN WHERE NAME = 'Test Shiftplan') WHERE START_TIME = '2024-01-01 00:00:00';
