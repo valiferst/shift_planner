@@ -1,9 +1,15 @@
 package at.qe.skeleton.controllers;
 
+import at.qe.skeleton.dtos.ShiftDTO;
+import at.qe.skeleton.dtos.ShiftPlanCreateDTO;
+import at.qe.skeleton.mappers.ShiftMapper;
+import at.qe.skeleton.mappers.ShiftPlanCreateMapper;
 import at.qe.skeleton.dtos.ShiftPlanDTO;
+import at.qe.skeleton.dtos.ValidationErrorDTO;
 import at.qe.skeleton.mappers.ShiftPlanMapper;
 import at.qe.skeleton.model.Department;
 import at.qe.skeleton.model.ShiftPlan;
+import at.qe.skeleton.model.ValidationError;
 import at.qe.skeleton.services.DepartmentService;
 import at.qe.skeleton.services.ShiftPlanService;
 import jakarta.validation.Valid;
@@ -13,9 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * REST controller for managing Shift Plans.
@@ -27,12 +31,17 @@ public class ShiftPlanController {
     private final ShiftPlanService shiftPlanService;
     private final DepartmentService departmentService;
     private final ShiftPlanMapper shiftPlanMapper;
+    private final ShiftPlanCreateMapper shiftPlanCreateMapper;
+    private final ShiftMapper shiftMapper;
 
+    // TODO: check how to handle non singleton bean autowiring
     @Autowired
-    public ShiftPlanController(ShiftPlanService shiftPlanService, DepartmentService departmentService, ShiftPlanMapper shiftPlanMapper) {
+    public ShiftPlanController(ShiftPlanService shiftPlanService, DepartmentService departmentService, ShiftPlanMapper shiftPlanMapper, ShiftPlanCreateMapper shiftPlanCreateMapper, ShiftMapper shiftMapper) {
         this.shiftPlanService = shiftPlanService;
         this.departmentService = departmentService;
         this.shiftPlanMapper = shiftPlanMapper;
+        this.shiftPlanCreateMapper = shiftPlanCreateMapper;
+        this.shiftMapper = shiftMapper;
     }
 
     /**
@@ -95,15 +104,33 @@ public class ShiftPlanController {
     }
 
     /**
+     * Retrieves a single shift by ID.
+     *
+     * @param id ID of the shift plan.
+     * @return The requested shift plan as a DTO.
+     */
+    @GetMapping("/{id}/shifts")
+    @PreAuthorize("hasAuthority('MANAGER')")
+    public ResponseEntity<List<ShiftDTO>> getShiftsForShiftPlan(@PathVariable Long id) {
+        Optional<ShiftPlan> shiftPlanOpt = shiftPlanService.loadShiftPlan(id);
+        if (shiftPlanOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return shiftPlanOpt.map(shiftPlan -> ResponseEntity.ok(shiftPlan.getShifts()
+                        .stream().map(shiftMapper::mapTo).toList()))
+                .orElse(ResponseEntity.notFound().build());
+    }
+    /**
      * Creates a new shift plan.
      *
-     * @param shiftPlanDTO DTO containing shift plan details.
+     * @param shiftPlanCreateDTO DTO containing shift plan details.
      * @return The created shift plan as a DTO.
      */
     @PostMapping("")
     @PreAuthorize("hasAuthority('MANAGER')")
-    public ResponseEntity<ShiftPlanDTO> createShiftPlan(@Valid @RequestBody ShiftPlanDTO shiftPlanDTO) {
-        ShiftPlan shiftPlan = shiftPlanMapper.mapFrom(shiftPlanDTO);
+    public ResponseEntity<ShiftPlanDTO> createShiftPlan(@Valid @RequestBody ShiftPlanCreateDTO shiftPlanCreateDTO) {
+        ShiftPlan shiftPlan = shiftPlanCreateMapper.mapFrom(shiftPlanCreateDTO);
         ShiftPlan savedShiftPlan = shiftPlanService.saveShiftPlan(shiftPlan);
         return ResponseEntity.status(HttpStatus.CREATED).body(shiftPlanMapper.mapTo(savedShiftPlan));
     }
@@ -123,7 +150,6 @@ public class ShiftPlanController {
             return ResponseEntity.notFound().build();
         }
         ShiftPlan shiftPlan = shiftPlanMapper.mapFrom(shiftPlanDTO);
-        shiftPlan.setId(id);
         ShiftPlan updatedShiftPlan = shiftPlanService.saveShiftPlan(shiftPlan);
         return ResponseEntity.ok(shiftPlanMapper.mapTo(updatedShiftPlan));
     }
@@ -132,19 +158,25 @@ public class ShiftPlanController {
      * Publishes an existing shift plan.
      *
      * @param id ID of the shift plan to publish.
-     * @param shiftPlanDTO DTO containing to be published shift plan details.
      * @return The published shift plan as a DTO.
      */
     @PatchMapping("/{id}/publish")
     @PreAuthorize("hasAuthority('MANAGER')")
-    public ResponseEntity<ShiftPlanDTO> publishShiftPlan(@PathVariable Long id, @RequestBody ShiftPlanDTO shiftPlanDTO) {
+    public ResponseEntity<List<ValidationErrorDTO>> publishShiftPlan(@PathVariable Long id) {
         Optional<ShiftPlan> existingPlan = shiftPlanService.loadShiftPlan(id);
         if (existingPlan.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        ShiftPlan shiftPlan = shiftPlanMapper.mapFrom(shiftPlanDTO);
-        ShiftPlan publishedShiftPlan = shiftPlanService.publishShiftPlan(shiftPlan);
-        return ResponseEntity.ok(shiftPlanMapper.mapTo(publishedShiftPlan));
+
+        List<ValidationError> errors = shiftPlanService.publishShiftPlan(existingPlan.get());
+
+        if (!errors.isEmpty()) {
+            List<ValidationErrorDTO> validationErrorDTOS = errors.stream()
+                    .map(ValidationError::mapToDto)
+                    .toList();
+            return ResponseEntity.badRequest().body(validationErrorDTOS);
+        }
+        return ResponseEntity.ok(new ArrayList<>());
     }
 
     /**

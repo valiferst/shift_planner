@@ -166,6 +166,10 @@ public class Userx implements Persistable<Long>, Serializable, Comparable<Userx>
     this.shifts = shifts;
   }
 
+  public String getFullNameWithUsername() {
+    return firstName + " " + lastName + " (" + username + ")";
+  }
+
   @Override
   public int hashCode() {
     int hash = 7;

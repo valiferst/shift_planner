@@ -3,6 +3,7 @@ package at.qe.skeleton.controllers;
 import at.qe.skeleton.dtos.UserxDTO;
 import at.qe.skeleton.mappers.UserxMapper;
 import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.model.UserxRole;
 import at.qe.skeleton.services.UserxService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Collection;
 
 /**
  * Userx endpoints exposed by the server.
@@ -44,5 +48,20 @@ public class UserxController {
         }
         return ResponseEntity.ok("User is authenticated: " + userDetails.getUsername());
         
+    }
+
+    /**
+     * GET all Employees
+     *
+     * @return {@link ResponseEntity} with status {@code 200 (OK)} with a collection of all existing users in the body
+     */
+    @GetMapping("/employees")
+    public ResponseEntity<Collection<UserxDTO>> getEmployees() {
+        Collection<Userx> allUsers = userService.getAllUsers();
+        List<UserxDTO> employeesMapped = allUsers.stream()
+                .map(userMapper::mapTo)
+                .filter(user -> !user.roles().contains(UserxRole.ADMIN) && user.id() != 9999) //                        && !user.roles().contains(UserxRole.MANAGER))
+                .toList();
+        return ResponseEntity.ok(employeesMapped);
     }
 }

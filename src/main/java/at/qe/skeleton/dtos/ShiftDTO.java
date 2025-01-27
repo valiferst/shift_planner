@@ -1,18 +1,14 @@
 package at.qe.skeleton.dtos;
 
-import at.qe.skeleton.model.ShiftPlan;
-import at.qe.skeleton.model.Userx;
-
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 public record ShiftDTO(
         Long id,
         LocalDateTime startTime,
         LocalDateTime endTime,
-        ShiftPlan toShiftPlan,
-        Set<Userx> shiftWorkers,
+        Long shiftPlanId,
+        List<Long> shiftWorkerIds,
         List<String> shiftWorkerNames
 ) {
 }

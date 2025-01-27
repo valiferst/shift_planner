@@ -9,15 +9,21 @@ import { ShiftPlanDTO } from "../DTO/ShiftPlan";
 import ShiftPlanForm from './ShiftPlanForm';
 import { InputMaskChangeEvent } from "primereact/inputmask";
 import {Nullable} from "primereact/ts-helpers";
+import {Department} from "../DTO/Department";
+import {DropdownChangeEvent} from "primereact/dropdown";
+import {Userx} from "../DTO/Userx";
 
 interface ShiftPlanDialogProps {
     visible: boolean,
     shiftPlan: ShiftPlanDTO | null,
     isNewShiftPlan: boolean,
+    departments: Department[],
+    employees: Userx[],
     onHide: () => void,
     onSubmit: () => void,
     onInputChange: (event: React.ChangeEvent<HTMLInputElement> | InputMaskChangeEvent) => void,
     onTimeChange: (name: 'startDate' | 'endDate', event: Nullable<Date>) => void,
+    onDepartmentChange: (event: DropdownChangeEvent) => void,
 }
 
 /**
@@ -25,19 +31,25 @@ interface ShiftPlanDialogProps {
  * @param visible whether the dialog is visible
  * @param shiftPlan the shiftPlan to be edited
  * @param isNewShiftPlan whether the shiftPlan is new
+ * @param departments the departments assigned to the manager
+ * @param employees
  * @param onHide callback when the dialog is hidden
  * @param onSubmit callback when the shiftPlan is submitted
  * @param onInputChange callback when the input changes
  * @param onTimeChange callback when the date in datepicker field changes
+ * @param onDepartmentChange
  */
 const ShiftPlanDialog: React.FC<ShiftPlanDialogProps> = ({
     visible,
     shiftPlan,
     isNewShiftPlan,
+    departments,
+    employees,
     onHide,
     onSubmit,
     onInputChange,
     onTimeChange,
+    onDepartmentChange,
 }) => {
 
     /**
@@ -63,8 +75,11 @@ const ShiftPlanDialog: React.FC<ShiftPlanDialogProps> = ({
                 <ShiftPlanForm
                     shiftPlan={shiftPlan}
                     isNewShiftPlan={isNewShiftPlan}
+                    departments={departments}
+                    employees={employees}
                     onInputChange={onInputChange}
                     onTimeChange={onTimeChange}
+                    onDepartmentChange={onDepartmentChange}
                 />
             )}
         </Dialog>

@@ -2,11 +2,11 @@
  * This code is part of the skeleton project provided for students of the course "Software
  * Architecture" offered by Innsbruck University.
  */
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 
-import { Button } from "primereact/button";
-import { Card } from 'primereact/card';
-import { InputMaskChangeEvent } from "primereact/inputmask";
+import {Button} from "primereact/button";
+import {Card} from 'primereact/card';
+import {InputMaskChangeEvent} from "primereact/inputmask";
 import 'primeicons/primeicons.css';
 
 import ShiftPlanListComponent from "./ShiftPlanListComponent";
@@ -14,18 +14,26 @@ import ShiftPlanDialog from "./ShiftPlanDialog";
 import ShiftPlanPublishDialog from "./ShiftPlanPublishDialog";
 import ShiftPlanDeleteDialog from "./ShiftPlanDeleteDialog";
 
-import { ShiftPlanDTO, ShiftPlan } from "../DTO/ShiftPlan";
-import { ShiftPlanCrud } from "../utilities/ShiftPlanCrud";
-import {
-    createShiftPlanFromInterfaces
-} from '../factories/shiftPlanFactory';
+import {ShiftPlan, ShiftPlanDTO, ShiftPlanState} from "../DTO/ShiftPlan";
+import {ShiftPlanCrud} from "../utilities/ShiftPlanCrud";
+import {createShiftPlanFromInterfaces} from '../factories/shiftPlanFactory';
+import {createDepartmentFromInterfaces} from '../factories/departmentFactory';
 import {Nullable} from "primereact/ts-helpers";
+import {ValidationError} from "../DTO/ValidationError";
+import {DepartmentCrud} from "../utilities/DepartmentCrud";
+import {Department, DepartmentDTO} from "../DTO/Department";
+import {DropdownChangeEvent} from "primereact/dropdown";
+import {UserCrud} from "../utilities/UserCrud";
+import {UserDTO, Userx} from "../DTO/Userx";
+import {createUserxFromInterfaces} from "../factories/userxFactory";
 
 /**
  * Component for managing shiftPlans.
  */
 const ShiftPlanTable = () => {
     const [shiftPlans, setShiftPlans] = useState<ShiftPlan[]>([]);
+    const [departments, setDepartments] = useState<Department[]>([]);
+    const [employees, setEmployees] = useState<Userx[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [selectedShiftPlan, setSelectedShiftPlan] = useState<ShiftPlanDTO | null>(null);
     const [isNewShiftPlan, setIsNewShiftPlan] = useState<boolean>(false);
@@ -33,9 +41,6 @@ const ShiftPlanTable = () => {
     const [publishDialogVisible, setPublishDialogVisible] = useState<boolean>(false);
     const [deleteDialogVisible, setDeleteDialogVisible] = useState<boolean>(false);
 
-    /**
-     * Fetch all shiftPlans from the backend on mount once.
-     */
     useEffect(() => {
         const fetchShiftPlans = async () => {
             try {
@@ -49,7 +54,27 @@ const ShiftPlanTable = () => {
                 setLoading(false); // Set loading to false regardless of success or failure
             }
         };
+        const fetchManagerDepartments = async () => {
+            try {
+                const departmentData= await DepartmentCrud.fetchManagerDepartments();
+                const departmentInstances = departmentData.map((department: DepartmentDTO) => createDepartmentFromInterfaces(department));
+                setDepartments(departmentInstances);
+            } catch (error: any) {
+                console.error('Error fetching departments:', error);
+            }
+        };
+        const fetchAllEmployees= async () => {
+            try {
+                const employeeData= await UserCrud.fetchAllEmployees();
+                const employeeInstances = employeeData.map((employee: UserDTO) => createUserxFromInterfaces(employee));
+                setEmployees(employeeInstances);
+            } catch (error: any) {
+                console.error('Error fetching employees:', error);
+            }
+        };
         fetchShiftPlans();
+        fetchManagerDepartments();
+        fetchAllEmployees();
     }, []); // empty dependency array means this effect will only run once on mount
 
     /**
@@ -118,10 +143,18 @@ const ShiftPlanTable = () => {
             if (!selectedShiftPlan) return;
 
             try {
-                const publishedShiftPlan: ShiftPlan = await ShiftPlanCrud.publishShiftPlan(selectedShiftPlan);
-                setShiftPlans(shiftPlans.map((shiftPlan: ShiftPlan) => shiftPlan.id === publishedShiftPlan.id ? publishedShiftPlan : shiftPlan));
-                // TODO implement updating state of previously published ShiftPlan if there was one
-                setPublishDialogVisible(false)
+                const validationErrors: ValidationError[] = await ShiftPlanCrud.publishShiftPlan(selectedShiftPlan);
+                if (validationErrors.length === 0) {
+                    shiftPlans.filter(shiftPlan => shiftPlan.departmentId === selectedShiftPlan.departmentId)
+                        .forEach(shiftPlan => {
+                            if (shiftPlan.state === ShiftPlanState.PUBLISHED) shiftPlan.state = ShiftPlanState.CANCELLED
+                        });
+                    selectedShiftPlan.state = ShiftPlanState.PUBLISHED
+                    setPublishDialogVisible(false)
+                } else {
+                    validationErrors.forEach(valError => console.error(`${valError.error} for user: ${valError.user.fullNameWithUsername} in shift ${valError.shift.shiftIdentification}`))
+                }
+
             } catch (error: any) {
                 console.error('Error publishing shiftPlan:', error);
             }
@@ -216,6 +249,7 @@ const ShiftPlanTable = () => {
 
     /**
      * Handle input changes for the absence dialog: times.
+     * @param name
      * @param event
      */
     const handleTimeChange = (name: 'startDate' | 'endDate' , event: Nullable<Date>) => {
@@ -223,6 +257,16 @@ const ShiftPlanTable = () => {
         setSelectedShiftPlan({ ...selectedShiftPlan, [name]: event });
     }
 
+
+    const handleDepartmentChange = (event: DropdownChangeEvent) => {
+        if (!selectedShiftPlan) return;
+
+        const selectedDepartment = event.value
+
+
+        // console.log(selectedShiftPlan)
+        setSelectedShiftPlan({...selectedShiftPlan, departmentId: selectedDepartment.id, departmentName: selectedDepartment.name});
+    }
 
     return (<Card title="ShiftPlan List" className="m-4">
         {/* Button that opens a new shiftPlan dialog on click */}
@@ -233,8 +277,9 @@ const ShiftPlanTable = () => {
 
         {/* Dialog for creating or editing an shiftPlan */}
         <ShiftPlanDialog visible={dialogVisible} shiftPlan={selectedShiftPlan} isNewShiftPlan={isNewShiftPlan}
-            onHide={hideDialog} onSubmit={handleSubmit}
-            onInputChange={handleInputChange} onTimeChange={handleTimeChange}/>
+            departments={departments} employees={employees} onHide={hideDialog} onSubmit={handleSubmit}
+            onInputChange={handleInputChange} onTimeChange={handleTimeChange}
+            onDepartmentChange={handleDepartmentChange}/>
 
         {/* Dialog for creating or publishing an shiftPlan */}
         <ShiftPlanPublishDialog visible={publishDialogVisible} shiftPlan={selectedShiftPlan}

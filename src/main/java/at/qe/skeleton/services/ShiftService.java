@@ -1,11 +1,9 @@
 package at.qe.skeleton.services;
 
+import at.qe.skeleton.exceptions.AbsenceOverlapException;
 import at.qe.skeleton.exceptions.ShiftDuplicateException;
 import at.qe.skeleton.exceptions.ShiftOverlapException;
-import at.qe.skeleton.model.Absence;
-import at.qe.skeleton.model.Shift;
-import at.qe.skeleton.model.ShiftPlan;
-import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.model.*;
 import at.qe.skeleton.repositories.ShiftRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -13,10 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Component
 @Scope("application")
@@ -143,8 +138,32 @@ public class ShiftService {
                     && shift.getStartTime().getDayOfWeek() == absence.getAbsentDay()
                     && shift.getStartTime().toLocalTime().isBefore(absence.getAbsentFrom())
                     && shift.getEndTime().toLocalTime().isAfter(absence.getAbsentFrom())){
-                throw new ShiftOverlapException("The shift "+ shift.getId() + "overlaps with absence of user " + user.getUsername());
+                throw new AbsenceOverlapException("The shift "+ shift.getId() + "overlaps with absence of user " + user.getUsername());
             }
         }
+    }
+
+    /**
+     * check a shift for overlaps in shifts or absences for the assigned users.
+     *
+     * @param shift the shift to check for overlaps
+     * @return List of ValidationErrors for users, specifying absence or shift conflicts
+     */
+    @PreAuthorize("hasAuthority('MANAGER')")
+    public List<ValidationError> validateShift(Shift shift){
+        List<ValidationError> shiftErrors = new ArrayList<>();
+        for (Userx user : shift.getShiftWorkers()) {
+            try {
+                overlapUserShift(shift, user);
+            } catch (ShiftOverlapException e) {
+                shiftErrors.add(new ValidationError(ValidationErrorType.SHIFT_CONFLICT, shift, user));
+            }
+            try {
+                overlapUserAbsences(shift, user);
+            } catch (AbsenceOverlapException e) {
+                shiftErrors.add(new ValidationError(ValidationErrorType.ABSENCE_CONFLICT, shift, user));
+            }
+        }
+        return shiftErrors;
     }
 }

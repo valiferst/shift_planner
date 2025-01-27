@@ -1,9 +1,7 @@
 package at.qe.skeleton.dtos;
 
-import at.qe.skeleton.model.ShiftPlan;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Data transfer object for the Department Entity.
@@ -15,5 +13,5 @@ public record DepartmentDTO (
         LocalDateTime closingTime,
         Long managerId,
         String fullManagerName, // firstName lastName (username)
-        List<ShiftPlan> shiftPlans
+        List<Long> shiftPlanIds
 ) {}
