@@ -13,12 +13,15 @@ import {Column} from "primereact/column";
 import {ShiftDTO} from "../DTO/Shift";
 import {Department} from "../DTO/Department";
 import {Dropdown, DropdownChangeEvent} from "primereact/dropdown";
+import ShiftTableComponent from "./ShiftTableComponent";
+import {Userx} from "../DTO/Userx";
 
 
 interface ShiftPlanFormProps {
     shiftPlan: ShiftPlanDTO,
     isNewShiftPlan: boolean,
-    departments: Department[]
+    departments: Department[],
+    employees: Userx[],
     onInputChange: (event: React.ChangeEvent<HTMLInputElement> | InputMaskChangeEvent) => void,
     onTimeChange: (name: 'startDate' | 'endDate', event: Nullable<Date>) => void,
     onDepartmentChange: (event: DropdownChangeEvent) => void
@@ -37,6 +40,7 @@ const ShiftPlanForm: React.FC<ShiftPlanFormProps> =
     ({
         shiftPlan,
         departments,
+        employees,
         isNewShiftPlan,
         onInputChange,
         onTimeChange,
@@ -87,25 +91,8 @@ const ShiftPlanForm: React.FC<ShiftPlanFormProps> =
                     </div>
                 </div>
                 <div className="card">
-                    <h2>Shifts</h2>
-                    <DataTable value={shiftPlan.shifts || []} paginator rows={5} emptyMessage="No shifts available.">
-                        <Column field="id" header="ID"/>
-                        <Column
-                            field="startTime"
-                            header="Start Time"
-                            body={(rowData: ShiftDTO) => rowData.startTime ? new Date(rowData.startTime).toLocaleString() : ''}
-                        />
-                        <Column
-                            field="endTime"
-                            header="End Time"
-                            body={(rowData: ShiftDTO) => rowData.endTime ? new Date(rowData.endTime).toLocaleString() : ''}
-                        />
-                        <Column
-                            field="shiftWorkers"
-                            header="Workers"
-                            body={(rowData: ShiftDTO) => rowData.shiftWorkerNames?.join(', ') || 'No workers assigned'}
-                        />
-                    </DataTable>
+                    <ShiftTableComponent
+                    shiftPlan={shiftPlan} isNewShiftPlan={isNewShiftPlan} employees={employees}/>
                 </div>
             </div>
 

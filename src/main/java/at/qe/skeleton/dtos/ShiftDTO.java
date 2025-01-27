@@ -7,6 +7,7 @@ public record ShiftDTO(
         Long id,
         LocalDateTime startTime,
         LocalDateTime endTime,
+        Long shiftPlanId,
         List<Long> shiftWorkerIds,
         List<String> shiftWorkerNames
 ) {

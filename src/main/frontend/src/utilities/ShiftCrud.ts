@@ -35,9 +35,11 @@ const fetchAllShifts = async (): Promise<ShiftDTO[]> => {
  * @returns Promise<Shift> a promise that resolves with the created shift
  * @throws Error if the request fails
  */
-const createShift = async (selectedShift: ShiftDTO): Promise<Shift> => { try { const shiftInstance = createShiftFromInterfaces(selectedShift);
-    const response = await axios.post(`${API_BASE_URL}/api/shifts`, shiftInstance.toCreateJSON(), {
-        withCredentials: true
+const createShift = async (selectedShift: ShiftDTO): Promise<Shift> => {
+    try {
+        const shiftInstance = createShiftFromInterfaces(selectedShift);
+        const response = await axios.post(`${API_BASE_URL}/api/shifts`, shiftInstance.toCreateJSON(), {
+            withCredentials: true
     });
     return Shift.fromJSON(response.data);
 } catch (error: any) {
@@ -82,6 +84,8 @@ const deleteShift = async (selectedShift: ShiftDTO) => {
         throw new Error(`Error deleting shift: ${error.message}`);
     }
 }
+
+
 
 export const ShiftCrud = {
     createShift,

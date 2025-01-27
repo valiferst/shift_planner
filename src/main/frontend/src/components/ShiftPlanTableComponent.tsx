@@ -23,6 +23,9 @@ import {ValidationError} from "../DTO/ValidationError";
 import {DepartmentCrud} from "../utilities/DepartmentCrud";
 import {Department, DepartmentDTO} from "../DTO/Department";
 import {DropdownChangeEvent} from "primereact/dropdown";
+import {UserCrud} from "../utilities/UserCrud";
+import {UserDTO, Userx} from "../DTO/Userx";
+import {createUserxFromInterfaces} from "../factories/userxFactory";
 
 /**
  * Component for managing shiftPlans.
@@ -30,6 +33,7 @@ import {DropdownChangeEvent} from "primereact/dropdown";
 const ShiftPlanTable = () => {
     const [shiftPlans, setShiftPlans] = useState<ShiftPlan[]>([]);
     const [departments, setDepartments] = useState<Department[]>([]);
+    const [employees, setEmployees] = useState<Userx[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [selectedShiftPlan, setSelectedShiftPlan] = useState<ShiftPlanDTO | null>(null);
     const [isNewShiftPlan, setIsNewShiftPlan] = useState<boolean>(false);
@@ -59,8 +63,18 @@ const ShiftPlanTable = () => {
                 console.error('Error fetching departments:', error);
             }
         };
+        const fetchAllEmployees= async () => {
+            try {
+                const employeeData= await UserCrud.fetchAllEmployees();
+                const employeeInstances = employeeData.map((employee: UserDTO) => createUserxFromInterfaces(employee));
+                setEmployees(employeeInstances);
+            } catch (error: any) {
+                console.error('Error fetching employees:', error);
+            }
+        };
         fetchShiftPlans();
         fetchManagerDepartments();
+        fetchAllEmployees();
     }, []); // empty dependency array means this effect will only run once on mount
 
     /**
@@ -247,14 +261,11 @@ const ShiftPlanTable = () => {
     const handleDepartmentChange = (event: DropdownChangeEvent) => {
         if (!selectedShiftPlan) return;
 
-        console.log(event)
         const selectedDepartment = event.value
-        console.log(selectedDepartment)
 
 
         // console.log(selectedShiftPlan)
         setSelectedShiftPlan({...selectedShiftPlan, departmentId: selectedDepartment.id, departmentName: selectedDepartment.name});
-        console.log(selectedShiftPlan)
     }
 
     return (<Card title="ShiftPlan List" className="m-4">
@@ -266,7 +277,7 @@ const ShiftPlanTable = () => {
 
         {/* Dialog for creating or editing an shiftPlan */}
         <ShiftPlanDialog visible={dialogVisible} shiftPlan={selectedShiftPlan} isNewShiftPlan={isNewShiftPlan}
-            departments={departments} onHide={hideDialog} onSubmit={handleSubmit}
+            departments={departments} employees={employees} onHide={hideDialog} onSubmit={handleSubmit}
             onInputChange={handleInputChange} onTimeChange={handleTimeChange}
             onDepartmentChange={handleDepartmentChange}/>
 

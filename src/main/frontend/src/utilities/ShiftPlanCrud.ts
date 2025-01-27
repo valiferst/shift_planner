@@ -8,6 +8,7 @@ import {createShiftPlanFromInterfaces} from "../factories/shiftPlanFactory";
 
 import {API_BASE_URL} from "../config/config";
 import {ValidationError} from "../DTO/ValidationError";
+import {ShiftDTO} from "../DTO/Shift";
 
 /**
  * This file provides utility functions for CRUD operations on shiftPlans.
@@ -26,6 +27,22 @@ const fetchAllShiftPlans = async (): Promise<ShiftPlanDTO[]> => {
         return response.data;
     } catch (error: any) {
         throw new Error(`Error fetching shiftPlans: ${error.message}`);
+    }
+}
+
+/**
+ * Fetch all shifts from the backend
+ * @returns Promise<ShiftDTO[]> a promise that resolves with an array of ShiftDTO objects
+ * @throws Error if the request fails
+ */
+const getShiftsForShiftPlan = async (selectedShiftPlan: ShiftPlanDTO): Promise<ShiftDTO[]> => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/shiftplans/${selectedShiftPlan.id}/shifts`, {
+            withCredentials: true
+        });
+        return response.data;
+    } catch (error: any) {
+        throw new Error(`Error fetching shifts: ${error.message}`);
     }
 }
 
@@ -106,5 +123,6 @@ export const ShiftPlanCrud = {
     updateShiftPlan,
     publishShiftPlan,
     deleteShiftPlan,
-    fetchAllShiftPlans
+    fetchAllShiftPlans,
+    getShiftsForShiftPlan
 }

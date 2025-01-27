@@ -47,7 +47,7 @@ public class UserxService {
      *
      * @return the userx collection
      */
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('MANAGER')")
     public Collection<Userx> getAllUsers() {
         return userRepository.findAll();
     }

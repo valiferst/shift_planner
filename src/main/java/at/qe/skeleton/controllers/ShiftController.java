@@ -65,10 +65,29 @@ public class ShiftController {
      */
     @PostMapping("")
     public ResponseEntity<ShiftDTO> createShift(@Valid @RequestBody ShiftDTO shiftDto) {
-        Shift shift = shiftService.saveShift(shiftMapper.mapFrom(shiftDto));
-        return ResponseEntity.status(HttpStatus.CREATED).body(shiftMapper.mapTo(shift));
+        Shift shift = shiftMapper.mapFrom(shiftDto);
+        Shift savedShift = shiftService.saveShift(shift);
+        return ResponseEntity.status(HttpStatus.CREATED).body(shiftMapper.mapTo(savedShift));
     }
 
+    /**
+     * Creates a shift if the shift is not yet there.
+     *
+     * @param shiftDto the shift tb created
+     * @return {@link ResponseEntity} with status {@code 201 (Created)} with the newly created shift in the body,
+     *          or with status {@code 409 (Conflict)} if the shift already exists
+     */
+    @PatchMapping("/{id}")
+    public ResponseEntity<ShiftDTO> updateShift(@PathVariable Long id, @Valid @RequestBody ShiftDTO shiftDto) {
+        Optional<Shift> existingShift = shiftService.loadShift(id);
+        if (existingShift.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Shift updatedShift = shiftMapper.mapFrom(shiftDto);
+        Shift savedShift = shiftService.saveShift(updatedShift);
+        return ResponseEntity.status(HttpStatus.CREATED).body(shiftMapper.mapTo(savedShift));
+    }
     /**
      * Deletes shift of given id.
      *

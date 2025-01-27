@@ -29,6 +29,22 @@ const fetchAllUsers = async (): Promise<UserDTO[]> => {
 }
 
 /**
+ * Fetch all users from the backend
+ * @returns Promise<UserDTO[]> a promise that resolves with an array of UserDTO objects
+ * @throws Error if the request fails
+ */
+const fetchAllEmployees= async (): Promise<UserDTO[]> => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/users/employees`, {
+            withCredentials: true
+        });
+        return response.data;
+    } catch (error: any) {
+        throw new Error(`Error fetching users: ${error.message}`);
+    }
+}
+
+/**
  * Create a new user
  * @param selectedUser the user to create
  * @returns Promise<Userx> a promise that resolves with the created user
@@ -87,5 +103,6 @@ export const UserCrud = {
     createUser,
     updateUser,
     deleteUser,
-    fetchAllUsers
+    fetchAllUsers,
+    fetchAllEmployees
 }
