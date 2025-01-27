@@ -32,6 +32,19 @@ const ShiftPlanDialog: React.FC<ShiftPlanPublishDialogProps> = ({
     onInputChange,
 }) => {
 
+
+    /**
+     * Renders the contents of the delete dialog.
+     */
+    const renderPublishDialogContents = () => {
+        return (
+            <div>
+                <h2>ShiftPlan</h2>
+                <p>Validate and publish this shiftPlan?</p>
+            </div>
+        );
+    }
+
     /**
      * Renders the footer of the dialog.
      */
@@ -51,13 +64,7 @@ const ShiftPlanDialog: React.FC<ShiftPlanPublishDialogProps> = ({
             onHide={onHide}
             footer={renderFooter}
         >
-            {/*{shiftPlan && (*/}
-            {/*    <ShiftPlanForm*/}
-            {/*        shiftPlan={shiftPlan}*/}
-            {/*        isNewShiftPlan={isNewShiftPlan}*/}
-            {/*        onInputChange={onInputChange}*/}
-            {/*    />*/}
-            {/*)}*/}
+            {renderPublishDialogContents()}
         </Dialog>
     );
 };

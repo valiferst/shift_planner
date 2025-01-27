@@ -11,12 +11,14 @@ import { InputMaskChangeEvent } from "primereact/inputmask";
 import {Nullable} from "primereact/ts-helpers";
 import {Department} from "../DTO/Department";
 import {DropdownChangeEvent} from "primereact/dropdown";
+import {Userx} from "../DTO/Userx";
 
 interface ShiftPlanDialogProps {
     visible: boolean,
     shiftPlan: ShiftPlanDTO | null,
     isNewShiftPlan: boolean,
     departments: Department[],
+    employees: Userx[],
     onHide: () => void,
     onSubmit: () => void,
     onInputChange: (event: React.ChangeEvent<HTMLInputElement> | InputMaskChangeEvent) => void,
@@ -30,6 +32,7 @@ interface ShiftPlanDialogProps {
  * @param shiftPlan the shiftPlan to be edited
  * @param isNewShiftPlan whether the shiftPlan is new
  * @param departments the departments assigned to the manager
+ * @param employees
  * @param onHide callback when the dialog is hidden
  * @param onSubmit callback when the shiftPlan is submitted
  * @param onInputChange callback when the input changes
@@ -41,6 +44,7 @@ const ShiftPlanDialog: React.FC<ShiftPlanDialogProps> = ({
     shiftPlan,
     isNewShiftPlan,
     departments,
+    employees,
     onHide,
     onSubmit,
     onInputChange,
@@ -72,6 +76,7 @@ const ShiftPlanDialog: React.FC<ShiftPlanDialogProps> = ({
                     shiftPlan={shiftPlan}
                     isNewShiftPlan={isNewShiftPlan}
                     departments={departments}
+                    employees={employees}
                     onInputChange={onInputChange}
                     onTimeChange={onTimeChange}
                     onDepartmentChange={onDepartmentChange}

@@ -3,6 +3,7 @@ package at.qe.skeleton.mappers;
 import at.qe.skeleton.dtos.ShiftDTO;
 import at.qe.skeleton.model.Shift;
 import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.services.ShiftPlanService;
 import at.qe.skeleton.services.ShiftService;
 import at.qe.skeleton.services.UserxService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +21,13 @@ public class ShiftMapper implements DTOMapper<Shift, ShiftDTO>{
 
     private final ShiftService shiftService;
     private final UserxService userxService;
+    private final ShiftPlanService shiftPlanService;
 
     @Autowired
-    public ShiftMapper(ShiftService shiftService, UserxService userxService){
+    public ShiftMapper(ShiftService shiftService, UserxService userxService, ShiftPlanService shiftPlanService){
         this.shiftService = shiftService;
         this.userxService = userxService;
+        this.shiftPlanService = shiftPlanService;
     }
 
     @Override
@@ -32,15 +35,14 @@ public class ShiftMapper implements DTOMapper<Shift, ShiftDTO>{
         if (shift == null) {
             return null;
         }
-        ShiftDTO dto = new ShiftDTO(
+        return new ShiftDTO(
                 shift.getId(),
                 shift.getStartTime(),
                 shift.getEndTime(),
+                shift.getShiftPlan().getId(),
                 shift.getShiftWorkers().stream().map(Userx::getId).toList(),
-                shift.getShiftWorkers().stream().map(Userx::getUsername).toList()
+                shift.getShiftWorkers().stream().map(Userx::getFullNameWithUsername).toList()
         );
-
-        return dto;
     }
 
     @Override
@@ -56,6 +58,7 @@ public class ShiftMapper implements DTOMapper<Shift, ShiftDTO>{
         }
         shift.setStartTime(shiftDto.startTime());
         shift.setEndTime(shiftDto.endTime());
+        shift.setShiftPlan(shiftPlanService.loadShiftPlan(shiftDto.shiftPlanId()).orElse(null));
         shift.setShiftWorkers(userxService.getUsersById(shiftDto.shiftWorkerIds()).stream().collect(Collectors.toSet()));
 
         return shift;

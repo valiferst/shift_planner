@@ -16,6 +16,7 @@ interface ShiftPlanListProps {
     onPublishShiftPlan: (shiftPlan: ShiftPlan) => void;
     onEditShiftPlan: (shiftPlan: ShiftPlan) => void;
     onDeleteShiftPlan: (shiftPlan: ShiftPlan) => void;
+    // onAddShift: (shiftPlan: ShiftPlan) => void;
 }
 
 
@@ -27,7 +28,14 @@ interface ShiftPlanListProps {
  * @param onPublishShiftPlan callback when an shiftPlan is published
  * @param onDeleteShiftPlan callback when an shiftPlan is deleted
  */
-const ShiftPlanListComponent: React.FC<ShiftPlanListProps> = ({ shiftPlans, loading, onEditShiftPlan, onPublishShiftPlan, onDeleteShiftPlan }) => {
+const ShiftPlanListComponent: React.FC<ShiftPlanListProps> = ({
+        shiftPlans,
+        loading,
+        onEditShiftPlan,
+        onPublishShiftPlan,
+        onDeleteShiftPlan,
+        // onAddShift
+    }) => {
 
     /**
      * Renders the edit button for an shiftPlan.
@@ -50,6 +58,7 @@ const ShiftPlanListComponent: React.FC<ShiftPlanListProps> = ({ shiftPlans, load
         return (<Button
             label={"Publish"}
             icon="pi pi-check-circle"
+            severity="success"
             onClick={() => onPublishShiftPlan(rowData)}
             aria-label={`Publish ShiftPlan`}
         />);
@@ -98,6 +107,7 @@ const ShiftPlanListComponent: React.FC<ShiftPlanListProps> = ({ shiftPlans, load
             <Column field="updateDate" header="Updated Date" sortable></Column>
             <Column field="departmentName" header="Department" sortable></Column>
             <Column field="state" header="Status" sortable></Column>
+            {/*<Column body={addShiftButtonTemplate} exportable={false} style={{ minWidth: '11rem' }}></Column>*/}
             <Column body={editButtonTemplate} exportable={false} style={{ minWidth: '8rem' }}></Column>
             <Column body={publishButtonTemplate} exportable={false} style={{ minWidth: '8rem' }}></Column>
             <Column body={deleteButtonTemplate} exportable={false} style={{ minWidth: '8rem' }}></Column>

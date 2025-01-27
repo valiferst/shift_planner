@@ -46,7 +46,7 @@ public class ShiftControllerTest {
         shift.setStartTime(startTime);
         shift.setEndTime(endTime);
 
-        ShiftDTO shiftDTO = new ShiftDTO(id, startTime, endTime, null, null);
+        ShiftDTO shiftDTO = new ShiftDTO(id, startTime, endTime, null, null, null);
 
         Mockito.when(shiftService.loadShift(id)).thenReturn(Optional.of(shift));
         Mockito.when(shiftMapper.mapTo(shift)).thenReturn(shiftDTO);

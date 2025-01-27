@@ -1,6 +1,8 @@
 package at.qe.skeleton.controllers;
 
+import at.qe.skeleton.dtos.ShiftDTO;
 import at.qe.skeleton.dtos.ShiftPlanCreateDTO;
+import at.qe.skeleton.mappers.ShiftMapper;
 import at.qe.skeleton.mappers.ShiftPlanCreateMapper;
 import at.qe.skeleton.dtos.ShiftPlanDTO;
 import at.qe.skeleton.dtos.ValidationErrorDTO;
@@ -30,14 +32,16 @@ public class ShiftPlanController {
     private final DepartmentService departmentService;
     private final ShiftPlanMapper shiftPlanMapper;
     private final ShiftPlanCreateMapper shiftPlanCreateMapper;
+    private final ShiftMapper shiftMapper;
 
     // TODO: check how to handle non singleton bean autowiring
     @Autowired
-    public ShiftPlanController(ShiftPlanService shiftPlanService, DepartmentService departmentService, ShiftPlanMapper shiftPlanMapper, ShiftPlanCreateMapper shiftPlanCreateMapper) {
+    public ShiftPlanController(ShiftPlanService shiftPlanService, DepartmentService departmentService, ShiftPlanMapper shiftPlanMapper, ShiftPlanCreateMapper shiftPlanCreateMapper, ShiftMapper shiftMapper) {
         this.shiftPlanService = shiftPlanService;
         this.departmentService = departmentService;
         this.shiftPlanMapper = shiftPlanMapper;
         this.shiftPlanCreateMapper = shiftPlanCreateMapper;
+        this.shiftMapper = shiftMapper;
     }
 
     /**
@@ -99,6 +103,24 @@ public class ShiftPlanController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    /**
+     * Retrieves a single shift by ID.
+     *
+     * @param id ID of the shift plan.
+     * @return The requested shift plan as a DTO.
+     */
+    @GetMapping("/{id}/shifts")
+    @PreAuthorize("hasAuthority('MANAGER')")
+    public ResponseEntity<List<ShiftDTO>> getShiftsForShiftPlan(@PathVariable Long id) {
+        Optional<ShiftPlan> shiftPlanOpt = shiftPlanService.loadShiftPlan(id);
+        if (shiftPlanOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return shiftPlanOpt.map(shiftPlan -> ResponseEntity.ok(shiftPlan.getShifts()
+                        .stream().map(shiftMapper::mapTo).toList()))
+                .orElse(ResponseEntity.notFound().build());
+    }
     /**
      * Creates a new shift plan.
      *
