@@ -29,7 +29,6 @@ Feel free to use this skeleton project as you see fit - but keep in mind that
 this project is primarily provided to be used for educational purposes. Don't
 use it for production!
 
-
 Contributors:
 Christian Sillaber
 Michael Brunner
@@ -37,3 +36,8 @@ Clemens Sauerwein
 Andrea Mussmann
 Alexander Blaas
 Zoe Pfister
+
+---
+
+**Portfolio Notice:**  
+This repository is a mirror of the original GitLab repository created for the "Software Architecture" course project, which I completed during the winter semester 2024/25 as part of my additional studies in Computer Science at the University of Innsbruck. I have mirrored this project on my GitHub account for portfolio purposes to showcase my work in software architecture and web application development.
